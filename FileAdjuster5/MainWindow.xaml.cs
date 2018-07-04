@@ -27,5 +27,21 @@ namespace FileAdjuster5
             // Adding the version number to the title
             MainFrame.Title = "File Adjuster version:" + Assembly.GetExecutingAssembly().GetName().Version;
         }
+
+        private void cbLines_Loaded(object sender, RoutedEventArgs e)
+        {
+            // ... A List.
+            List<string> data = new List<string>();
+            data.Add("5500000 Good Notepad++");
+            data.Add("550000 Great Notepad++");
+            data.Add("1048575 Excel Row Limit");
+            data.Add("55000 Dinky size");
+
+            // ... Assign the ItemsSource to the List.
+            cbLines.ItemsSource = data;
+
+            // ... Make the first item selected.
+            cbLines.SelectedIndex = 0;
+        }
     }
 }
