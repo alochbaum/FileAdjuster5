@@ -19,7 +19,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
-            <Label>Selected Files(s)</Label>
+            <StackPanel Orientation="Horizontal">
+                <Label>Selected Files(s)</Label>
+                <Button x:Name="btnAddFile">Add File</Button>
+                <Label>Or drag file in</Label>
+            </StackPanel>
+            <ListBox x:Name="lbFileNames" />
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="0">
             <Label>New File Name(s)</Label>
