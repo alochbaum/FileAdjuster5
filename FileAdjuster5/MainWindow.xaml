@@ -19,19 +19,28 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Drop="StackPanel_Drop" AllowDrop="True">
                 <Label>Selected Files(s)</Label>
-                <Button x:Name="btnAddFile">Add File</Button>
-                <Label>Or drag file in</Label>
+                <Button x:Name="btnAddFile" Click="btnAddFile_Click">Add File</Button>
+                <Label>Or drag in file</Label>
+                <Button x:Name="btnStart" Click="btnStart_Click">
+                    <AccessText>_Start</AccessText>
+                </Button>
             </StackPanel>
             <ListBox x:Name="lbFileNames" />
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <Label>New File Name(s)</Label>
+            <StackPanel Orientation="Horizontal">
+                <Label>New File Name(s)</Label>
+                <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
+                <Button x:Name="btnCancel" Click="btnCancel_Click">Cancel</Button>
+            </StackPanel>
+            <TextBox x:Name="tbOutFile"></TextBox>
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.Row="0" >
             <Label>Size of output file(s) in lines</Label>
             <ComboBox x:Name="cbLines" Loaded="cbLines_Loaded" />
+            <ProgressBar x:Name="pbProgress" Height="10" MinHeight="4"></ProgressBar>
         </StackPanel>
         
     </Grid>
