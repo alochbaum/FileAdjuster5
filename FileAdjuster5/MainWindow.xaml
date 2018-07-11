@@ -4,6 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
         x:Name="MainFrame"
@@ -44,4 +45,13 @@
         </StackPanel>
         
     </Grid>
+    <Window.Resources>
+        <cm:BackgroundWorker x:Key="MyWorker"
+                             DoWork="MyWorker_DoWork"
+                             ProgressChanged="MyWorker_ProgressChanged"
+                             RunWorkerCompleted="MyWorker_Complete"
+                             WorkerReportsProgress="True"
+                             WorkerSupportsCancellation="True"
+                             ></cm:BackgroundWorker>
+    </Window.Resources>
 </Window>

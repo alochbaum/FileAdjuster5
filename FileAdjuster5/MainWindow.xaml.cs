@@ -24,9 +24,14 @@ namespace FileAdjuster5
     /// </summary>
     public partial class MainWindow : Window
     {
-        private BackgroundWorker MyWorker;
+        private FileStream input;
+        private FileStream output;
+        private long lNullsNum = 0, lPosition = 0, lFileSize = 0;
         // This holds current out file
-        private string strFileOut;
+        private string strFileOut="";
+        private BackgroundWorker MyWorker;
+        private string strRTB = "";
+        private bool blPosNum = true, blShowChar = true;
         public MainWindow()
         {
             InitializeComponent();
@@ -35,8 +40,10 @@ namespace FileAdjuster5
             // Adding section to catch event when items are added to listbox of files
             ((INotifyCollectionChanged)lbFileNames.Items).CollectionChanged +=
     lbFileNames_CollectionChanged;
+            // Setting up a worker thread
+            MyWorker = (BackgroundWorker)this.FindResource("MyWorker");
 
-    }
+        }
 
         private void cbLines_Loaded(object sender, RoutedEventArgs e)
         {
@@ -76,7 +83,9 @@ namespace FileAdjuster5
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Started");
+            strFileOut = tbOutFile.Text;
+            MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
+            //MessageBox.Show("Started");
         }
 
         private void StackPanel_Drop(object sender, DragEventArgs e)
@@ -170,6 +179,7 @@ namespace FileAdjuster5
             if (MyWorker.CancellationPending) e.Cancel = true;
         }
 
+
         void MyWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             pbProgress.Value = e.ProgressPercentage;
@@ -178,7 +188,7 @@ namespace FileAdjuster5
         {
             pbProgress.Value = 0;
         }
-
+    
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             MyWorker.CancelAsync();
