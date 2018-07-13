@@ -26,12 +26,15 @@ namespace FileAdjuster5
     {
         private FileStream input;
         private FileStream output;
-        private long lNullsNum = 0, lPosition = 0, lFileSize = 0;
+        private long lNullsNum = 0, lPosition = 0, 
+            lFileSize = 0, lLinesPerFile = 0;
         // This holds current out file
         private string strFileOut="";
         private BackgroundWorker MyWorker;
         private string strRTB = "";
         private bool blPosNum = true, blShowChar = true;
+      
+
         public MainWindow()
         {
             InitializeComponent();
@@ -84,6 +87,8 @@ namespace FileAdjuster5
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
             strFileOut = tbOutFile.Text;
+            // Just for testing
+            lLinesPerFile = 10000;
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
             //MessageBox.Show("Started");
         }
@@ -108,13 +113,14 @@ namespace FileAdjuster5
             // for root directories like e:\ they will come in with \
             var baseDir = System.IO.Path.GetDirectoryName(strTemp);
             string strFile = System.IO.Path.GetFileNameWithoutExtension(strTemp) + "-0";
-            tbOutFile.Text = baseDir + strFile + System.IO.Path.GetExtension(strTemp);
+            tbOutFile.Text = baseDir + "\\"+strFile + System.IO.Path.GetExtension(strTemp);
             //MessageBox.Show("Data Changes");
         }
         void MyWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             input = File.Open(e.Argument.ToString(), FileMode.Open);
             output = File.Open(strFileOut, FileMode.Create);
+            long lNumOfLines = 0;
             lPosition = 0;
             FileInfo f = new FileInfo(e.Argument.ToString());
             lFileSize = f.Length;
@@ -123,15 +129,25 @@ namespace FileAdjuster5
             string strHoldLast50 = "";
             int read, icount;
             long lStoredPosition = 0;
+            bool blHitLastLine = false;
             while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
             {
                 int iOut = 0;
-                for (icount = 0; icount < read; icount++)
+                for (icount = 0; icount < read && !blHitLastLine ; icount++)
                 {
                     if (inbuffer[icount] != 0)
                     {
                         outbuffer[iOut] = inbuffer[icount];
                         iOut++;
+                        if(inbuffer[icount] == '\r')
+                        {
+                            lNumOfLines++;
+                            if (lNumOfLines >= lLinesPerFile)
+                            {
+                                blHitLastLine = true;
+                                MessageBox.Show("Hit it");
+                            }
+                        }
                     }
                     else
                     {
