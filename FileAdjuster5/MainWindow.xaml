@@ -21,11 +21,12 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
             <StackPanel Orientation="Horizontal" Drop="StackPanel_Drop" AllowDrop="True">
-                <Label>Selected Files(s)</Label>
-                <Button x:Name="btnAddFile" Click="btnAddFile_Click">Add File</Button>
-                <Label>Or drag in file</Label>
-                <Button x:Name="btnStart" Click="btnStart_Click">
-                    <AccessText>_Start</AccessText>
+                <Label>Selected Files(s) or drag here</Label>
+                <Button x:Name="btnAddFile" Click="btnAddFile_Click">
+                    <AccessText>_Add File</AccessText>
+                </Button>
+                <Button x:Name="btbCkear" Click="btbCkear_Click">
+                    <AccessText>_Clear</AccessText>
                 </Button>
             </StackPanel>
             <ListBox x:Name="lbFileNames" />
@@ -33,10 +34,17 @@
         <StackPanel Grid.Column="1" Grid.Row="0">
             <StackPanel Orientation="Horizontal">
                 <Label>New File Name(s)</Label>
-                <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
-                <Button x:Name="btnCancel" Click="btnCancel_Click" IsEnabled="False">Cancel</Button>
+                <Button x:Name="btnStart" Click="btnStart_Click">
+                    <AccessText>_Start</AccessText>
+                </Button>
+                <Button x:Name="btnCancel" Click="btnCancel_Click" IsEnabled="False">
+                    <AccessText>Ca_ncel</AccessText>
+                </Button>
             </StackPanel>
             <TextBox x:Name="tbOutFile"></TextBox>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
+            </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.Row="0" >
             <Label>Size of output file(s) in lines</Label>

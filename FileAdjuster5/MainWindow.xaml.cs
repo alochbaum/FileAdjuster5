@@ -51,17 +51,13 @@ namespace FileAdjuster5
         private void cbLines_Loaded(object sender, RoutedEventArgs e)
         {
             // ... A List.
-            List<string> data = new List<string>();
-            data.Add("5500000 Good Notepad++");
-            data.Add("550000 Great Notepad++");
-            data.Add("1048575 Excel Row Limit");
-            data.Add("55000 Dinky size");
+            List<string> data = FileAdjSQLite.getSizes();
 
             // ... Assign the ItemsSource to the List.
             cbLines.ItemsSource = data;
 
             // ... Make the first item selected.
-            cbLines.SelectedIndex = 3;
+            cbLines.SelectedIndex = 0;
         }
 
         private void btnAddFile_Click(object sender, RoutedEventArgs e)
@@ -124,6 +120,12 @@ namespace FileAdjuster5
             tbOutFile.Text = baseDir + "\\"+strFile + System.IO.Path.GetExtension(strTemp);
             //MessageBox.Show("Data Changes");
         }
+
+        private void btbCkear_Click(object sender, RoutedEventArgs e)
+        {
+            lbFileNames.Items.Clear();
+        }
+
         void MyWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             input = File.Open(e.Argument.ToString(), FileMode.Open);
