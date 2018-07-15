@@ -34,7 +34,7 @@
             <StackPanel Orientation="Horizontal">
                 <Label>New File Name(s)</Label>
                 <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
-                <Button x:Name="btnCancel" Click="btnCancel_Click">Cancel</Button>
+                <Button x:Name="btnCancel" Click="btnCancel_Click" IsEnabled="False">Cancel</Button>
             </StackPanel>
             <TextBox x:Name="tbOutFile"></TextBox>
         </StackPanel>

@@ -61,7 +61,7 @@ namespace FileAdjuster5
             cbLines.ItemsSource = data;
 
             // ... Make the first item selected.
-            cbLines.SelectedIndex = 0;
+            cbLines.SelectedIndex = 3;
         }
 
         private void btnAddFile_Click(object sender, RoutedEventArgs e)
@@ -87,8 +87,16 @@ namespace FileAdjuster5
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
             strFileOut = tbOutFile.Text;
-            // Just for testing
-            lLinesPerFile = 10000;
+            // cblines stores the number of lines to work 
+            string strTemp = cbLines.SelectedValue.ToString();
+            string[] words = strTemp.Split(' ');
+            if(!Int64.TryParse(words[0],out lLinesPerFile))
+            {
+                // Just for testing
+                lLinesPerFile = 10000;
+            }
+            btnCancel.IsEnabled = true;
+            btnStart.IsEnabled = false;
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
             //MessageBox.Show("Started");
         }
@@ -130,9 +138,11 @@ namespace FileAdjuster5
             int read, icount;
             long lStoredPosition = 0;
             bool blHitLastLine = false;
+            // looping the full file size
             while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
             {
                 int iOut = 0;
+                // looping the input buffer
                 for (icount = 0; icount < read && !blHitLastLine ; icount++)
                 {
                     if (inbuffer[icount] != 0)
@@ -171,7 +181,8 @@ namespace FileAdjuster5
                         }
                         lStoredPosition = lPosition;
                     }
-                }
+                }  // end looping input buffer
+                // writing to output buffer
                 if (iOut > 0)
                 {
                     output.Write(outbuffer, 0, iOut);
@@ -189,7 +200,7 @@ namespace FileAdjuster5
                 // checking to see if user click cancel, if they did get out of loop
                 if (MyWorker.CancellationPending) break;
                 MyWorker.ReportProgress((int)(((double)lPosition / (double)lFileSize) * 100.0));
-            }
+            } // end looping full file size
             output.Close();
             input.Close();
             if (MyWorker.CancellationPending) e.Cancel = true;
@@ -203,6 +214,8 @@ namespace FileAdjuster5
         void MyWorker_Complete(object sender, RunWorkerCompletedEventArgs e)
         {
             pbProgress.Value = 0;
+            btnStart.IsEnabled = true;
+            btnCancel.IsEnabled = false;
         }
     
         private void btnCancel_Click(object sender, RoutedEventArgs e)
