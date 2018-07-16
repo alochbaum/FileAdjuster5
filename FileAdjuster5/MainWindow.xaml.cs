@@ -93,6 +93,7 @@ namespace FileAdjuster5
             }
             btnCancel.IsEnabled = true;
             btnStart.IsEnabled = false;
+            FileAdjSQLite.WriteHistory(FileAdjSQLite.getHistoryint() + 1, lbFileNames.Items[0].ToString());
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
             //MessageBox.Show("Started");
         }

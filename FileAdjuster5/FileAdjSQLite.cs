@@ -40,5 +40,42 @@ namespace FileAdjuster5
             }
             return mList;
         }
+        static public Int64 getHistoryint()
+        {
+            Int64 iReturn = 0;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "Select group_id from FileHistory order by group_id desc limit 1;";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    iReturn = reader.GetInt64(0);
+                }
+                m_dbConnection.Close();
+            }
+            return iReturn;
+        }
+        static public void WriteHistory(Int64 iGroup,string strFileName)
+        {
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sqlcmd = "INSERT INTO FileHistory (group_id,file_name" +
+                   ")VALUES (" +iGroup.ToString()+",'"+
+                    strFileName + "');";
+                SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                m_dbConnection.Close();
+            }
+        }
     }
+    
 }
