@@ -61,8 +61,9 @@ namespace FileAdjuster5
             }
             return iReturn;
         }
-        static public void WriteHistory(Int64 iGroup,string strFileName)
+        static public bool WriteHistory(Int64 iGroup,string strFileName)
         {
+            bool blreturn = false;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             string strDBFile = DBFile();
             if (File.Exists(strDBFile))
@@ -73,8 +74,31 @@ namespace FileAdjuster5
                    ")VALUES (" +iGroup.ToString()+",'"+
                     strFileName + "');";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                int rows = command.ExecuteNonQuery();
+                if (rows == 1) blreturn=true;
                 m_dbConnection.Close();
             }
+            return blreturn;
+        }
+        static public List<string> getHistory(Int64 lGroup)
+        {
+            List<string> mList = new List<string>();
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select * from FileHistory where group_id ="+
+                    lGroup.ToString() +" order by id;";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                    mList.Add(reader["file_Name"].ToString());
+                reader.Close();
+                m_dbConnection.Close();
+            }
+            return mList;
         }
     }
     

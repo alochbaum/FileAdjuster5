@@ -28,6 +28,9 @@
                 <Button x:Name="btbCkear" Click="btbCkear_Click">
                     <AccessText>_Clear</AccessText>
                 </Button>
+                <Button x:Name="btnHistory" Click="btnHistory_Click">
+                    <AccessText>_&lt;</AccessText>
+                </Button>
             </StackPanel>
             <ListBox x:Name="lbFileNames" />
         </StackPanel>

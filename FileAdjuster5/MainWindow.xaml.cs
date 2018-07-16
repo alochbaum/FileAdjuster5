@@ -27,7 +27,7 @@ namespace FileAdjuster5
         private FileStream input;
         private FileStream output;
         private long lNullsNum = 0, lPosition = 0, 
-            lFileSize = 0, lLinesPerFile = 0;
+            lFileSize = 0, lLinesPerFile = 0, lLastHistory =0;
         // This holds current out file
         private string strFileOut="";
         private BackgroundWorker MyWorker;
@@ -114,17 +114,35 @@ namespace FileAdjuster5
 
         private void lbFileNames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            string strTemp = lbFileNames.Items[0].ToString();
-            // for root directories like e:\ they will come in with \
-            var baseDir = System.IO.Path.GetDirectoryName(strTemp);
-            string strFile = System.IO.Path.GetFileNameWithoutExtension(strTemp) + "-0";
-            tbOutFile.Text = baseDir + "\\"+strFile + System.IO.Path.GetExtension(strTemp);
-            //MessageBox.Show("Data Changes");
+            if (lbFileNames.Items.Count > 0)
+            {
+                string strTemp = lbFileNames.Items[0].ToString();
+                // for root directories like e:\ they will come in with \
+                var baseDir = System.IO.Path.GetDirectoryName(strTemp);
+                string strFile = System.IO.Path.GetFileNameWithoutExtension(strTemp) + "-0";
+                tbOutFile.Text = baseDir + "\\" + strFile + System.IO.Path.GetExtension(strTemp);
+            } else
+            {
+                tbOutFile.Text = "";
+            }
         }
 
         private void btbCkear_Click(object sender, RoutedEventArgs e)
         {
+            lLastHistory = 0;
             lbFileNames.Items.Clear();
+        }
+
+        private void btnHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (lLastHistory < 1) lLastHistory = FileAdjSQLite.getHistoryint();
+            else lLastHistory--;
+            List<string> lsTemp = FileAdjSQLite.getHistory(lLastHistory);
+            lbFileNames.Items.Clear();
+            foreach(string s in lsTemp)
+            {
+                lbFileNames.Items.Add(s);
+            }
         }
 
         void MyWorker_DoWork(object sender, DoWorkEventArgs e)
