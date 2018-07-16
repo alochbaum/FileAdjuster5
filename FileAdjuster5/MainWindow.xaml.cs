@@ -145,7 +145,7 @@ namespace FileAdjuster5
             }
         }
 
-        void MyWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void MyWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             input = File.Open(e.Argument.ToString(), FileMode.Open);
             output = File.Open(strFileOut, FileMode.Create);
@@ -162,46 +162,53 @@ namespace FileAdjuster5
             // looping the full file size
             while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
             {
-                int iOut = 0;
-                // looping the input buffer
-                for (icount = 0; icount < read && !blHitLastLine ; icount++)
+                int iOut = 0, iicount = 0;
+                // looping output files, I'm thinking this has to be inside looping input buffer
+                if (!blHitLastLine)
                 {
-                    if (inbuffer[icount] != 0)
+
+                    // looping the input buffer
+                    for (icount = iicount; icount < read; icount++, iicount++)
                     {
-                        outbuffer[iOut] = inbuffer[icount];
-                        iOut++;
-                        if(inbuffer[icount] == '\r')
+
+                        if (inbuffer[icount] != 0)
                         {
-                            lNumOfLines++;
-                            if (lNumOfLines >= lLinesPerFile)
+                            outbuffer[iOut] = inbuffer[icount];
+                            iOut++;
+                            if (inbuffer[icount] == '\r')
                             {
-                                blHitLastLine = true;
-                                MessageBox.Show("Hit it");
+                                lNumOfLines++;
+                                if (lNumOfLines >= lLinesPerFile)
+                                {
+                                    blHitLastLine = true;
+                                    //MessageBox.Show("Hit it");
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        if (lPosition == lStoredPosition)
-                            lNullsNum++;
                         else
                         {
-                            if (lStoredPosition > 0 || lNullsNum > 0)
+                            if (lPosition == lStoredPosition)
+                                lNullsNum++;
+                            else
                             {
-                                strRTB = strHoldLast50;
-                                if (blPosNum)
+                                if (lStoredPosition > 0 || lNullsNum > 0)
                                 {
-                                    string s1 = $"Position {lStoredPosition} has {lNullsNum} null characters";
-                                    strRTB += s1 + "\r\n";
-                                    string s2 = new string('-', s1.Length);
-                                    strRTB += s2 + "\r\n";
+                                    strRTB = strHoldLast50;
+                                    if (blPosNum)
+                                    {
+                                        string s1 = $"Position {lStoredPosition} has {lNullsNum} null characters";
+                                        strRTB += s1 + "\r\n";
+                                        string s2 = new string('-', s1.Length);
+                                        strRTB += s2 + "\r\n";
+                                    }
+                                    lNullsNum = -1;
                                 }
-                                lNullsNum = -1;
+                                lNullsNum++;
                             }
-                            lNullsNum++;
+                            lStoredPosition = lPosition;
                         }
-                        lStoredPosition = lPosition;
-                    }
+                    } // end looping output not hit
+
                 }  // end looping input buffer
                 // writing to output buffer
                 if (iOut > 0)
@@ -216,11 +223,19 @@ namespace FileAdjuster5
                         var stream = new StreamReader(new MemoryStream(bSmall));
                         strHoldLast50 = stream.ReadToEnd();
                     }
-                }
-                lPosition += read;
-                // checking to see if user click cancel, if they did get out of loop
-                if (MyWorker.CancellationPending) break;
-                MyWorker.ReportProgress((int)(((double)lPosition / (double)lFileSize) * 100.0));
+                    iicount = 0;
+                    lPosition += read;
+                    // checking to see if user click cancel, if they did get out of loop
+                    if (MyWorker.CancellationPending) break;
+                    MyWorker.ReportProgress((int)(((double)lPosition / (double)lFileSize) * 100.0));
+                } // end looping output files
+                else
+                {
+                    // finish writing out block plus one character for \n
+                    if (iOut > 0)
+                    {
+                        output.Write(outbuffer, 0, iOut);
+                    }
             } // end looping full file size
             output.Close();
             input.Close();
