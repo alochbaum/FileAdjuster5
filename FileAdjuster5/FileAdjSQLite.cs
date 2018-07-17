@@ -15,7 +15,7 @@ namespace FileAdjuster5
         {
             return AppDomain.CurrentDomain.BaseDirectory + "FileAdj.db";
         }
-        static public List<string> getSizes()
+        static public List<string> GetSizes()
         {
             List<string> mList = new List<string>();
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -40,7 +40,7 @@ namespace FileAdjuster5
             }
             return mList;
         }
-        static public Int64 getHistoryint()
+        static public Int64 GetHistoryint()
         {
             Int64 iReturn = 0;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -54,9 +54,11 @@ namespace FileAdjuster5
                 SQLiteDataReader reader = command.ExecuteReader();
                 if (reader.HasRows)
                 {
-                    reader.Read();
-                    iReturn = reader.GetInt64(0);
+                    while (reader.Read())
+                        iReturn = reader.GetInt64(0);
                 }
+              
+                reader.Close();
                 m_dbConnection.Close();
             }
             return iReturn;
@@ -80,7 +82,7 @@ namespace FileAdjuster5
             }
             return blreturn;
         }
-        static public List<string> getHistory(Int64 lGroup)
+        static public List<string> ReadHistory(Int64 lGroup)
         {
             List<string> mList = new List<string>();
             SQLiteConnection m_dbConnection = new SQLiteConnection();

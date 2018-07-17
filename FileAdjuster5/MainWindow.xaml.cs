@@ -42,16 +42,16 @@ namespace FileAdjuster5
             MainFrame.Title = "File Adjuster version:" + Assembly.GetExecutingAssembly().GetName().Version;
             // Adding section to catch event when items are added to listbox of files
             ((INotifyCollectionChanged)lbFileNames.Items).CollectionChanged +=
-    lbFileNames_CollectionChanged;
+    LbFileNames_CollectionChanged;
             // Setting up a worker thread
             MyWorker = (BackgroundWorker)this.FindResource("MyWorker");
 
         }
 
-        private void cbLines_Loaded(object sender, RoutedEventArgs e)
+        private void CbLines_Loaded(object sender, RoutedEventArgs e)
         {
             // ... A List.
-            List<string> data = FileAdjSQLite.getSizes();
+            List<string> data = FileAdjSQLite.GetSizes();
 
             // ... Assign the ItemsSource to the List.
             cbLines.ItemsSource = data;
@@ -60,7 +60,7 @@ namespace FileAdjuster5
             cbLines.SelectedIndex = 0;
         }
 
-        private void btnAddFile_Click(object sender, RoutedEventArgs e)
+        private void BtnAddFile_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
             {
@@ -80,7 +80,7 @@ namespace FileAdjuster5
             }
         }
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             strFileOut = tbOutFile.Text;
             // cblines stores the number of lines to work 
@@ -93,7 +93,12 @@ namespace FileAdjuster5
             }
             btnCancel.IsEnabled = true;
             btnStart.IsEnabled = false;
-            FileAdjSQLite.WriteHistory(FileAdjSQLite.getHistoryint() + 1, lbFileNames.Items[0].ToString());
+            Int64 iTemp = FileAdjSQLite.GetHistoryint();
+            iTemp++;
+            for (int i = 0; i < lbFileNames.Items.Count; i++)
+            {
+                FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString());
+            }
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
             //MessageBox.Show("Started");
         }
@@ -112,7 +117,7 @@ namespace FileAdjuster5
             }
         }
 
-        private void lbFileNames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void LbFileNames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (lbFileNames.Items.Count > 0)
             {
@@ -127,17 +132,17 @@ namespace FileAdjuster5
             }
         }
 
-        private void btbCkear_Click(object sender, RoutedEventArgs e)
+        private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
             lLastHistory = 0;
             lbFileNames.Items.Clear();
         }
 
-        private void btnHistory_Click(object sender, RoutedEventArgs e)
+        private void BtnHistory_Click(object sender, RoutedEventArgs e)
         {
-            if (lLastHistory < 1) lLastHistory = FileAdjSQLite.getHistoryint();
+            if (lLastHistory < 1) lLastHistory = FileAdjSQLite.GetHistoryint();
             else lLastHistory--;
-            List<string> lsTemp = FileAdjSQLite.getHistory(lLastHistory);
+            List<string> lsTemp = FileAdjSQLite.ReadHistory(lLastHistory);
             lbFileNames.Items.Clear();
             foreach(string s in lsTemp)
             {
@@ -163,52 +168,58 @@ namespace FileAdjuster5
             while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
             {
                 int iOut = 0, iicount = 0;
-                // looping output files, I'm thinking this has to be inside looping input buffer
-                if (!blHitLastLine)
-                {
-
                     // looping the input buffer
                     for (icount = iicount; icount < read; icount++, iicount++)
                     {
 
-                        if (inbuffer[icount] != 0)
+                    if (inbuffer[icount] != 0)
+                    {
+                        outbuffer[iOut] = inbuffer[icount];
+                        iOut++;
+                        if (inbuffer[icount] == '\r')
                         {
-                            outbuffer[iOut] = inbuffer[icount];
-                            iOut++;
-                            if (inbuffer[icount] == '\r')
+                            lNumOfLines++;
+                            if (lNumOfLines >= lLinesPerFile)
                             {
-                                lNumOfLines++;
-                                if (lNumOfLines >= lLinesPerFile)
-                                {
-                                    blHitLastLine = true;
-                                    //MessageBox.Show("Hit it");
-                                }
+                                blHitLastLine = true;
+                                //MessageBox.Show("Hit it");
                             }
                         }
+                    }
+                    else
+                    {
+                        if (lPosition == lStoredPosition)
+                            lNullsNum++;
                         else
                         {
-                            if (lPosition == lStoredPosition)
-                                lNullsNum++;
-                            else
+                            if (lStoredPosition > 0 || lNullsNum > 0)
                             {
-                                if (lStoredPosition > 0 || lNullsNum > 0)
+                                strRTB = strHoldLast50;
+                                if (blPosNum)
                                 {
-                                    strRTB = strHoldLast50;
-                                    if (blPosNum)
-                                    {
-                                        string s1 = $"Position {lStoredPosition} has {lNullsNum} null characters";
-                                        strRTB += s1 + "\r\n";
-                                        string s2 = new string('-', s1.Length);
-                                        strRTB += s2 + "\r\n";
-                                    }
-                                    lNullsNum = -1;
+                                    string s1 = $"Position {lStoredPosition} has {lNullsNum} null characters";
+                                    strRTB += s1 + "\r\n";
+                                    string s2 = new string('-', s1.Length);
+                                    strRTB += s2 + "\r\n";
                                 }
-                                lNullsNum++;
+                                lNullsNum = -1;
                             }
-                            lStoredPosition = lPosition;
+                            lNullsNum++;
                         }
-                    } // end looping output not hit
+                        lStoredPosition = lPosition;
 
+
+                    } // end looping output not hit
+                      // looping output files, I'm thinking this has to be inside looping input buffer
+                    if (blHitLastLine)
+                    {
+                        blHitLastLine = false;
+                        output.Write(outbuffer, 0, iOut);
+                        output.Close();
+                        strFileOut = ComputeNewFileOut(strFileOut);
+                        output = File.Open(strFileOut, FileMode.Create);
+                        iOut = 0;
+                    }
                 }  // end looping input buffer
                 // writing to output buffer
                 if (iOut > 0)
@@ -236,13 +247,28 @@ namespace FileAdjuster5
                     {
                         output.Write(outbuffer, 0, iOut);
                     }
-            } // end looping full file size
+                } // end looping full file size
+            }
             output.Close();
             input.Close();
             if (MyWorker.CancellationPending) e.Cancel = true;
         }
 
-
+        private string ComputeNewFileOut(string inStr)
+        {
+            string strOut = "";
+            var baseDir = System.IO.Path.GetDirectoryName(inStr);
+            string strFile = System.IO.Path.GetFileNameWithoutExtension(inStr);
+            // this has file name plus number at end starting with "-0";
+            int iTemp = strFile.LastIndexOf('-');
+            string strFront = strFile.Substring(0, iTemp);
+            string strEnd = strFile.Substring(++iTemp, strFile.Length - iTemp);
+            int iiTemp = int.Parse(strEnd);
+            iiTemp++;
+            strOut = baseDir + "\\" + strFront +"-"+ iiTemp.ToString()
+                + System.IO.Path.GetExtension(inStr);
+            return strOut;
+        }
         void MyWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             pbProgress.Value = e.ProgressPercentage;
@@ -254,7 +280,7 @@ namespace FileAdjuster5
             btnCancel.IsEnabled = false;
         }
     
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             MyWorker.CancelAsync();
         }
