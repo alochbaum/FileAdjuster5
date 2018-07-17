@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("FileAdjuster5")]
 [assembly: AssemblyDescription("Program splits large logs with certain criteria.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Andrew Lochbaum")]
 [assembly: AssemblyProduct("FileAdjuster5")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCopyright("Copyright ©  2018 by Andrew Lochbaum")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

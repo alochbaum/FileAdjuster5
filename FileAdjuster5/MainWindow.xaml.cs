@@ -214,10 +214,13 @@ namespace FileAdjuster5
                     if (blHitLastLine)
                     {
                         blHitLastLine = false;
+                        icount++;
+                        outbuffer[iOut] = inbuffer[icount];
                         output.Write(outbuffer, 0, iOut);
                         output.Close();
                         strFileOut = ComputeNewFileOut(strFileOut);
                         output = File.Open(strFileOut, FileMode.Create);
+                        lNumOfLines = 0;
                         iOut = 0;
                     }
                 }  // end looping input buffer
