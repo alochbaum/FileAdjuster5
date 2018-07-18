@@ -11,9 +11,10 @@ namespace FileAdjuster5
     static class FileAdjSQLite
     {
  
-        static private string DBFile()
+        static public string DBFile()
         {
-            return AppDomain.CurrentDomain.BaseDirectory + "FileAdj.db";
+            //return @"c:\iTX Software\FileAdj.db";
+            return AppDomain.CurrentDomain.BaseDirectory + "FileAdj.mdb";
         }
         static public List<string> GetSizes()
         {

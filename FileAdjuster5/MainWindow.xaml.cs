@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -33,7 +34,6 @@ namespace FileAdjuster5
         private BackgroundWorker MyWorker;
         private string strRTB = "";
         private bool blPosNum = true, blShowChar = true;
-      
 
         public MainWindow()
         {
@@ -45,9 +45,28 @@ namespace FileAdjuster5
     LbFileNames_CollectionChanged;
             // Setting up a worker thread
             MyWorker = (BackgroundWorker)this.FindResource("MyWorker");
+            tbOutFile.Text = AppDomain.CurrentDomain.BaseDirectory;
+            rtbStatus.AppendText($"I got the following text:\r\n");
+            rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
+            // Get the DataTable.
+            DataTable MyDtable = GetTable();
+            dgActions.DataContext = MyDtable.DefaultView;
 
         }
+        static DataTable GetTable()
+        {
+            // Here we create a DataTable with four columns.
+            DataTable table = new DataTable();
+            table.Columns.Add("Order", typeof(int));
+            table.Columns.Add("Action", typeof(string));
+            table.Columns.Add("Parameter1", typeof(string));
+            table.Columns.Add("Parameter2", typeof(string));
 
+            // Here we add five DataRows.
+            table.Rows.Add(1, "Exclude", "XMedia", "");
+            table.Rows.Add(2, "Only Include", "TXPlay02", "On Air");
+            return table;
+        }
         private void CbLines_Loaded(object sender, RoutedEventArgs e)
         {
             // ... A List.
