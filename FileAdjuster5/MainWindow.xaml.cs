@@ -25,6 +25,8 @@ namespace FileAdjuster5
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly log4net.ILog log =
+    log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private FileStream input;
         private FileStream output;
         private long lNullsNum = 0, lPosition = 0, 
@@ -43,10 +45,11 @@ namespace FileAdjuster5
             // Adding section to catch event when items are added to listbox of files
             ((INotifyCollectionChanged)lbFileNames.Items).CollectionChanged +=
     LbFileNames_CollectionChanged;
+            log.Info("FileAdjuster is starting up.");
             // Setting up a worker thread
             MyWorker = (BackgroundWorker)this.FindResource("MyWorker");
             tbOutFile.Text = AppDomain.CurrentDomain.BaseDirectory;
-            rtbStatus.AppendText($"I got the following text:\r\n");
+            rtbStatus.AppendText($"Datafile directory:");
             rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
             // Get the DataTable.
             DataTable MyDtable = GetTable();
@@ -167,6 +170,20 @@ namespace FileAdjuster5
             {
                 lbFileNames.Items.Add(s);
             }
+        }
+
+        private void Btn_Fix_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> lsSizes = new List<string>
+            {
+                "555000 Std",
+                "55500 Small",
+                "500000 Med"
+            };
+            cbLines.ItemsSource = lsSizes;
+
+            // ... Make the first item selected.
+            cbLines.SelectedIndex = 0;
         }
 
         private void MyWorker_DoWork(object sender, DoWorkEventArgs e)

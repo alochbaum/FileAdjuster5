@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Deployment.Application;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.SQLite;
@@ -10,28 +11,40 @@ namespace FileAdjuster5
 {
     static class FileAdjSQLite
     {
- 
+        private static readonly log4net.ILog log =
+log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         static public string DBFile()
         {
             //return @"c:\iTX Software\FileAdj.db";
-            return AppDomain.CurrentDomain.BaseDirectory + "FileAdj.mdb";
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                log.Debug("SQLite class is detecting that is Network Deployed");
+                return ApplicationDeployment.CurrentDeployment.DataDirectory + @"\FileAdj.sqlite";
+            }
+            return @"C:\Users\andy\Source\Repos\FileAdjuster5\FileAdjuster5\FileAdj.sqlite";
         }
         static public List<string> GetSizes()
         {
+            log.Debug("Started Get Sizes Function");
             List<string> mList = new List<string>();
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             string strDBFile = DBFile();
             if (File.Exists(strDBFile))
             {
+                log.Info("Function detected file");
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
+                log.Info("State of connection:"+m_dbConnection.State.ToString());
                 string sql = "select * from SubFileSizes order by display_order;";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
+                log.Info("Has rows of reader:" + reader.HasRows.ToString());
                 while (reader.Read())
                     mList.Add(reader["text"].ToString());
                 reader.Close();
                 m_dbConnection.Close();
+                mList.Add("555000 outside of db");
             } else
             {
                 mList.Add("5500000 Good Notepad++");
