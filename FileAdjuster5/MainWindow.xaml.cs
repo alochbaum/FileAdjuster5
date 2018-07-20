@@ -51,6 +51,7 @@ namespace FileAdjuster5
             tbOutFile.Text = AppDomain.CurrentDomain.BaseDirectory;
             rtbStatus.AppendText($"Datafile directory:");
             rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
+            rtbStatus.AppendText($"Program location {AppDomain.CurrentDomain.BaseDirectory}");
             // Get the DataTable.
             DataTable MyDtable = GetTable();
             dgActions.DataContext = MyDtable.DefaultView;

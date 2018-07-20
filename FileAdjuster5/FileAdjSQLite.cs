@@ -28,8 +28,11 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         {
             log.Debug("Started Get Sizes Function");
             List<string> mList = new List<string>();
+            log.Debug("Created mList");
             SQLiteConnection m_dbConnection = new SQLiteConnection();
+            log.Debug("Created m_dbConnection");
             string strDBFile = DBFile();
+            log.Debug($"Got strDBFile of {strDBFile}");
             if (File.Exists(strDBFile))
             {
                 log.Info("Function detected file");
