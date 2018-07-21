@@ -7,7 +7,7 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FileAdjuster5-15branch")]
+[assembly: AssemblyTitle("FileAdjuster5")]
 [assembly: AssemblyDescription("Program splits large logs with certain criteria.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Andrew Lochbaum")]
@@ -51,7 +51,7 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.0.17.0")]
+[assembly: AssemblyVersion("5.0.19.0")]
 [assembly: AssemblyFileVersion("5.0.17.0")]
 
 // Added for logging
