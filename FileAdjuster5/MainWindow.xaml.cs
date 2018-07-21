@@ -167,9 +167,13 @@ namespace FileAdjuster5
             else lLastHistory--;
             List<string> lsTemp = FileAdjSQLite.ReadHistory(lLastHistory);
             lbFileNames.Items.Clear();
+            rtbStatus.Document.Blocks.Clear();
+            
             foreach(string s in lsTemp)
             {
-                lbFileNames.Items.Add(s);
+                string[] sTemp = s.Split('|');
+                rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[1]);
+                lbFileNames.Items.Add(sTemp[0]);
             }
         }
 

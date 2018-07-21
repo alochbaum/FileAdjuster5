@@ -26,28 +26,21 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         }
         static public List<string> GetSizes()
         {
-            log.Debug("Started Get Sizes Function");
             List<string> mList = new List<string>();
-            log.Debug("Created mList");
             SQLiteConnection m_dbConnection = new SQLiteConnection();
-            log.Debug("Created m_dbConnection");
             string strDBFile = DBFile();
-            log.Debug($"Got strDBFile of {strDBFile}");
+            log.Debug($"Size function got strDBFile of {strDBFile}");
             if (File.Exists(strDBFile))
             {
-                log.Info("Function detected file");
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                log.Info("State of connection:"+m_dbConnection.State.ToString());
                 string sql = "select * from SubFileSizes order by display_order;";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
-                log.Info("Has rows of reader:" + reader.HasRows.ToString());
                 while (reader.Read())
                     mList.Add(reader["text"].ToString());
                 reader.Close();
                 m_dbConnection.Close();
-                mList.Add("555000 outside of db");
             } else
             {
                 mList.Add("5500000 Good Notepad++");
@@ -113,7 +106,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
-                    mList.Add(reader["file_Name"].ToString());
+                    mList.Add(reader["file_Name"].ToString()+"|"+reader["date_added"].ToString());
                 reader.Close();
                 m_dbConnection.Close();
             }
