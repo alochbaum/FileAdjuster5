@@ -36,6 +36,8 @@ namespace FileAdjuster5
         private BackgroundWorker MyWorker;
         private string strRTB = "";
         private bool blPosNum = true, blShowChar = true;
+        // If using File History this is set, so history isn't saved twice
+        private bool blUsingHistory = true;
 
         public MainWindow()
         {
@@ -68,7 +70,7 @@ namespace FileAdjuster5
 
             // Here we add five DataRows.
             table.Rows.Add(1, "Exclude", "XMedia", "");
-            table.Rows.Add(2, "Only Include", "TXPlay02", "On Air");
+            table.Rows.Add(2, "Include", "TXPlay02", "On Air");
             return table;
         }
         private void CbLines_Loaded(object sender, RoutedEventArgs e)
@@ -85,6 +87,8 @@ namespace FileAdjuster5
 
         private void BtnAddFile_Click(object sender, RoutedEventArgs e)
         {
+            blUsingHistory = false;
+
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
             {
                 Title = "Select File to Add To List (It will not auto start)",
@@ -116,11 +120,14 @@ namespace FileAdjuster5
             }
             btnCancel.IsEnabled = true;
             btnStart.IsEnabled = false;
-            Int64 iTemp = FileAdjSQLite.GetHistoryint();
-            iTemp++;
-            for (int i = 0; i < lbFileNames.Items.Count; i++)
+            if (!blUsingHistory)
             {
-                FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString());
+                Int64 iTemp = FileAdjSQLite.GetHistoryint();
+                iTemp++;
+                for (int i = 0; i < lbFileNames.Items.Count; i++)
+                {
+                    FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString());
+                }
             }
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
             //MessageBox.Show("Started");
@@ -157,13 +164,15 @@ namespace FileAdjuster5
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
+            blUsingHistory = false;
             lLastHistory = 0;
             lbFileNames.Items.Clear();
         }
 
         private void BtnHistory_Click(object sender, RoutedEventArgs e)
         {
-            if (lLastHistory < 1) lLastHistory = FileAdjSQLite.GetHistoryint();
+            blUsingHistory = true;
+            if (lLastHistory < 2) lLastHistory = FileAdjSQLite.GetHistoryint();
             else lLastHistory--;
             List<string> lsTemp = FileAdjSQLite.ReadHistory(lLastHistory);
             lbFileNames.Items.Clear();
