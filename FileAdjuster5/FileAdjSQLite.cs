@@ -73,7 +73,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return iReturn;
         }
-        static public bool WriteHistory(Int64 iGroup,string strFileName)
+        static public bool WriteHistory(Int64 iGroup,string strFileName,string strExt)
         {
             bool blreturn = false;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -82,9 +82,9 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sqlcmd = "INSERT INTO FileHistory (group_id,file_name" +
+                string sqlcmd = "INSERT INTO FileHistory (group_id,file_name,ext" +
                    ")VALUES (" +iGroup.ToString()+",'"+
-                    strFileName + "');";
+                    strFileName + ",'"+ strExt + "');";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
                 int rows = command.ExecuteNonQuery();
                 if (rows == 1) blreturn=true;
@@ -106,7 +106,8 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
-                    mList.Add(reader["file_Name"].ToString()+"|"+reader["date_added"].ToString());
+                    mList.Add(reader["file_Name"].ToString()+"|"+reader["ext"].ToString()
+                       + "|" + reader["date_added"].ToString());
                 reader.Close();
                 m_dbConnection.Close();
             }

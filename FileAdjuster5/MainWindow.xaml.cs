@@ -63,14 +63,15 @@ namespace FileAdjuster5
         {
             // Here we create a DataTable with four columns.
             DataTable table = new DataTable();
-            table.Columns.Add("Order", typeof(int));
+            table.Columns.Add("Order", typeof(Int64));
+            table.Columns.Add("Group", typeof(Int64));
             table.Columns.Add("Action", typeof(string));
             table.Columns.Add("Parameter1", typeof(string));
             table.Columns.Add("Parameter2", typeof(string));
 
-            // Here we add five DataRows.
-            table.Rows.Add(1, "Exclude", "XMedia", "");
-            table.Rows.Add(2, "Include", "TXPlay02", "On Air");
+            // Here we add two example DataRows.
+            table.Rows.Add(1, 1, "Exclude", "XMedia", "");
+            table.Rows.Add(2, 1, "Include", "TXPlay02", "On Air");
             return table;
         }
         private void CbLines_Loaded(object sender, RoutedEventArgs e)
@@ -126,7 +127,7 @@ namespace FileAdjuster5
                 iTemp++;
                 for (int i = 0; i < lbFileNames.Items.Count; i++)
                 {
-                    FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString());
+                    FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString(),tbExt.Text);
                 }
             }
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
@@ -165,6 +166,7 @@ namespace FileAdjuster5
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
             blUsingHistory = false;
+            tbExt.Text = ".txt";
             lLastHistory = 0;
             lbFileNames.Items.Clear();
         }
@@ -181,8 +183,9 @@ namespace FileAdjuster5
             foreach(string s in lsTemp)
             {
                 string[] sTemp = s.Split('|');
-                rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[1]);
+                rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[2]);
                 lbFileNames.Items.Add(sTemp[0]);
+                tbExt.Text = sTemp[1];
             }
         }
 

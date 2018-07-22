@@ -23,10 +23,10 @@
         <StackPanel Grid.Column="0" Grid.Row="0">
             <StackPanel Orientation="Horizontal" Drop="StackPanel_Drop" AllowDrop="True">
                 <Label>Source File(s) [drag here or]</Label>
-                <Button x:Name="btnAddFile" Click="BtnAddFile_Click">
+                <Button x:Name="btnAddFile" Click="BtnAddFile_Click" Margin="0,0,5,0">
                     <AccessText>_Add File</AccessText>
                 </Button>
-                <Button x:Name="btbCkear" Click="BtnClear_Click">
+                <Button x:Name="btbCkear" Click="BtnClear_Click" Margin="0,0,5,0">
                     <AccessText>_Clear</AccessText>
                 </Button>
                 <Button x:Name="btnHistory" Click="BtnHistory_Click">
@@ -38,12 +38,14 @@
         <StackPanel Grid.Column="1" Grid.Row="0">
             <StackPanel Orientation="Horizontal">
                 <Label>New File Name(s)</Label>
-                <Button x:Name="btnStart" Click="BtnStart_Click">
+                <Button x:Name="btnStart" Click="BtnStart_Click" Margin="0,0,5,0">
                     <AccessText>_Start</AccessText>
                 </Button>
-                <Button x:Name="btnCancel" Click="BtnCancel_Click" IsEnabled="False">
+                <Button x:Name="btnCancel" Click="BtnCancel_Click" IsEnabled="False" Margin="0,0,5,0">
                     <AccessText>Ca_ncel</AccessText>
                 </Button>
+                <Label Content="extension: "></Label>
+                <TextBox x:Name="tbExt" VerticalAlignment="Center">.txt</TextBox>
             </StackPanel>
             <TextBox x:Name="tbOutFile"></TextBox>
             <StackPanel Orientation="Horizontal">
@@ -58,7 +60,17 @@
             <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" />
             <ProgressBar x:Name="pbProgress" Height="10" MinHeight="4"></ProgressBar>
         </StackPanel>
-        <DataGrid x:Name="dgActions" Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding}"></DataGrid>
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
+                <Button x:Name="btnAddRow" Margin="0,0,5,0">Add Row</Button>
+                <Button x:Name="btnClear" Margin="0,0,5,0">Clear Grid Action and No Action Comment</Button>
+                <Button x:Name="btnDelRow" Margin="0,0,5,0">Delete Row</Button>
+                <Button x:Name="btnSwapAbove" Margin="0,0,5,0">Swap with Row Above</Button>
+                <Button x:Name="btnSavePreset" Margin="0,0,5,0">Save as Preset</Button>
+                <Button x:Name="btnActionHistory">&lt;</Button>
+            </StackPanel>
+        <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"></DataGrid>
+        </StackPanel>
         <RichTextBox x:Name="rtbStatus" Grid.Row="2" Grid.ColumnSpan="3"></RichTextBox>
     </Grid>
     <Window.Resources>
