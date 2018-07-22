@@ -84,7 +84,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.Open();
                 string sqlcmd = "INSERT INTO FileHistory (group_id,file_name,ext" +
                    ")VALUES (" +iGroup.ToString()+",'"+
-                    strFileName + ",'"+ strExt + "');";
+                    strFileName + "','"+ strExt + "');";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
                 int rows = command.ExecuteNonQuery();
                 if (rows == 1) blreturn=true;

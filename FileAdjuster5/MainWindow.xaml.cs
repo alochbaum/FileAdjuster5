@@ -203,8 +203,9 @@ namespace FileAdjuster5
             lFileSize = f.Length;
             byte[] inbuffer = new byte[16 * 4096];
             byte[] outbuffer = new byte[16 * 4096];
+            byte[] strbuffer = new byte[2003];
             string strHoldLast50 = "";
-            int read, icount;
+            int read, icount, iStrLen=0;
             long lStoredPosition = 0;
             bool blHitLastLine = false;
             // looping the full file size
@@ -217,10 +218,13 @@ namespace FileAdjuster5
 
                     if (inbuffer[icount] != 0)
                     {
-                        outbuffer[iOut] = inbuffer[icount];
-                        iOut++;
+                        strbuffer[iStrLen++] = inbuffer[icount];
                         if (inbuffer[icount] == '\n')
                         {
+                            // Insert string testing section here
+                            Array.Copy(strbuffer, 0, outbuffer,iOut,iStrLen);
+                            iOut += iStrLen;
+                            iStrLen = 0;
                             lNumOfLines++;
                             if (lNumOfLines >= lLinesPerFile)
                             {
@@ -271,15 +275,6 @@ namespace FileAdjuster5
                 if (iOut > 0)
                 {
                     output.Write(outbuffer, 0, iOut);
-                    if (blShowChar)
-                    {
-                        int iTemp = 255;
-                        if (iOut < iTemp) iTemp = iOut;
-                        var bSmall = new Byte[iTemp];
-                        bSmall = outbuffer.Skip(iOut - iTemp).Take(iTemp).ToArray();
-                        var stream = new StreamReader(new MemoryStream(bSmall));
-                        strHoldLast50 = stream.ReadToEnd();
-                    }
                     lPosition += read;
                     // checking to see if user click cancel, if they did get out of loop
                     if (MyWorker.CancellationPending) break;
