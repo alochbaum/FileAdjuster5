@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Deployment.Application;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,12 +42,6 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     mList.Add(reader["text"].ToString());
                 reader.Close();
                 m_dbConnection.Close();
-            } else
-            {
-                mList.Add("5500000 Good Notepad++");
-                mList.Add("550000 Great Notepad++");
-                mList.Add("1048575 Excel Row Limit");
-                mList.Add("55000 Dinky size");
             }
             return mList;
         }
@@ -112,6 +107,19 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.Close();
             }
             return mList;
+        }
+        static public DataTable ReadActions(Int64 iGroup)
+        {
+            DataTable tableReturn = new DataTable();
+            tableReturn.Columns.Add("Order", typeof(Int64));
+            tableReturn.Columns.Add("Group", typeof(Int64));
+            tableReturn.Columns.Add("Action", typeof(string));
+            tableReturn.Columns.Add("Parameter1", typeof(string));
+            tableReturn.Columns.Add("Parameter2", typeof(string));
+
+            // Here we add two example DataRows.
+            tableReturn.Rows.Add(1, 1, "Exclude", "In directory Found", "");
+            return tableReturn;
         }
     }
     

@@ -40,6 +40,7 @@ namespace FileAdjuster5
         private bool blUsingHistory = true;
         // This stores extension for creating output files
         private string strExt = ".txt";
+        private DataTable MyDtable = new DataTable();
 
         public MainWindow()
         {
@@ -57,7 +58,7 @@ namespace FileAdjuster5
             rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
             rtbStatus.AppendText($"Program location {AppDomain.CurrentDomain.BaseDirectory}");
             // Get the DataTable.
-            DataTable MyDtable = GetTable();
+            MyDtable = GetTable();
             dgActions.DataContext = MyDtable.DefaultView;
 
         }
@@ -72,7 +73,7 @@ namespace FileAdjuster5
             table.Columns.Add("Parameter2", typeof(string));
 
             // Here we add two example DataRows.
-            table.Rows.Add(1, 1, "Exclude", "XMedia", "");
+            table.Rows.Add(1, 1, "Exclude", "In directory Found", "");
             table.Rows.Add(2, 1, "Include", "TXPlay02", "On Air");
             return table;
         }
@@ -208,6 +209,7 @@ namespace FileAdjuster5
             int read, icount, iStrLen=0;
             long lStoredPosition = 0;
             bool blHitLastLine = false;
+            bool blLineOverRun = false;
             // looping the full file size
             while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
             {
@@ -218,19 +220,28 @@ namespace FileAdjuster5
 
                     if (inbuffer[icount] != 0)
                     {
-                        strbuffer[iStrLen++] = inbuffer[icount];
-                        if (inbuffer[icount] == '\n')
+                        if (iStrLen > 1999)
                         {
-                            // Insert string testing section here
-                            Array.Copy(strbuffer, 0, outbuffer,iOut,iStrLen);
-                            iOut += iStrLen;
-                            iStrLen = 0;
-                            lNumOfLines++;
-                            if (lNumOfLines >= lLinesPerFile)
-                            {
-                                blHitLastLine = true;
-                                //MessageBox.Show("Hit it");
+                            strbuffer[iStrLen++] = (byte)'\r';
+                            strbuffer[iStrLen++] = (byte)'\n';
+                            blLineOverRun = true;
+                        } else
+                        strbuffer[iStrLen++] = inbuffer[icount];
+                        if (inbuffer[icount] == '\n'  && !blLineOverRun)
+                        {
+                            blLineOverRun = false;
+                            if (DoICopyStr(System.Text.Encoding.Default.GetString(strbuffer,0,iStrLen))){
+                                // Insert string testing section here
+                                Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
+                                iOut += iStrLen;
+                                lNumOfLines++;
+                                if (lNumOfLines >= lLinesPerFile)
+                                {
+                                    blHitLastLine = true;
+                                    //MessageBox.Show("Hit it");
+                                }
                             }
+                            iStrLen = 0;
                         }
                     }
                     else
@@ -294,6 +305,18 @@ namespace FileAdjuster5
             if (MyWorker.CancellationPending) e.Cancel = true;
         }
 
+        private bool DoICopyStr(string strIn)
+        {
+            bool blReturn = true;
+            foreach(DataRow dRow in MyDtable.Rows)
+            {
+                if (dRow[2].Equals("Exclude") && (dRow[3].ToString().Length>1))
+                {
+                    if (strIn.IndexOf(dRow[3].ToString()) >= 0) return false;
+                }
+            }
+            return blReturn;
+        }
         private string ComputeNewFileOut(string inStr)
         {
             string strOut = "";
