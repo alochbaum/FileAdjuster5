@@ -35,7 +35,7 @@
             </StackPanel>
             <ListBox x:Name="lbFileNames" />
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="0">
+        <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,7">
             <StackPanel Orientation="Horizontal">
                 <Label>New File Name(s)</Label>
                 <Button x:Name="btnStart" Click="BtnStart_Click" Margin="0,0,5,0">
@@ -52,10 +52,10 @@
                 <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
             </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Column="2" Grid.Row="0" >
+        <StackPanel Grid.Column="2" Grid.Row="0"  Margin="0,0,0,7">
             <StackPanel Orientation="Horizontal">
                 <Label>Size of output file(s) in lines</Label>
-                <Button x:Name="btnFix" Click="Btn_Fix_Click">Fix</Button>
+                <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False">Open in Notepad++</Button>
             </StackPanel>
             <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" />
             <ProgressBar x:Name="pbProgress" Height="10" MinHeight="4"></ProgressBar>
@@ -71,7 +71,7 @@
             </StackPanel>
         <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"></DataGrid>
         </StackPanel>
-        <RichTextBox x:Name="rtbStatus" Grid.Row="2" Grid.ColumnSpan="3"></RichTextBox>
+        <RichTextBox x:Name="rtbStatus" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0"></RichTextBox>
     </Grid>
     <Window.Resources>
         <cm:BackgroundWorker x:Key="MyWorker"

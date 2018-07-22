@@ -38,6 +38,8 @@ namespace FileAdjuster5
         private bool blPosNum = true, blShowChar = true;
         // If using File History this is set, so history isn't saved twice
         private bool blUsingHistory = true;
+        // This stores extension for creating output files
+        private string strExt = ".txt";
 
         public MainWindow()
         {
@@ -111,6 +113,7 @@ namespace FileAdjuster5
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             strFileOut = tbOutFile.Text;
+            strExt = tbExt.Text;
             // cblines stores the number of lines to work 
             string strTemp = cbLines.SelectedValue.ToString();
             string[] words = strTemp.Split(' ');
@@ -156,7 +159,7 @@ namespace FileAdjuster5
                 // for root directories like e:\ they will come in with \
                 var baseDir = System.IO.Path.GetDirectoryName(strTemp);
                 string strFile = System.IO.Path.GetFileNameWithoutExtension(strTemp) + "-0";
-                tbOutFile.Text = baseDir + "\\" + strFile + System.IO.Path.GetExtension(strTemp);
+                tbOutFile.Text = baseDir + "\\" + strFile + tbExt.Text;
             } else
             {
                 tbOutFile.Text = "";
@@ -183,25 +186,12 @@ namespace FileAdjuster5
             foreach(string s in lsTemp)
             {
                 string[] sTemp = s.Split('|');
+                tbExt.Text = sTemp[1];
                 rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[2]);
                 lbFileNames.Items.Add(sTemp[0]);
-                tbExt.Text = sTemp[1];
             }
         }
 
-        private void Btn_Fix_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> lsSizes = new List<string>
-            {
-                "555000 Std",
-                "55500 Small",
-                "500000 Med"
-            };
-            cbLines.ItemsSource = lsSizes;
-
-            // ... Make the first item selected.
-            cbLines.SelectedIndex = 0;
-        }
 
         private void MyWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -220,16 +210,16 @@ namespace FileAdjuster5
             // looping the full file size
             while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
             {
-                int iOut = 0, iicount = 0;
+                int iOut = 0;
                     // looping the input buffer
-                    for (icount = iicount; icount < read; icount++, iicount++)
+                    for (icount = 0; icount < read; icount++)
                     {
 
                     if (inbuffer[icount] != 0)
                     {
                         outbuffer[iOut] = inbuffer[icount];
                         iOut++;
-                        if (inbuffer[icount] == '\r')
+                        if (inbuffer[icount] == '\n')
                         {
                             lNumOfLines++;
                             if (lNumOfLines >= lLinesPerFile)
@@ -290,7 +280,6 @@ namespace FileAdjuster5
                         var stream = new StreamReader(new MemoryStream(bSmall));
                         strHoldLast50 = stream.ReadToEnd();
                     }
-                    iicount = 0;
                     lPosition += read;
                     // checking to see if user click cancel, if they did get out of loop
                     if (MyWorker.CancellationPending) break;
@@ -298,7 +287,7 @@ namespace FileAdjuster5
                 } // end looping output files
                 else
                 {
-                    // finish writing out block plus one character for \n
+                    // finish writing out block
                     if (iOut > 0)
                     {
                         output.Write(outbuffer, 0, iOut);
@@ -322,7 +311,7 @@ namespace FileAdjuster5
             int iiTemp = int.Parse(strEnd);
             iiTemp++;
             strOut = baseDir + "\\" + strFront +"-"+ iiTemp.ToString()
-                + System.IO.Path.GetExtension(inStr);
+                + strExt;
             return strOut;
         }
         void MyWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -332,6 +321,7 @@ namespace FileAdjuster5
         void MyWorker_Complete(object sender, RunWorkerCompletedEventArgs e)
         {
             pbProgress.Value = 0;
+            tbOutFile.Text = strFileOut;
             btnStart.IsEnabled = true;
             btnCancel.IsEnabled = false;
         }
