@@ -30,12 +30,12 @@ namespace FileAdjuster5
         private FileStream input;
         private FileStream output;
         private long lNullsNum = 0, lPosition = 0, 
-            lFileSize = 0, lLinesPerFile = 0, lLastHistory =0;
+            lFileSize = 0, lLinesPerFile = 0, lLastHistory =0, lLastAction=0;
         // This holds current out file
         private string strFileOut="";
         private BackgroundWorker MyWorker;
         private string strRTB = "";
-        private bool blPosNum = true, blShowChar = true;
+        private bool blPosNum = true;
         // If using File History this is set, so history isn't saved twice
         private bool blUsingHistory = true;
         // This stores extension for creating output files
@@ -56,7 +56,7 @@ namespace FileAdjuster5
             tbOutFile.Text = AppDomain.CurrentDomain.BaseDirectory;
             rtbStatus.AppendText($"Datafile directory:");
             rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
-            rtbStatus.AppendText($"Program location {AppDomain.CurrentDomain.BaseDirectory}");
+            rtbStatus.AppendText($"Program location {AppDomain.CurrentDomain.BaseDirectory}\r\n");
             // Get the DataTable.
             MyDtable = GetTable(0);
             dgActions.DataContext = MyDtable.DefaultView;
@@ -124,6 +124,15 @@ namespace FileAdjuster5
                     FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString(),tbExt.Text);
                 }
             }
+            Int64 lTemp = FileAdjSQLite.GetActionint();
+            lTemp++;
+            foreach(DataRow myRow in MyDtable.Rows)
+            {
+                FileAdjSQLite.WriteAction(myRow.Field<Int64>("Order"),
+                    lTemp, myRow.Field<string>("Action"),
+                    myRow.Field<string>("Parameter1"),
+                    myRow.Field<string>("Parameter2"));
+            }
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
             //MessageBox.Show("Started");
         }
@@ -181,6 +190,16 @@ namespace FileAdjuster5
                 rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[2]);
                 lbFileNames.Items.Add(sTemp[0]);
             }
+        }
+
+        private void BtnActionHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (lLastAction < 2) lLastAction = FileAdjSQLite.GetActionint();
+            else lLastAction--;
+            MyDtable = GetTable(lLastAction);
+            dgActions.DataContext = MyDtable.DefaultView;
+            rtbStatus.AppendText("Got actions saved on: " + FileAdjSQLite.GetActionDate(lLastAction)
+                +"\r\n");
         }
 
 
@@ -307,6 +326,16 @@ namespace FileAdjuster5
             }
             return blReturn;
         }
+
+        private void btnDelRow_Click(object sender, RoutedEventArgs e)
+        {
+            int iTemp = dgActions.SelectedIndex;
+            if(iTemp>0 && iTemp<MyDtable.Rows.Count)
+            {
+                MyDtable.Rows[iTemp].Delete();
+            }
+        }
+
         private string ComputeNewFileOut(string inStr)
         {
             string strOut = "";

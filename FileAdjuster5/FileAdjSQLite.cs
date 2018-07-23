@@ -68,6 +68,52 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return iReturn;
         }
+        static public Int64 GetActionint()
+        {
+            Int64 iReturn = 0;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "Select GroupID from ActionTable order by GroupID desc limit 1;";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                        iReturn = reader.GetInt64(0);
+                }
+
+                reader.Close();
+                m_dbConnection.Close();
+            }
+            return iReturn;
+        }
+        static public String GetActionDate(Int64 iGroup)
+        {
+            string strReturn = "";
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "Select DateAdded from ActionTable order by GroupID desc limit 1;";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                        strReturn = reader.GetString(0);
+                }
+
+                reader.Close();
+                m_dbConnection.Close();
+            }
+            return strReturn;
+        }
         static public bool WriteHistory(Int64 iGroup,string strFileName,string strExt)
         {
             bool blreturn = false;
@@ -107,6 +153,40 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.Close();
             }
             return mList;
+        }
+        static public bool WriteAction(Int64 iOrder, Int64 iGroup, string strType, string Param1, string Param2 )
+        {
+            bool blreturn = false;
+            Int64 lType = 0;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select ActionTypeID from ActionType where ActionType='"+
+                   strType +"';";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                        lType = reader.GetInt64(0);
+                }
+                reader.Close();
+                if (lType > 0)
+                {
+                    sql = "INSERT INTO ActionTable (DisplayOrder,GroupID,ActionTypeID," +
+                        "Parameter1,Parameter2) VALUES (" + iOrder.ToString() + "," +
+                        iGroup.ToString() +"," + lType.ToString() + ",'"+Param1+"','"+
+                        Param2+ "');";
+                    command = new SQLiteCommand(sql, m_dbConnection);
+                    int rows = command.ExecuteNonQuery();
+                    if (rows == 1) blreturn = true;
+                }
+                m_dbConnection.Close();
+            }
+            return blreturn;
         }
         static public DataTable ReadActions(Int64 iGroup)
         {
