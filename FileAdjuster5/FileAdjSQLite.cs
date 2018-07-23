@@ -116,9 +116,23 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             tableReturn.Columns.Add("Action", typeof(string));
             tableReturn.Columns.Add("Parameter1", typeof(string));
             tableReturn.Columns.Add("Parameter2", typeof(string));
-
-            // Here we add two example DataRows.
-            tableReturn.Rows.Add(1, 1, "Exclude", "In directory Found", "");
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select at.DisplayOrder, at.GroupID, ty.ActionType," +
+                    "at.Parameter1, at.Parameter2 from ActionTable at join ActionType ty " +
+                    "on at.ActionTypeID = ty.ActionTypeID " +
+                    "where at.GroupID="+ iGroup.ToString() +" order by at.DisplayOrder; ";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                    tableReturn.Rows.Add(reader[0], reader[1], reader[2], reader[3], reader[4]);
+                reader.Close();
+                m_dbConnection.Close();
+            }
             return tableReturn;
         }
     }

@@ -58,23 +58,13 @@ namespace FileAdjuster5
             rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
             rtbStatus.AppendText($"Program location {AppDomain.CurrentDomain.BaseDirectory}");
             // Get the DataTable.
-            MyDtable = GetTable();
+            MyDtable = GetTable(0);
             dgActions.DataContext = MyDtable.DefaultView;
 
         }
-        static DataTable GetTable()
+        static DataTable GetTable(Int64 iGroup)
         {
-            // Here we create a DataTable with four columns.
-            DataTable table = new DataTable();
-            table.Columns.Add("Order", typeof(Int64));
-            table.Columns.Add("Group", typeof(Int64));
-            table.Columns.Add("Action", typeof(string));
-            table.Columns.Add("Parameter1", typeof(string));
-            table.Columns.Add("Parameter2", typeof(string));
-
-            // Here we add two example DataRows.
-            table.Rows.Add(1, 1, "Exclude", "In directory Found", "");
-            table.Rows.Add(2, 1, "Include", "TXPlay02", "On Air");
+            DataTable table = FileAdjSQLite.ReadActions(iGroup);
             return table;
         }
         private void CbLines_Loaded(object sender, RoutedEventArgs e)
