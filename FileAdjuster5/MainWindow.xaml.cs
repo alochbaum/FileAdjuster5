@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace FileAdjuster5
 {
@@ -114,6 +115,7 @@ namespace FileAdjuster5
                 lLinesPerFile = 10000;
             }
             btnCancel.IsEnabled = true;
+            btnOpenNotePad.IsEnabled = false;
             btnStart.IsEnabled = false;
             if (!blUsingHistory)
             {
@@ -327,6 +329,19 @@ namespace FileAdjuster5
             return blReturn;
         }
 
+        private void btnOpenNotePad_Click(object sender, RoutedEventArgs e)
+        {
+            Process myProcess = new Process();
+            try
+            {
+                Process.Start("notepad++.exe", strFileOut);
+            }
+            catch
+            {
+                MessageBox.Show("Tried to open " + strFileOut + " in Notepad++.exe but failed");
+            }
+        }
+
         private void btnDelRow_Click(object sender, RoutedEventArgs e)
         {
             int iTemp = dgActions.SelectedIndex;
@@ -360,6 +375,7 @@ namespace FileAdjuster5
             pbProgress.Value = 0;
             tbOutFile.Text = strFileOut;
             btnStart.IsEnabled = true;
+            btnOpenNotePad.IsEnabled = true;
             btnCancel.IsEnabled = false;
         }
     
