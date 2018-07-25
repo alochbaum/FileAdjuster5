@@ -40,6 +40,7 @@ namespace FileAdjuster5
         // If using File History this is set, so history isn't saved twice
         private bool blUsingHistory = true;
         // This stores extension for creating output files
+        private bool blUsingActions = true;
         private string strExt = ".txt";
         private DataTable MyDtable = new DataTable();
 
@@ -189,7 +190,7 @@ namespace FileAdjuster5
             {
                 string[] sTemp = s.Split('|');
                 tbExt.Text = sTemp[1];
-                rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[2]);
+                rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[2]+"\r\n");
                 lbFileNames.Items.Add(sTemp[0]);
             }
         }
@@ -214,85 +215,84 @@ namespace FileAdjuster5
             FileInfo f = new FileInfo(e.Argument.ToString());
             lFileSize = f.Length;
             byte[] inbuffer = new byte[16 * 4096];
-            byte[] outbuffer = new byte[16 * 4096];
+            byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
             byte[] strbuffer = new byte[2003];
             string strHoldLast50 = "";
             int read, icount, iStrLen=0;
             long lStoredPosition = 0;
             bool blHitLastLine = false;
             bool blLineOverRun = false;
+      
+            int iOut = 0;
             // looping the full file size
             while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
             {
-                int iOut = 0;
+                    iOut = 0;
                     // looping the input buffer
                     for (icount = 0; icount < read; icount++)
                     {
-
-                    if (inbuffer[icount] != 0)
-                    {
-                        if (iStrLen > 1999)
+                        // Start checking for null bytes
+                        if (inbuffer[icount] != 0)
                         {
-                            strbuffer[iStrLen++] = (byte)'\r';
-                            strbuffer[iStrLen++] = (byte)'\n';
-                            blLineOverRun = true;
-                        } else
-                        strbuffer[iStrLen++] = inbuffer[icount];
-                        if (inbuffer[icount] == '\n'  && !blLineOverRun)
-                        {
-                            blLineOverRun = false;
-                            if (DoICopyStr(System.Text.Encoding.Default.GetString(strbuffer,0,iStrLen))){
-                                // Insert string testing section here
-                                Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
-                                iOut += iStrLen;
-                                lNumOfLines++;
-                                if (lNumOfLines >= lLinesPerFile)
-                                {
-                                    blHitLastLine = true;
-                                    //MessageBox.Show("Hit it");
-                                }
-                            }
-                            iStrLen = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (lPosition == lStoredPosition)
-                            lNullsNum++;
-                        else
-                        {
-                            if (lStoredPosition > 0 || lNullsNum > 0)
+                            if (iStrLen > 1999)
                             {
-                                strRTB = strHoldLast50;
-                                if (blPosNum)
-                                {
-                                    string s1 = $"Position {lStoredPosition} has {lNullsNum} null characters";
-                                    strRTB += s1 + "\r\n";
-                                    string s2 = new string('-', s1.Length);
-                                    strRTB += s2 + "\r\n";
-                                }
-                                lNullsNum = -1;
+                                strbuffer[iStrLen++] = (byte)'\r';
+                                strbuffer[iStrLen++] = (byte)'\n';
+                                blLineOverRun = true;
                             }
-                            lNullsNum++;
+                            else
+                                strbuffer[iStrLen++] = inbuffer[icount];
+                            if (inbuffer[icount] == '\n' && !blLineOverRun)
+                            {
+                                blLineOverRun = false;
+                                if (DoICopyStr(System.Text.Encoding.Default.GetString(strbuffer, 0, iStrLen)))
+                                {
+                                    // Insert string testing section here
+                                    Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
+                                    iOut += iStrLen;
+                                    lNumOfLines++;
+                                    if (lNumOfLines >= lLinesPerFile)
+                                    {
+                                        blHitLastLine = true;
+                                        //MessageBox.Show("Hit it");
+                                    }
+                                }
+                                iStrLen = 0;
+                            }
                         }
-                        lStoredPosition = lPosition;
-
-
-                    } // end looping output not hit
-                      // looping output files, I'm thinking this has to be inside looping input buffer
-                    if (blHitLastLine)
-                    {
-                        blHitLastLine = false;
-                        icount++;
-                        outbuffer[iOut] = inbuffer[icount];
-                        output.Write(outbuffer, 0, iOut);
-                        output.Close();
-                        strFileOut = ComputeNewFileOut(strFileOut);
-                        output = File.Open(strFileOut, FileMode.Create);
-                        lNumOfLines = 0;
-                        iOut = 0;
-                    }
-                }  // end looping input buffer
+                        else // Found a null byte in file
+                        {
+                            if (lPosition == lStoredPosition)
+                                lNullsNum++;
+                            else
+                            {
+                               {
+                                    strRTB = strHoldLast50;
+                                    if (blPosNum)
+                                    {
+                                        string s1 = $"Position {lStoredPosition} has {lNullsNum} null characters";
+                                        strRTB += s1 + "\r\n";
+                                    }
+                                    lNullsNum = -1;
+                                }
+                                lNullsNum++;
+                            }
+                            lStoredPosition = lPosition;
+                        } // End check for null bytes
+                        // if you hit last line change the files
+                        if (blHitLastLine)
+                        {
+                            blHitLastLine = false;
+                            icount++;
+                            outbuffer[iOut] = inbuffer[icount];
+                            output.Write(outbuffer, 0, iOut);
+                            output.Close();
+                            strFileOut = ComputeNewFileOut(strFileOut);
+                            output = File.Open(strFileOut, FileMode.Create);
+                            lNumOfLines = 0;
+                            iOut = 0;
+                        }
+                    }  // end looping input buffer
                 // writing to output buffer
                 if (iOut > 0)
                 {
@@ -302,14 +302,11 @@ namespace FileAdjuster5
                     if (MyWorker.CancellationPending) break;
                     MyWorker.ReportProgress((int)(((double)lPosition / (double)lFileSize) * 100.0));
                 } // end looping output files
-                else
-                {
-                    // finish writing out block
-                    if (iOut > 0)
-                    {
-                        output.Write(outbuffer, 0, iOut);
-                    }
-                } // end looping full file size
+            } // finished reading last block
+            // finish writing out block
+            if (iOut > 0)
+            {
+                output.Write(outbuffer, 0, iOut);
             }
             output.Close();
             input.Close();
