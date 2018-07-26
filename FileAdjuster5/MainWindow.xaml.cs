@@ -40,7 +40,7 @@ namespace FileAdjuster5
         // If using File History this is set, so history isn't saved twice
         private bool blUsingHistory = true;
         // This stores extension for creating output files
-        private bool blUsingActions = true;
+        private bool blUsingActions = false;
         private string strExt = ".txt";
         private DataTable MyDtable = new DataTable();
 
@@ -129,12 +129,15 @@ namespace FileAdjuster5
             }
             Int64 lTemp = FileAdjSQLite.GetActionint();
             lTemp++;
-            foreach(DataRow myRow in MyDtable.Rows)
+            if (blUsingActions)
             {
-                FileAdjSQLite.WriteAction(myRow.Field<Int64>("Order"),
-                    lTemp, myRow.Field<string>("Action"),
-                    myRow.Field<string>("Parameter1"),
-                    myRow.Field<string>("Parameter2"));
+                foreach (DataRow myRow in MyDtable.Rows)
+                {
+                    FileAdjSQLite.WriteAction(myRow.Field<Int64>("Order"),
+                        lTemp, myRow.Field<string>("Action"),
+                        myRow.Field<string>("Parameter1"),
+                        myRow.Field<string>("Parameter2"));
+                }
             }
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
             //MessageBox.Show("Started");
@@ -242,7 +245,7 @@ namespace FileAdjuster5
                             }
                             else
                                 strbuffer[iStrLen++] = inbuffer[icount];
-                            if (inbuffer[icount] == '\n' && !blLineOverRun)
+                            if (inbuffer[icount] == '\n' || blLineOverRun)
                             {
                                 blLineOverRun = false;
                                 if (DoICopyStr(System.Text.Encoding.Default.GetString(strbuffer, 0, iStrLen)))
@@ -254,9 +257,9 @@ namespace FileAdjuster5
                                     if (lNumOfLines >= lLinesPerFile)
                                     {
                                         blHitLastLine = true;
-                                        //MessageBox.Show("Hit it");
                                     }
                                 }
+                                // reset string weither I copy it or not
                                 iStrLen = 0;
                             }
                         }
@@ -315,12 +318,26 @@ namespace FileAdjuster5
 
         private bool DoICopyStr(string strIn)
         {
-            bool blReturn = true;
+            bool blReturn = true, blDoingInclude = false;
             foreach(DataRow dRow in MyDtable.Rows)
             {
-                if (dRow[2].Equals("Exclude") && (dRow[3].ToString().Length>1))
+                if (dRow[2].Equals("Exclude") && (dRow[3].ToString().Length > 1))
                 {
                     if (strIn.IndexOf(dRow[3].ToString()) >= 0) return false;
+                }
+                else if (dRow[2].Equals("Include"))
+                {
+                    // This is set first time in to the Include, so if there are additional includes
+                    // They will not be excluded
+                    if (!blDoingInclude)
+                    {
+                        blDoingInclude = true;
+                        blReturn = false;
+                    }
+                    if (strIn.IndexOf(dRow[3].ToString()) >= 0)
+                    {
+                        return true;
+                    }
                 }
             }
             return blReturn;
@@ -339,12 +356,49 @@ namespace FileAdjuster5
             }
         }
 
+        private void BtnAddRow_Click(object sender, RoutedEventArgs e)
+        {
+            // need to have clear set group, so there has to be first comment line
+            AddRow myAddRow = new AddRow();
+            if(myAddRow.ShowDialog()==true)
+            {
+                blUsingActions = true;
+                List<string> inString = myAddRow.GetSettings();
+                int i = MyDtable.Rows.Count;
+                DataRow drow = MyDtable.Rows[--i];
+                Int64 iOrder = drow.Field<Int64>("Order");
+                // need to get last order number to increase by one
+                MyDtable.Rows.Add(++iOrder, drow.Field<Int64>("Group"), inString[0], inString[1], inString[2]);
+            }
+            myAddRow.Close();
+        }
+
+        private void btnClearRows_Click(object sender, RoutedEventArgs e)
+        {
+            GetString myGet = new GetString();
+            if(myGet.ShowDialog()==true)
+            {
+                blUsingActions = false;
+                MyDtable.Rows.Clear();
+                Int64 i = FileAdjSQLite.GetActionint();
+                MyDtable.Rows.Add(1, ++i, "Comment", myGet.GetComment(), "");
+            }
+        }
+
         private void btnDelRow_Click(object sender, RoutedEventArgs e)
         {
-            int iTemp = dgActions.SelectedIndex;
-            if(iTemp>0 && iTemp<MyDtable.Rows.Count)
+            if (MyDtable.Rows.Count < 2)
             {
-                MyDtable.Rows[iTemp].Delete();
+                MessageBox.Show("Sorry you can't delete last row.");
+            }
+            else
+            {
+                int iTemp = dgActions.SelectedIndex;
+                if (iTemp > 0 && iTemp < MyDtable.Rows.Count)
+                {
+                    MyDtable.Rows[iTemp].Delete();
+                }
+                MessageBox.Show("You have to select a valid row.");
             }
         }
 

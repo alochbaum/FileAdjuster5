@@ -26,7 +26,7 @@
                 <Button x:Name="btnAddFile" Click="BtnAddFile_Click" Margin="0,0,5,0">
                     <AccessText>_Add File</AccessText>
                 </Button>
-                <Button x:Name="btbCkear" Click="BtnClear_Click" Margin="0,0,5,0">
+                <Button x:Name="btbClear" Click="BtnClear_Click" Margin="0,0,5,0">
                     <AccessText>_Clear</AccessText>
                 </Button>
                 <Button x:Name="btnHistory" Click="BtnHistory_Click" ToolTip="Load file(s) from previous starts." >
@@ -62,14 +62,17 @@
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <Button x:Name="btnAddRow" Margin="0,0,5,0">Add Row</Button>
-                <Button x:Name="btnClear" Margin="0,0,5,0">Clear Grid Action and No Action Comment</Button>
+                <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click">Add Row</Button>
+                <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="btnClearRows_Click">Clear Rows</Button>
                 <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="btnDelRow_Click">Delete Row</Button>
                 <Button x:Name="btnSwapAbove" Margin="0,0,5,0">Swap with Row Above</Button>
+                <Label Content="--" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnSavePreset" Margin="0,0,5,0">Save as Preset</Button>
+                <Label Content="Change Row Grid -->" Margin="0,0,5,0"></Label>
+                <Button x:Name="btnLoadPreset" Margin="0,0,5,0">Load Preset</Button>
                 <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous start.">&lt;</Button>
             </StackPanel>
-        <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"/>
+        <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True"/>
         </StackPanel>
         <RichTextBox x:Name="rtbStatus" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0"></RichTextBox>
     </Grid>

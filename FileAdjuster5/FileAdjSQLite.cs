@@ -45,6 +45,26 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return mList;
         }
+        static public List<string> GetActionTypes()
+        {
+            List<string> mList = new List<string>();
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            log.Debug($"Size function got strDBFile of {strDBFile}");
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select * from ActionType order by ActionTypeID;";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                    mList.Add(reader["ActionType"].ToString());
+                reader.Close();
+                m_dbConnection.Close();
+            }
+            return mList;
+        }
         static public Int64 GetHistoryint()
         {
             Int64 iReturn = 0;
