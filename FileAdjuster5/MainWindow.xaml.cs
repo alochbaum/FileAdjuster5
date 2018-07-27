@@ -42,6 +42,7 @@ namespace FileAdjuster5
         // This stores extension for creating output files
         private bool blUsingActions = false;
         private string strExt = ".txt";
+        private DateTime myStartTime;
         private DataTable MyDtable = new DataTable();
 
         public MainWindow()
@@ -122,6 +123,7 @@ namespace FileAdjuster5
             {
                 Int64 iTemp = FileAdjSQLite.GetHistoryint();
                 iTemp++;
+                rtbStatus.AppendText($"Saving File History #{iTemp}\r\n");
                 for (int i = 0; i < lbFileNames.Items.Count; i++)
                 {
                     FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString(),tbExt.Text);
@@ -131,6 +133,7 @@ namespace FileAdjuster5
             lTemp++;
             if (blUsingActions)
             {
+                rtbStatus.AppendText("Saving Action Grid \r\n");
                 foreach (DataRow myRow in MyDtable.Rows)
                 {
                     FileAdjSQLite.WriteAction(myRow.Field<Int64>("Order"),
@@ -139,6 +142,8 @@ namespace FileAdjuster5
                         myRow.Field<string>("Parameter2"));
                 }
             }
+            myStartTime = DateTime.Now;
+            rtbStatus.AppendText($"Started work at {myStartTime.TimeOfDay}\r\n");
             MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
             //MessageBox.Show("Started");
         }
@@ -193,7 +198,7 @@ namespace FileAdjuster5
             {
                 string[] sTemp = s.Split('|');
                 tbExt.Text = sTemp[1];
-                rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[2]+"\r\n");
+                rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[2]+"\r\n\r\n");
                 lbFileNames.Items.Add(sTemp[0]);
             }
         }
@@ -428,6 +433,8 @@ namespace FileAdjuster5
             btnStart.IsEnabled = true;
             btnOpenNotePad.IsEnabled = true;
             btnCancel.IsEnabled = false;
+            TimeSpan mySpan = DateTime.Now - myStartTime;
+            rtbStatus.AppendText($"{DateTime.Now.TimeOfDay} Finished with file in {mySpan.Seconds} seconds\r\n");
         }
     
         private void BtnCancel_Click(object sender, RoutedEventArgs e)

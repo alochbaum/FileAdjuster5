@@ -74,7 +74,9 @@
             </StackPanel>
         <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True"/>
         </StackPanel>
-        <RichTextBox x:Name="rtbStatus" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0"></RichTextBox>
+        <RichTextBox x:Name="rtbStatus" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0" AllowDrop="False" 
+                     Focusable="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" 
+                     VerticalScrollBarVisibility="Visible"></RichTextBox>
     </Grid>
     <Window.Resources>
         <cm:BackgroundWorker x:Key="MyWorker"
