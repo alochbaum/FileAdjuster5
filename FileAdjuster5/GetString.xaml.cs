@@ -36,5 +36,11 @@ namespace FileAdjuster5
         {
             this.DialogResult = true;
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            wndGetString.Title = strTitle;
+            lbAnswer.Content = strQuestion;
+        }
     }
 }

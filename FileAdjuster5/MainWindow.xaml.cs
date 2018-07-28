@@ -393,8 +393,7 @@ namespace FileAdjuster5
         private void BtnSavePreset_Click(object sender, RoutedEventArgs e)
         {
             Int64 iGroup = MyDtable.Rows[0].Field<Int64>(1);
-            SavePreset mySavePreset = new SavePreset();
-            mySavePreset.iGroupID = iGroup;
+            SavePreset mySavePreset = new SavePreset(iGroup);
             if (mySavePreset.ShowDialog() == true)
                 rtbStatus.AppendText($"Saved preset for group {iGroup}\r\n");
         }

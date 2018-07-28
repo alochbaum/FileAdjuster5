@@ -19,12 +19,12 @@
         <Label Grid.Row="0" Grid.Column="0" Content="Select Prest Group" />
         <Label Grid.Row="0" Grid.Column="1" Content="Name Preset" />
         <ComboBox x:Name="cbGroups" Grid.Row="1" Grid.Column="0" Loaded="cbGroups_Loaded"></ComboBox>
-        <TextBox Grid.Row="1" Grid.Column="1" />
+        <TextBox x:Name="tbTitle" Grid.Row="1" Grid.Column="1" />
         <Button x:Name="BtnAddGroup" Grid.Row="2" Grid.Column="0" Width="100" HorizontalAlignment="Right" Click="BtnAddGroup_Click">
             <AccessText>_Add Group</AccessText>
         </Button>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="btnOK" IsDefault="True" Width="60" Click="btnOK_Click">
+            <Button x:Name="btnOK" IsDefault="True" Width="60" Click="BtnOK_Click">
                 <AccessText>_OK</AccessText>
             </Button>
             <Button  x:Name="btnCancel" IsCancel="True" Width="60" Margin="5,0,0,0">

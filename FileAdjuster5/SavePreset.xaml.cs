@@ -19,9 +19,10 @@ namespace FileAdjuster5
     /// </summary>
     public partial class SavePreset : Window
     {
-        public Int64 iGroupID = 0;
-        public SavePreset()
+        private Int64 iGroupID = 0;
+        public SavePreset(Int64 inGroup)
         {
+            iGroupID = inGroup;
             InitializeComponent();
         }
 
@@ -37,8 +38,9 @@ namespace FileAdjuster5
             cbGroups.SelectedIndex = 0;
         }
 
-        private void btnOK_Click(object sender, RoutedEventArgs e)
+        private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
+            FileAdjSQLite.WritePreset(cbGroups.Text, tbTitle.Text, iGroupID);
             this.DialogResult = true;
         }
 

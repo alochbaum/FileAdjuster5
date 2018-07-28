@@ -1,14 +1,14 @@
-﻿<Window x:Class="FileAdjuster5.GetString"
+﻿<Window x:Name="wndGetString"  x:Class="FileAdjuster5.GetString"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="{Binding strTitle}" Height="130" Width="500">
-    <StackPanel>
-        <Label Content="{Binding strQuestion}"/>
-        <TextBox x:Name="tbAnswer" Margin="10"></TextBox>
+        Title="" Height="130" Width="500" Loaded="Window_Loaded">
+    <StackPanel Margin="10">
+        <Label x:Name="lbAnswer" Content=""/>
+        <TextBox x:Name="tbAnswer"></TextBox>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnOK" IsDefault="True"  Width="60" Click="btnOK_Click">
                 <AccessText>_OK</AccessText>

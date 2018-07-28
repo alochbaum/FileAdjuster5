@@ -272,6 +272,25 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return blreturn;
         }
+        static public bool WritePreset(string strGroup, string strTitle, Int64 iGroup)
+        {
+            bool blreturn = false;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sqlcmd = "insert into ActionPreset (PTypeId,PresetName,GroupID) " +
+                    " select PTypeID,'" + strTitle + "','" + iGroup.ToString() +
+                    "' from ActionPresetType where PresetType = '" + strGroup + "';";
+                SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                int rows = command.ExecuteNonQuery();
+                if (rows == 1) blreturn = true;
+                m_dbConnection.Close();
+            }
+            return blreturn;
+        }
     }
     
 }
