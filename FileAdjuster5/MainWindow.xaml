@@ -67,7 +67,7 @@
                 <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="btnDelRow_Click">Delete Row</Button>
                 <Button x:Name="btnSwapAbove" Margin="0,0,5,0">Swap with Row Above</Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
-                <Button x:Name="btnSavePreset" Margin="0,0,5,0">Save as Preset</Button>
+                <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click">Save as Preset</Button>
                 <Label Content="Change Row Grid -->" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnLoadPreset" Margin="0,0,5,0">Load Preset</Button>
                 <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous start.">&lt;</Button>

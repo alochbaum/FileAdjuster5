@@ -1,0 +1,35 @@
+﻿<Window x:Class="FileAdjuster5.SavePreset"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileAdjuster5"
+        mc:Ignorable="d"
+        Title="SavePreset" Height="117.891" Width="493.77">
+    <Grid Margin="10,5,10,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Select Prest Group" />
+        <Label Grid.Row="0" Grid.Column="1" Content="Name Preset" />
+        <ComboBox x:Name="cbGroups" Grid.Row="1" Grid.Column="0" Loaded="cbGroups_Loaded"></ComboBox>
+        <TextBox Grid.Row="1" Grid.Column="1" />
+        <Button x:Name="BtnAddGroup" Grid.Row="2" Grid.Column="0" Width="100" HorizontalAlignment="Right" Click="BtnAddGroup_Click">
+            <AccessText>_Add Group</AccessText>
+        </Button>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnOK" IsDefault="True" Width="60" Click="btnOK_Click">
+                <AccessText>_OK</AccessText>
+            </Button>
+            <Button  x:Name="btnCancel" IsCancel="True" Width="60" Margin="5,0,0,0">
+                <AccessText>_Cancel</AccessText>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

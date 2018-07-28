@@ -19,14 +19,18 @@ namespace FileAdjuster5
     /// </summary>
     public partial class GetString : Window
     {
-        public GetString()
+        private string strTitle = "";
+        private string strQuestion = "";
+        public GetString(string strTitleIn, string strQuestionIn)
         {
+            strTitle = strTitleIn;
+            strQuestion = strQuestionIn;
             InitializeComponent();
         }
 
-        public string GetComment()
+        public string GetAnswer()
         {
-            return tbComment.Text;
+            return tbAnswer.Text;
         }
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {

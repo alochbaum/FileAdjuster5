@@ -380,14 +380,23 @@ namespace FileAdjuster5
 
         private void btnClearRows_Click(object sender, RoutedEventArgs e)
         {
-            GetString myGet = new GetString();
+            GetString myGet = new GetString("Enter Comment String","A new set of actions start with a comment");
             if(myGet.ShowDialog()==true)
             {
                 blUsingActions = false;
                 MyDtable.Rows.Clear();
                 Int64 i = FileAdjSQLite.GetActionint();
-                MyDtable.Rows.Add(1, ++i, "Comment", myGet.GetComment(), "");
+                MyDtable.Rows.Add(1, ++i, "Comment", myGet.GetAnswer(), "");
             }
+        }
+
+        private void BtnSavePreset_Click(object sender, RoutedEventArgs e)
+        {
+            Int64 iGroup = MyDtable.Rows[0].Field<Int64>(1);
+            SavePreset mySavePreset = new SavePreset();
+            mySavePreset.iGroupID = iGroup;
+            if (mySavePreset.ShowDialog() == true)
+                rtbStatus.AppendText($"Saved preset for group {iGroup}\r\n");
         }
 
         private void btnDelRow_Click(object sender, RoutedEventArgs e)

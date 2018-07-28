@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="You need to have a comment at the top of any Action List" Height="120" Width="500">
+        Title="{Binding strTitle}" Height="130" Width="500">
     <StackPanel>
-        <Label Content="Comment"/>
-        <TextBox x:Name="tbComment"></TextBox>
+        <Label Content="{Binding strQuestion}"/>
+        <TextBox x:Name="tbAnswer" Margin="10"></TextBox>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnOK" IsDefault="True"  Width="60" Click="btnOK_Click">
                 <AccessText>_OK</AccessText>

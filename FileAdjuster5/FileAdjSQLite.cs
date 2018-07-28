@@ -65,6 +65,26 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return mList;
         }
+        static public List<string> GetPresetTypes()
+        {
+            List<string> mList = new List<string>();
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            log.Debug($"Size function got strDBFile of {strDBFile}");
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select * from ActionPresetType order by PTypeID;";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                    mList.Add(reader["PresetType"].ToString());
+                reader.Close();
+                m_dbConnection.Close();
+            }
+            return mList;
+        }
         static public Int64 GetHistoryint()
         {
             Int64 iReturn = 0;
@@ -234,6 +254,23 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.Close();
             }
             return tableReturn;
+        }
+        static public bool WriteGroup(string strGroup)
+        {
+            bool blreturn = false;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sqlcmd = "INSERT INTO ActionPresetType (PresetType) VALUES ('" + strGroup + "');";
+                SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                int rows = command.ExecuteNonQuery();
+                if (rows == 1) blreturn = true;
+                m_dbConnection.Close();
+            }
+            return blreturn;
         }
     }
     
