@@ -209,8 +209,10 @@ namespace FileAdjuster5
             else lLastAction--;
             MyDtable = GetTable(lLastAction);
             dgActions.DataContext = MyDtable.DefaultView;
-            rtbStatus.AppendText("Got actions saved on: " + FileAdjSQLite.GetActionDate(lLastAction)
-                +"\r\n");
+            string sTemp = "Got actions saved on: " +
+                FileAdjSQLite.GetActionDate(lLastAction);
+            log.Debug(sTemp);
+            rtbStatus.AppendText(sTemp+"\r\n");
         }
 
 
@@ -396,6 +398,17 @@ namespace FileAdjuster5
             SavePreset mySavePreset = new SavePreset(iGroup);
             if (mySavePreset.ShowDialog() == true)
                 rtbStatus.AppendText($"Saved preset for group {iGroup}\r\n");
+        }
+
+        private void BtnLoadPreset_Click(object sender, RoutedEventArgs e)
+        {
+            FindPreset MyFindPreset = new FindPreset();
+            if (MyFindPreset.ShowDialog() == true)
+            {
+                Int64 iTemp = MyFindPreset.GetGroup();
+                MyDtable = GetTable(iTemp);
+                dgActions.DataContext = MyDtable.DefaultView;
+            }
         }
 
         private void btnDelRow_Click(object sender, RoutedEventArgs e)

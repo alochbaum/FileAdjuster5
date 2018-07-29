@@ -291,6 +291,31 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return blreturn;
         }
+        static public DataTable ReadPresets()
+        {
+            DataTable tableReturn = new DataTable();
+            tableReturn.Columns.Add("Group_ID", typeof(Int64));
+            tableReturn.Columns.Add("Preset Group", typeof(string));
+            tableReturn.Columns.Add("Preset Title", typeof(string));
+            tableReturn.Columns.Add("Date Added", typeof(string));
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select ap.GroupID, at.PresetType, ap.PresetName, ap.DateAdded" +
+                    " from ActionPreset ap join ActionPresetType at on ap.PTypeID = at.PTypeID"+
+                    " order by ap.PTypeID, ap.GroupID; ";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                    tableReturn.Rows.Add(reader[0], reader[1], reader[2], reader[3]);
+                reader.Close();
+                m_dbConnection.Close();
+            }
+            return tableReturn;
+        }
     }
     
 }
