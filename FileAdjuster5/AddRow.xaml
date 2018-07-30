@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="Select Type of Action on Left and Enter Parameters on the Right" Height="120" Width="500">
+        Title="Select Type of Action on Left and Enter Parameters on the Right" Height="120" Width="560">
     <Grid Margin="10,5,10,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />

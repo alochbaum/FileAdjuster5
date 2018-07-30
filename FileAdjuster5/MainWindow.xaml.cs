@@ -326,24 +326,43 @@ namespace FileAdjuster5
         private bool DoICopyStr(string strIn)
         {
             bool blReturn = true, blDoingInclude = false;
-            foreach(DataRow dRow in MyDtable.Rows)
+            foreach (DataRow dRow in MyDtable.Rows)
             {
-                if (dRow[2].Equals("Exclude") && (dRow[3].ToString().Length > 1))
+                // no use doing work if first parameter is empty
+                if (dRow[3].ToString().Length > 1)
                 {
-                    if (strIn.IndexOf(dRow[3].ToString()) >= 0) return false;
-                }
-                else if (dRow[2].Equals("Include"))
-                {
-                    // This is set first time in to the Include, so if there are additional includes
-                    // They will not be excluded
-                    if (!blDoingInclude)
+                    string sTemp = dRow[2].ToString();
+                    switch (sTemp)
                     {
-                        blDoingInclude = true;
-                        blReturn = false;
-                    }
-                    if (strIn.IndexOf(dRow[3].ToString()) >= 0)
-                    {
-                        return true;
+                        case "Exclude":
+                            // check in includes ran out first
+                            if (blDoingInclude && !blReturn) return false;
+                            if (strIn.IndexOf(dRow[3].ToString()) >= 0) return false;
+                            break;
+                        case "Include":
+                            // Found and include, reversing return logic for next couple
+                            // of includes, flagging reversed logic for other values
+                            if (!blDoingInclude)
+                            {
+                                blDoingInclude = true;
+                                blReturn = false;
+                            }   
+                            if (strIn.IndexOf(dRow[3].ToString()) >= 0)return true;
+                            break;
+                        case "Any_Case_Exclude":
+                            // check in includes ran out first
+                            if (blDoingInclude && !blReturn) return false;
+                            if (strIn.ToUpper().IndexOf(dRow[3].ToString().ToUpper()) >= 0) return false;
+                            break;
+                        case "Any_Case_Include":
+                            if (!blDoingInclude)
+                            {
+                                blDoingInclude = true;
+                                blReturn = false;
+                            }
+                            if (strIn.ToUpper().IndexOf(dRow[3].ToString().ToUpper()) >= 0) return true;
+                            break;
+                        // Note: case comment does nothing
                     }
                 }
             }
@@ -411,6 +430,30 @@ namespace FileAdjuster5
             }
         }
 
+        private void btnSwapAbove_Click(object sender, RoutedEventArgs e)
+        {
+            if(dgActions.SelectedIndex<1)
+            {
+                MessageBox.Show("You have to select a row below top row");
+            }
+            else
+            {
+                DataTable dtParent = MyDtable;
+                int iOldRowIndex = dgActions.SelectedIndex;
+                DataRow row = MyDtable.Rows[iOldRowIndex];
+                DataRow newRow = dtParent.NewRow();
+                newRow.ItemArray = row.ItemArray;
+                int iOrderNew = int.Parse( newRow["Order"].ToString())-1;
+                newRow["Order"] = iOrderNew;
+                if (iOldRowIndex >0 && iOldRowIndex <= dtParent.Rows.Count)
+                {
+                    dtParent.Rows.Remove(row);
+                    dtParent.Rows.InsertAt(newRow, iOldRowIndex - 1);
+                    MyDtable.Rows[iOldRowIndex]["Order"] = iOrderNew +1;
+                }
+                dgActions.DataContext = MyDtable.DefaultView;
+            }
+        }
         private void btnDelRow_Click(object sender, RoutedEventArgs e)
         {
             if (MyDtable.Rows.Count < 2)
@@ -424,7 +467,7 @@ namespace FileAdjuster5
                 {
                     MyDtable.Rows[iTemp].Delete();
                 }
-                MessageBox.Show("You have to select a valid row.");
+                else MessageBox.Show("You have to select a valid row.");
             }
         }
 
