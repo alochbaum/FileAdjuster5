@@ -108,6 +108,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddTime.xaml.cs">
+      <DependentUpon>AddTime.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FindPreset.xaml.cs">
       <DependentUpon>FindPreset.xaml</DependentUpon>
     </Compile>
@@ -115,6 +118,10 @@
       <DependentUpon>SavePreset.xaml</DependentUpon>
     </Compile>
     <Page Include="AddRow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AddTime.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
