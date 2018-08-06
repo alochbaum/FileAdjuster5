@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
         Title="This sets a limited time window for dividing logs files." Height="200
@@ -20,6 +21,7 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0">Start Time</Label>
+        <xctk:TimePicker x:Name="tpStart" Grid.Row="0" Grid.Column="1" Format="LongTime" DefaultValue="08/06/2018 00:30:00" DisplayDefaultValueOnEmptyText="True"></xctk:TimePicker>
         <Label Grid.Row="1" Grid.Column="0">Duration</Label>
         <Label Grid.Row="2" Grid.Column="0">End Time</Label>
         <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
