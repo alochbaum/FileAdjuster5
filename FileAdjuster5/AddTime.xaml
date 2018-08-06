@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="AddTime" Height="200
+        Title="This sets a limited time window for dividing logs files." Height="200
         " Width="560">
     <Grid Margin="10,5,10,10">
         <Grid.ColumnDefinitions>
@@ -19,6 +19,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0">Start Time</Label>
+        <Label Grid.Row="1" Grid.Column="0">Duration</Label>
+        <Label Grid.Row="2" Grid.Column="0">End Time</Label>
         <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnOK" IsDefault="True" Click="btnOK_Click" Width="60">
                 <AccessText>_OK</AccessText>
