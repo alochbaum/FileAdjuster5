@@ -18,7 +18,7 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         
-            <ComboBox Grid.Row="1" Grid.Column="0"  x:Name="RowType" Loaded="RowType_Loaded" />
+            <ComboBox Grid.Row="1" Grid.Column="0"  x:Name="RowType" Loaded="RowType_Loaded" SelectionChanged="RowType_SelectionChanged" />
 
         <Label Grid.Row="0" Grid.Column="1" Content="Parameter 1"></Label>
         <TextBox Grid.Row="1" Grid.Column="1" x:Name="Param1"></TextBox>

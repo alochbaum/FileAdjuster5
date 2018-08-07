@@ -23,5 +23,15 @@ namespace FileAdjuster5
         {
             InitializeComponent();
         }
+
+        public string GetParam1()
+        {
+            return tpStart.Text;
+        }
+
+        private void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
     }
 }

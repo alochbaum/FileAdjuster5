@@ -50,6 +50,17 @@ namespace FileAdjuster5
             this.DialogResult = true;
         }
 
-
+        private void RowType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string strValue = (sender as ComboBox).SelectedItem as string;
+            if (strValue == "Time_Window")
+            {
+                AddTime myTimeWnd = new AddTime();
+                if (myTimeWnd.ShowDialog() == true)
+                {
+                    Param1.Text = myTimeWnd.GetParam1();
+                }
+            }
+        }
     }
 }
