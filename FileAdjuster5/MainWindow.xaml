@@ -55,7 +55,9 @@
         <StackPanel Grid.Column="2" Grid.Row="0"  Margin="0,0,0,7">
             <StackPanel Orientation="Horizontal">
                 <Label>Size of output file(s) in lines</Label>
-                <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False" Click="btnOpenNotePad_Click">Open in Notepad++</Button>
+                <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False" Click="btnOpenNotePad_Click">
+                    <AccessText>Open in Notepad_++</AccessText>
+                </Button>
             </StackPanel>
             <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" />
             <ProgressBar x:Name="pbProgress" Height="10" MinHeight="4"></ProgressBar>
@@ -70,7 +72,9 @@
                 <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click">Save as Preset</Button>
                 <Label Content="Change Row Grid -->" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnLoadPreset" Margin="0,0,5,0" Click="BtnLoadPreset_Click">Load Preset</Button>
-                <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous start.">&lt;</Button>
+                <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous start.">
+                    <AccessText>&lt;_=</AccessText>
+                </Button>
             </StackPanel>
         <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True"/>
         </StackPanel>

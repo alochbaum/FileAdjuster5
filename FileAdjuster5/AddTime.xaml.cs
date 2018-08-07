@@ -19,6 +19,7 @@ namespace FileAdjuster5
     /// </summary>
     public partial class AddTime : Window
     {
+        private bool bltpEndLoaded = false, bltsDurLoaded = false;
         public AddTime()
         {
             InitializeComponent();
@@ -32,6 +33,28 @@ namespace FileAdjuster5
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
+        }
+
+        private void TimeSpanUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if(bltpEndLoaded&&bltsDurLoaded)
+            tpEnd.Value = tpStart.Value + tsDur.Value;
+        }
+
+        private void tpEnd_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (bltpEndLoaded && bltsDurLoaded)
+                tsDur.Value = tpEnd.Value - tpStart.Value;
+        }
+
+        private void tsDur_Loaded(object sender, RoutedEventArgs e)
+        {
+            bltsDurLoaded = true;
+        }
+
+        private void tpEnd_Loaded(object sender, RoutedEventArgs e)
+        {
+            bltpEndLoaded = true;
         }
     }
 }
