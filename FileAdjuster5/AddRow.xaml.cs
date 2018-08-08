@@ -59,6 +59,7 @@ namespace FileAdjuster5
                 if (myTimeWnd.ShowDialog() == true)
                 {
                     Param1.Text = myTimeWnd.GetParam1();
+                    Param2.Text = myTimeWnd.GetParam2();
                 }
             }
         }

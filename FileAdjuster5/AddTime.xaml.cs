@@ -19,6 +19,7 @@ namespace FileAdjuster5
     /// </summary>
     public partial class AddTime : Window
     {
+        private int iOtherChanges = 3;
         private bool bltpEndLoaded = false, bltsDurLoaded = false;
         public AddTime()
         {
@@ -30,31 +31,36 @@ namespace FileAdjuster5
             return tpStart.Text;
         }
 
+        public string GetParam2()
+        {
+            return tpEnd.Text;
+        }
+
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
         }
 
-        private void TimeSpanUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if(bltpEndLoaded&&bltsDurLoaded)
-            tpEnd.Value = tpStart.Value + tsDur.Value;
-        }
 
-        private void tpEnd_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void myValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (bltpEndLoaded && bltsDurLoaded)
-                tsDur.Value = tpEnd.Value - tpStart.Value;
-        }
-
-        private void tsDur_Loaded(object sender, RoutedEventArgs e)
-        {
-            bltsDurLoaded = true;
+            if (iOtherChanges < 1)
+            {
+                if (sender.Equals(tpEnd))
+                {
+                    tsDur.Value = tpEnd.Value - tpStart.Value;
+                }
+                else if (sender.Equals(tsDur) || (sender.Equals(tpStart)))
+                {
+                    tpEnd.Value = tpStart.Value + tsDur.Value;
+                }
+            }
+            else iOtherChanges--;
         }
 
         private void tpEnd_Loaded(object sender, RoutedEventArgs e)
         {
-            bltpEndLoaded = true;
+            iOtherChanges = 0;
         }
     }
 }

@@ -6,7 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="This sets a limited time window for dividing logs files." Height="160" Width="380">
+        Title="Enter Time Window" Height="160" Width="250">
     <Grid Margin="10,5,10,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -19,12 +19,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0">Start Time</Label>
-        <xctk:TimePicker x:Name="tpStart" Grid.Row="0" Grid.Column="1" Format="LongTime" DefaultValue="08/06/2018 00:30:00" DisplayDefaultValueOnEmptyText="True"></xctk:TimePicker>
+        <xctk:TimePicker x:Name="tpStart" Grid.Row="0" Grid.Column="1" Format="LongTime" DefaultValue="08/06/2018 00:30:00" DisplayDefaultValueOnEmptyText="True" ValueChanged="myValueChanged"></xctk:TimePicker>
         <Label Grid.Row="1" Grid.Column="0">Duration</Label>
-        <xctk:TimeSpanUpDown x:Name="tsDur"  Grid.Row="1" Grid.Column="1" ClipValueToMinMax="True" Text="0:30:00" Minimum="0:0:5" Maximum="23:0:0" ValueChanged="TimeSpanUpDown_ValueChanged" Loaded="tsDur_Loaded"/>
+        <xctk:TimeSpanUpDown x:Name="tsDur"  Grid.Row="1" Grid.Column="1" ClipValueToMinMax="True" Text="0:30:00" Minimum="0:0:5" Maximum="23:0:0" ValueChanged="myValueChanged" />
         <Label Grid.Row="2" Grid.Column="0">End Time</Label>
-        <xctk:TimePicker x:Name="tpEnd" Grid.Row="2" Grid.Column="1" Format="LongTime" ValueChanged="tpEnd_ValueChanged" Loaded="tpEnd_Loaded" Text="1:00:00 AM"></xctk:TimePicker>
-        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+        <xctk:TimePicker x:Name="tpEnd" Grid.Row="2" Grid.Column="1" Format="LongTime" ValueChanged="myValueChanged" Loaded="tpEnd_Loaded" Text="1:00:00 AM"></xctk:TimePicker>
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnOK" IsDefault="True" Width="60" Click="btnOK_Click">
                 <AccessText>_OK</AccessText>
             </Button>
