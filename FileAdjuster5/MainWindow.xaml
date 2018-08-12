@@ -13,7 +13,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -50,6 +50,7 @@
             <TextBox x:Name="tbOutFile"></TextBox>
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
+                <Button x:Name="btnLog" Margin="5,0,0,0" Click="btnLog_Click">Log</Button>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.Row="0"  Margin="0,0,0,7">

@@ -325,7 +325,9 @@ namespace FileAdjuster5
 
         private bool DoICopyStr(string strIn)
         {
-            bool blReturn = true, blDoingInclude = false;
+
+            if (strIn == null || strIn.Length < 1) return false;
+            bool blReturn = true, blDoingInclude = false, blInsideTW = false;
             foreach (DataRow dRow in MyDtable.Rows)
             {
                 // no use doing work if first parameter is empty
@@ -362,7 +364,61 @@ namespace FileAdjuster5
                             }
                             if (strIn.ToUpper().IndexOf(dRow[3].ToString().ToUpper()) >= 0) return true;
                             break;
-                        // Note: case comment does nothing
+                        // time case is type of include case
+                        case "Time_Window":
+                            if (!blDoingInclude)
+                            {
+                                blDoingInclude = true;
+                                blReturn = false;
+                            }
+                            // need both dRow[3] and dRow[4] for the bounds
+                            DateTime dtStartWin, dtEndWin;
+                            try
+                            {
+                                dtStartWin = DateTime.Parse("1/1/0001 " + dRow[3].ToString().Trim());
+                                dtEndWin = DateTime.Parse("1/1/0001 " + dRow[4].ToString().Trim());
+                            }
+                            catch (Exception errorCode)
+                            {
+                                log.Error("Error: Time Parsing " + errorCode.ToString() +" "+dRow[3].ToString()+" "+dRow[4].ToString());
+                                blDoingInclude = false;
+                                return false;
+                            }
+                            // some line don't start with number, if this is case check if blInsideTW, some new trace starts with [ characters
+                            if (char.IsNumber(strIn[0]) == true || strIn[0] == '[')
+                            {
+                                blInsideTW = false;
+                                int iFirstSpace = strIn.IndexOf(' ') + 1;
+                                // Test if trace log of GPI or other service which ends in period not AM or PM
+                                int iLastSpace = strIn.IndexOf('.');
+                                if (iLastSpace < 15 || iLastSpace > 23) iLastSpace = strIn.IndexOf('M') + 1;
+                                // the following might fail because of not containing time or can't parse time
+                                try
+                                {
+                                    string stTime = strIn.Substring(iFirstSpace, iLastSpace - iFirstSpace);
+                                   // log.Debug($"{strIn}=={stTime}");
+                                    DateTime dtReadtime = DateTime.Parse("1/1/0001 " + stTime);
+                                    // Time has to equal (0) or greater (positive) than start of window time to be in window
+                                    if (DateTime.Compare(dtReadtime, dtStartWin) < 0) return false;
+                                    // Time has to equal (0) or less (negative) than end of window time to be in window
+                                    if (DateTime.Compare(dtReadtime, dtEndWin) > 0) return false;
+                                    blReturn = blInsideTW = true;
+                                }
+                                catch (Exception errorCode)
+                                {
+                                    log.Error("Error " + errorCode.ToString() + " log.Error " + strIn);
+                                    return false;
+                                }
+                            }
+                            else if (!blInsideTW)
+                            {// some line don't start with time, if this is case check if blInsideTW
+                                return false;
+                            }
+                    
+                            break;
+                        default:
+                            // Note: case comment does nothing
+                            break;                
                     }
                 }
             }
@@ -381,6 +437,7 @@ namespace FileAdjuster5
                 Xceed.Wpf.Toolkit.MessageBox.Show("Error",
                     "Tried to open " + strFileOut + " in Notepad++.exe but failed",
                     MessageBoxButton.OK,MessageBoxImage.Error);
+                log.Error($"Failed Notepad++ open of {strFileOut}");
             }
         }
 
@@ -410,6 +467,7 @@ namespace FileAdjuster5
                 MyDtable.Rows.Clear();
                 Int64 i = FileAdjSQLite.GetActionint();
                 MyDtable.Rows.Add(1, ++i, "Comment", myGet.GetAnswer(), "");
+                log.Info("Cleared action");
             }
         }
 
@@ -418,7 +476,11 @@ namespace FileAdjuster5
             Int64 iGroup = MyDtable.Rows[0].Field<Int64>(1);
             SavePreset mySavePreset = new SavePreset(iGroup);
             if (mySavePreset.ShowDialog() == true)
-                rtbStatus.AppendText($"Saved preset for group {iGroup}\r\n");
+            {
+                string sTemp = $"Saved preset for group {iGroup}";
+                rtbStatus.AppendText($"{sTemp}\r\n");
+                log.Info(sTemp);
+            }
         }
 
         private void BtnLoadPreset_Click(object sender, RoutedEventArgs e)
@@ -458,6 +520,24 @@ namespace FileAdjuster5
                 dgActions.DataContext = MyDtable.DefaultView;
             }
         }
+
+        private void btnLog_Click(object sender, RoutedEventArgs e)
+        {
+            string strfilename = $"{ AppDomain.CurrentDomain.BaseDirectory }\\FileAdjuster5.log";
+            Process myProcess = new Process();
+            try
+            {
+
+                Process.Start("notepad++.exe", strfilename);
+            }
+            catch
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Error",
+                    "Tried to open " + strfilename + " in Notepad++.exe but failed",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void btnDelRow_Click(object sender, RoutedEventArgs e)
         {
             if (MyDtable.Rows.Count < 2)
