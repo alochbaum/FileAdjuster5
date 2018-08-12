@@ -47,6 +47,10 @@ namespace FileAdjuster5
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
+            if (Param1.Text.Length < 1)
+            {
+                MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show("There is no param 1 for this row", "Use Cancel if you don't want to add a row", MessageBoxButton.OK, MessageBoxImage.Error);
+            } else
             this.DialogResult = true;
         }
 

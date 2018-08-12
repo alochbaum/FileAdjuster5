@@ -378,7 +378,9 @@ namespace FileAdjuster5
             }
             catch
             {
-                MessageBox.Show("Tried to open " + strFileOut + " in Notepad++.exe but failed");
+                Xceed.Wpf.Toolkit.MessageBox.Show("Error",
+                    "Tried to open " + strFileOut + " in Notepad++.exe but failed",
+                    MessageBoxButton.OK,MessageBoxImage.Error);
             }
         }
 
@@ -434,7 +436,9 @@ namespace FileAdjuster5
         {
             if(dgActions.SelectedIndex<1)
             {
-                MessageBox.Show("You have to select a row below top row");
+                Xceed.Wpf.Toolkit.MessageBox.Show("Operational Hint-Left click on row",
+                    "You have to select a row below top row",
+                    MessageBoxButton.OK,MessageBoxImage.Exclamation);
             }
             else
             {
@@ -458,7 +462,9 @@ namespace FileAdjuster5
         {
             if (MyDtable.Rows.Count < 2)
             {
-                MessageBox.Show("Sorry you can't delete last row.");
+                Xceed.Wpf.Toolkit.MessageBox.Show("Operational Training",
+                    "Sorry you can't delete last row.",MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
             }
             else
             {
@@ -467,7 +473,9 @@ namespace FileAdjuster5
                 {
                     MyDtable.Rows[iTemp].Delete();
                 }
-                else MessageBox.Show("You have to select a valid row.");
+                else Xceed.Wpf.Toolkit.MessageBox.Show("Operational Hint-Left click on row", 
+                    "You have to select a valid row.",MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
             }
         }
 
