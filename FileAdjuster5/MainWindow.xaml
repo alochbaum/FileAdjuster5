@@ -49,7 +49,7 @@
             </StackPanel>
             <TextBox x:Name="tbOutFile"></TextBox>
             <StackPanel Orientation="Horizontal">
-                <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
+                <CheckBox x:Name="cbxCombineFiles" IsChecked="False" IsEnabled="False">Combine Files</CheckBox>
                 <Button x:Name="btnLog" Margin="5,0,0,0" Click="btnLog_Click">Log</Button>
             </StackPanel>
         </StackPanel>

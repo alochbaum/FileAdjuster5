@@ -113,7 +113,7 @@ namespace FileAdjuster5
             string[] words = strTemp.Split(' ');
             if(!Int64.TryParse(words[0],out lLinesPerFile))
             {
-                // Just for testing
+                log.Error("Error: Using default lines couldn't parse number of lines.");
                 lLinesPerFile = 10000;
             }
             btnCancel.IsEnabled = true;
@@ -144,8 +144,28 @@ namespace FileAdjuster5
             }
             myStartTime = DateTime.Now;
             rtbStatus.AppendText($"Started work at {myStartTime.TimeOfDay}\r\n");
-            MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
-            //MessageBox.Show("Started");
+            if (cbxCombineFiles.IsChecked == true)
+            {  // we will put all files in to one file group,
+                // I need to work out appending last file
+                if(lbFileNames.Items.Count>1)
+                    Xceed.Wpf.Toolkit.MessageBox.Show("Warning",
+                    "Only first file is processed, I haven't figured out group appending on combine files, you might try non-combined files.",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
+            } else
+            {
+                int iCountListbox = lbFileNames.Items.Count;
+                for(int i = 0; i < iCountListbox; i++)
+                {
+                    strTemp = lbFileNames.Items[i].ToString();
+                    tbOutFile.Text = NextFreeFilename(strTemp);
+                    strFileOut = tbOutFile.Text;
+                    MyWorker.DoWork += new DoWorkEventHandler("My_Worker");
+                    MyWorker.RunWorkerAsync(strTemp);
+                    
+                }
+
+            }
         }
 
         private void StackPanel_Drop(object sender, DragEventArgs e)
@@ -166,15 +186,30 @@ namespace FileAdjuster5
         {
             if (lbFileNames.Items.Count > 0)
             {
-                string strTemp = lbFileNames.Items[0].ToString();
-                // for root directories like e:\ they will come in with \
-                var baseDir = System.IO.Path.GetDirectoryName(strTemp);
-                string strFile = System.IO.Path.GetFileNameWithoutExtension(strTemp) + "-0";
-                tbOutFile.Text = baseDir + "\\" + strFile + tbExt.Text;
+                tbOutFile.Text = NextFreeFilename(lbFileNames.Items[0].ToString());
             } else
             {
                 tbOutFile.Text = "";
             }
+        }
+
+        private string NextFreeFilename(string inStr)
+        {
+            string strReturn = "";
+            if (File.Exists(inStr))
+            {
+                int i = 0;
+                do
+                {
+                    // for root directories like e:\ they will come in with \
+                    var baseDir = System.IO.Path.GetDirectoryName(inStr);
+                    string strFile = System.IO.Path.GetFileNameWithoutExtension(inStr) + "-"+
+                        i.ToString();
+                    strReturn = baseDir + "\\" + strFile + tbExt.Text;
+                    i++;
+                } while (File.Exists(strReturn));
+            }
+            return strReturn;
         }
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
