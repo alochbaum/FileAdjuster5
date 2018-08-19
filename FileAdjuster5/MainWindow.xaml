@@ -15,7 +15,7 @@
             <ColumnDefinition Width="2" />
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="2" />
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="224"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,13 +27,13 @@
         <StackPanel Grid.Column="0" Grid.Row="0">
             <StackPanel Orientation="Horizontal" Drop="StackPanel_Drop" AllowDrop="True">
                 <Label>Source File(s) [drag here or]</Label>
-                <Button x:Name="btnAddFile" Click="BtnAddFile_Click" Margin="0,0,5,0">
+                <Button x:Name="btnAddFile" Click="BtnAddFile_Click" Margin="0,0,5,0" ToolTip="Add a file to input file list below (alt a)">
                     <AccessText>_Add File</AccessText>
                 </Button>
-                <Button x:Name="btbClear" Click="BtnClear_Click" Margin="0,0,5,0">
+                <Button x:Name="btbClear" Click="BtnClear_Click" Margin="0,0,5,0" ToolTip="Clears input file list (alt c)">
                     <AccessText>_Clear</AccessText>
                 </Button>
-                <Button x:Name="btnHistory" Click="BtnHistory_Click" ToolTip="Load file(s) from previous starts." >
+                <Button x:Name="btnHistory" Click="BtnHistory_Click" ToolTip="Load file(s) from previous starts. (alt less than)" >
                     <AccessText>_&lt;</AccessText>
                 </Button>
             </StackPanel>
@@ -49,8 +49,8 @@
         </Rectangle>
         <StackPanel Grid.Column="2" Grid.Row="0" Margin="0,0,0,7">
             <StackPanel Orientation="Horizontal">
-                <Label>New File Name(s)</Label>
-                <Button x:Name="btnStart" Click="BtnStart_Click" Margin="0,0,5,0">
+                <Label>Output Name(s)</Label>
+                <Button x:Name="btnStart" Click="BtnStart_Click" Margin="0,0,5,0" ToolTip="Starts splitting clips in to lines at right to output files with actions (alt s)">
                     <AccessText>_Start</AccessText>
                 </Button>
                 <Button x:Name="btnCancel" Click="BtnCancel_Click" IsEnabled="False" Margin="0,0,5,0">
@@ -62,7 +62,7 @@
             <TextBox x:Name="tbOutFile"></TextBox>
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
-                <Button x:Name="btnLog" Margin="5,0,0,0" Click="btnLog_Click">Log</Button>
+                <Button x:Name="btnLog" Margin="5,0,0,0" Click="btnLog_Click" ToolTip="Loads program log file in Notepad ++ program">Log</Button>
             </StackPanel>
         </StackPanel>
         <Rectangle Grid.Column="3" Grid.Row="0">
@@ -75,9 +75,9 @@
         </Rectangle>
         <StackPanel Grid.Column="4" Grid.Row="0"  Margin="0,0,0,7">
             <StackPanel Orientation="Horizontal">
-                <Label>Size of output file(s) in lines</Label>
-                <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False" Click="btnOpenNotePad_Click">
-                    <AccessText>Open in Notepad_++</AccessText>
+                <Label>Number of Lines in Output</Label>
+                <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False" Click="btnOpenNotePad_Click" ToolTip="Open Output File in Notepad++ program (alt +)" >
+                    <AccessText>Notepad_++</AccessText>
                 </Button>
             </StackPanel>
             <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" />
@@ -94,14 +94,21 @@
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
                 <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click">Add Row</Button>
+                <Button x:Name="btnQuickInsert" Margin="0,0,5,0" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="btnQuickInsert_Click">
+                    <AccessText>_Q-I</AccessText>
+                </Button>
+                <Button x:Name="btnQuickExclude" Margin="0,0,5,0" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="btnQuickExclude_Click" >
+                    <AccessText>Q-_X</AccessText>
+                </Button>
                 <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="btnClearRows_Click" Content="Clear or New Action"/>
                 <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="btnDelRow_Click">Delete Row</Button>
                 <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="btnSwapAbove_Click">Swap with Row Above</Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click">Save as Preset</Button>
-                <Label Content="Change Row Grid -->" Margin="0,0,5,0"></Label>
-                <Button x:Name="btnLoadPreset" Margin="0,0,5,0" Click="BtnLoadPreset_Click">Load Preset</Button>
-                <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous start.">
+                <Button x:Name="btnLoadPreset" Margin="0,0,5,0" Click="BtnLoadPreset_Click" ToolTip="Loads Action Presets (alt L)">
+                    <AccessText>_Load Preset</AccessText>
+                </Button>
+                <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous start. (alt =)">
                     <AccessText>&lt;_=</AccessText>
                 </Button>
             </StackPanel>

@@ -582,6 +582,47 @@ namespace FileAdjuster5
             }
         }
 
+        private void btnQuickInsert_Click(object sender, RoutedEventArgs e)
+        {
+            if (Clipboard.ContainsText(TextDataFormat.Text))
+            {
+                string clipboardText = Clipboard.GetText(TextDataFormat.Text);
+                QuickAddRow("Include", clipboardText);
+            } else
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Can't read clipboard",
+                    "Can't insert Include action from clipboard text",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        private void QuickAddRow(string strAction, string strParam1)
+        {
+            blUsingActionsHistory = false;
+            int i = MyDtable.Rows.Count;
+            DataRow drow = MyDtable.Rows[--i];
+            Int64 iOrder = drow.Field<Int64>("Order");
+            // need to get last order number to increase by one
+            MyDtable.Rows.Add(++iOrder, drow.Field<Int64>("Group"), strAction, strParam1, "");
+
+        }
+
+        private void btnQuickExclude_Click(object sender, RoutedEventArgs e)
+        {
+            if (Clipboard.ContainsText(TextDataFormat.Text))
+            {
+                string clipboardText = Clipboard.GetText(TextDataFormat.Text);
+                QuickAddRow("Exclude", clipboardText);
+            }
+            else
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Can't read clipboard",
+                    "Can't insert Include action from clipboard text",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+
+        }
+
         private void btnLog_Click(object sender, RoutedEventArgs e)
         {
             string strfilename = $"{ AppDomain.CurrentDomain.BaseDirectory }\\FileAdjuster5.log";
