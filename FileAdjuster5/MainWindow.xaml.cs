@@ -39,9 +39,14 @@ namespace FileAdjuster5
         private bool blPosNum = true;
         // If using File History this is set, so history isn't saved twice
         private bool blUsingHistory = true;
-        // This stores extension for creating output files
-        private bool blUsingActions = false;
+        // Same for Action History
+        private bool blUsingActionsHistory = false;
+        // Passes Combine Files to thread
+        private bool blCombineFiles = true;
+        // Passes string extension to NextFile function when used in thread
         private string strExt = ".txt";
+        // Private passes list of filenames to thread
+        //private List<string> lFileList;
         private DateTime myStartTime;
         private DataTable MyDtable = new DataTable();
 
@@ -106,8 +111,6 @@ namespace FileAdjuster5
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
-            strFileOut = tbOutFile.Text;
-            strExt = tbExt.Text;
             // cblines stores the number of lines to work 
             string strTemp = cbLines.SelectedValue.ToString();
             string[] words = strTemp.Split(' ');
@@ -131,7 +134,7 @@ namespace FileAdjuster5
             }
             Int64 lTemp = FileAdjSQLite.GetActionint();
             lTemp++;
-            if (blUsingActions)
+            if (!blUsingActionsHistory)
             {
                 rtbStatus.AppendText("Saving Action Grid \r\n");
                 foreach (DataRow myRow in MyDtable.Rows)
@@ -144,27 +147,20 @@ namespace FileAdjuster5
             }
             myStartTime = DateTime.Now;
             rtbStatus.AppendText($"Started work at {myStartTime.TimeOfDay}\r\n");
-            if (cbxCombineFiles.IsChecked == true)
-            {  // we will put all files in to one file group,
-                // I need to work out appending last file
-                if(lbFileNames.Items.Count>1)
-                    Xceed.Wpf.Toolkit.MessageBox.Show("Warning",
-                    "Only first file is processed, I haven't figured out group appending on combine files, you might try non-combined files.",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                MyWorker.RunWorkerAsync(lbFileNames.Items[0].ToString());
-            } else
+            int iCountListbox = lbFileNames.Items.Count;
+            if (iCountListbox > 0)
             {
-                int iCountListbox = lbFileNames.Items.Count;
-                for(int i = 0; i < iCountListbox; i++)
+                // Load up passing private variable for thread
+                strFileOut = tbOutFile.Text;
+                strExt = tbExt.Text;
+                blCombineFiles = (bool)cbxCombineFiles.IsChecked;
+                List<string> lFileList = new List<string>();
+                for (int i = 0; i < iCountListbox; i++)
                 {
-                    strTemp = lbFileNames.Items[i].ToString();
-                    tbOutFile.Text = NextFreeFilename(strTemp);
-                    strFileOut = tbOutFile.Text;
-                    MyWorker.DoWork += new DoWorkEventHandler("My_Worker");
-                    MyWorker.RunWorkerAsync(strTemp);
-                    
+                    lFileList.Add(lbFileNames.Items[i].ToString());
+                      // passing extension because function below is also used in thread
                 }
-
+                MyWorker.RunWorkerAsync(lFileList);
             }
         }
 
@@ -186,6 +182,7 @@ namespace FileAdjuster5
         {
             if (lbFileNames.Items.Count > 0)
             {
+                strExt = tbExt.Text;  // passing extension because function below is also used in thread
                 tbOutFile.Text = NextFreeFilename(lbFileNames.Items[0].ToString());
             } else
             {
@@ -198,15 +195,34 @@ namespace FileAdjuster5
             string strReturn = "";
             if (File.Exists(inStr))
             {
-                int i = 0;
                 do
                 {
-                    // for root directories like e:\ they will come in with \
+                    // the might have gone through one time and is repeated because it exists
+                    if (strReturn.Length > 1) inStr = strReturn;
                     var baseDir = System.IO.Path.GetDirectoryName(inStr);
-                    string strFile = System.IO.Path.GetFileNameWithoutExtension(inStr) + "-"+
-                        i.ToString();
-                    strReturn = baseDir + "\\" + strFile + tbExt.Text;
-                    i++;
+                    string strFile = System.IO.Path.GetFileNameWithoutExtension(inStr);
+                    // this has file name might have at end starting with "-0";
+                    int iTemp = strFile.LastIndexOf('-');
+                    int iiTemp = 0;
+                    // if you didn't find a hyphen do default
+                    if (iTemp > 0)
+                    {
+                        string strFront = strFile.Substring(0, iTemp);
+                        string strEnd = strFile.Substring(++iTemp, strFile.Length - iTemp);
+                        bool successfullyParsed = int.TryParse(strEnd, out iiTemp);
+                        if (successfullyParsed)
+                        {
+                            iiTemp++;
+                            strReturn = baseDir + "\\" + strFront + "-" + iiTemp.ToString()
+                                + strExt;
+                        } else
+                        {
+                            strReturn = baseDir + "\\" + strFile + "-0" + tbExt.Text;
+                        }
+                    } else
+                    {
+                        strReturn = baseDir + "\\" + strFile +"-0" + tbExt.Text;
+                    }
                 } while (File.Exists(strReturn));
             }
             return strReturn;
@@ -253,25 +269,32 @@ namespace FileAdjuster5
 
         private void MyWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            input = File.Open(e.Argument.ToString(), FileMode.Open);
-            output = File.Open(strFileOut, FileMode.Create);
+            List<string> lInFiles = (List<string>)e.Argument;
             long lNumOfLines = 0;
-            lPosition = 0;
-            FileInfo f = new FileInfo(e.Argument.ToString());
-            lFileSize = f.Length;
-            byte[] inbuffer = new byte[16 * 4096];
-            byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
-            byte[] strbuffer = new byte[2003];
-            string strHoldLast50 = "";
-            int read, icount, iStrLen=0;
-            long lStoredPosition = 0;
-            bool blHitLastLine = false;
-            bool blLineOverRun = false;
-      
-            int iOut = 0;
-            // looping the full file size
-            while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
+            bool blWorkingInsideFileList = false;
+            foreach (string sInFile in lInFiles)
             {
+                input = File.Open(sInFile, FileMode.Open);
+                // skipping opening new file if blWorkingInsideFileList and Combine
+                if (!(blCombineFiles&&blWorkingInsideFileList))
+                    output = File.Open(strFileOut, FileMode.Create);
+                blWorkingInsideFileList = true;
+                lPosition = 0;
+                FileInfo f = new FileInfo(sInFile);
+                lFileSize = f.Length;
+                byte[] inbuffer = new byte[16 * 4096];
+                byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
+                byte[] strbuffer = new byte[2003];
+                string strHoldLast50 = "";
+                int read, icount, iStrLen = 0;
+                long lStoredPosition = 0;
+                bool blHitLastLine = false;
+                bool blLineOverRun = false;
+
+                int iOut = 0;
+                // looping the full file size
+                while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
+                {
                     iOut = 0;
                     // looping the input buffer
                     for (icount = 0; icount < read; icount++)
@@ -311,7 +334,7 @@ namespace FileAdjuster5
                                 lNullsNum++;
                             else
                             {
-                               {
+                                {
                                     strRTB = strHoldLast50;
                                     if (blPosNum)
                                     {
@@ -332,30 +355,33 @@ namespace FileAdjuster5
                             outbuffer[iOut] = inbuffer[icount];
                             output.Write(outbuffer, 0, iOut);
                             output.Close();
-                            strFileOut = ComputeNewFileOut(strFileOut);
+                            strFileOut = NextFreeFilename(strFileOut);
                             output = File.Open(strFileOut, FileMode.Create);
                             lNumOfLines = 0;
                             iOut = 0;
                         }
                     }  // end looping input buffer
-                // writing to output buffer
+                       // writing to output buffer
+                    if (iOut > 0)
+                    {
+                        output.Write(outbuffer, 0, iOut);
+                        lPosition += read;
+                        // checking to see if user click cancel, if they did get out of loop
+                        if (MyWorker.CancellationPending) break;
+                        MyWorker.ReportProgress((int)(((double)lPosition / (double)lFileSize) * 100.0));
+                    } // end looping output files
+                } // finished reading last block
+                  // finish writing out block
                 if (iOut > 0)
                 {
                     output.Write(outbuffer, 0, iOut);
-                    lPosition += read;
-                    // checking to see if user click cancel, if they did get out of loop
-                    if (MyWorker.CancellationPending) break;
-                    MyWorker.ReportProgress((int)(((double)lPosition / (double)lFileSize) * 100.0));
-                } // end looping output files
-            } // finished reading last block
-            // finish writing out block
-            if (iOut > 0)
-            {
-                output.Write(outbuffer, 0, iOut);
-            }
-            output.Close();
-            input.Close();
-            if (MyWorker.CancellationPending) e.Cancel = true;
+                }
+                if(!blCombineFiles)
+                output.Close();
+                input.Close();
+                if (MyWorker.CancellationPending) e.Cancel = true;
+            } // end of input files
+            if (blCombineFiles) output.Close();
         }
 
         private bool DoICopyStr(string strIn)
@@ -482,7 +508,7 @@ namespace FileAdjuster5
             AddRow myAddRow = new AddRow();
             if(myAddRow.ShowDialog()==true)
             {
-                blUsingActions = true;
+                blUsingActionsHistory = false;
                 List<string> inString = myAddRow.GetSettings();
                 int i = MyDtable.Rows.Count;
                 DataRow drow = MyDtable.Rows[--i];
@@ -498,7 +524,7 @@ namespace FileAdjuster5
             GetString myGet = new GetString("Enter Comment String","A new set of actions start with a comment");
             if(myGet.ShowDialog()==true)
             {
-                blUsingActions = false;
+                blUsingActionsHistory = true;
                 MyDtable.Rows.Clear();
                 Int64 i = FileAdjSQLite.GetActionint();
                 MyDtable.Rows.Add(1, ++i, "Comment", myGet.GetAnswer(), "");
@@ -593,22 +619,7 @@ namespace FileAdjuster5
                     MessageBoxImage.Exclamation);
             }
         }
-
-        private string ComputeNewFileOut(string inStr)
-        {
-            string strOut = "";
-            var baseDir = System.IO.Path.GetDirectoryName(inStr);
-            string strFile = System.IO.Path.GetFileNameWithoutExtension(inStr);
-            // this has file name plus number at end starting with "-0";
-            int iTemp = strFile.LastIndexOf('-');
-            string strFront = strFile.Substring(0, iTemp);
-            string strEnd = strFile.Substring(++iTemp, strFile.Length - iTemp);
-            int iiTemp = int.Parse(strEnd);
-            iiTemp++;
-            strOut = baseDir + "\\" + strFront +"-"+ iiTemp.ToString()
-                + strExt;
-            return strOut;
-        }
+        
         void MyWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             pbProgress.Value = e.ProgressPercentage;
