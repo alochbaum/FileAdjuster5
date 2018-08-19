@@ -15,7 +15,7 @@
             <ColumnDefinition Width="2" />
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="2" />
-            <ColumnDefinition Width="224"/>
+            <ColumnDefinition Width="247"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -78,6 +78,9 @@
                 <Label>Number of Lines in Output</Label>
                 <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False" Click="btnOpenNotePad_Click" ToolTip="Open Output File in Notepad++ program (alt +)" >
                     <AccessText>Notepad_++</AccessText>
+                </Button>
+                <Button x:Name="btnOpenDir" Margin="5,0,0,0" ToolTip="Open Output File's directory (alt d)" Click="btnOpenDir_Click" >
+                    <AccessText>dir</AccessText>
                 </Button>
             </StackPanel>
             <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" />

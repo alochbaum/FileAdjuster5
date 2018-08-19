@@ -623,6 +623,28 @@ namespace FileAdjuster5
 
         }
 
+        private void btnOpenDir_Click(object sender, RoutedEventArgs e)
+        {
+            if(tbOutFile.Text.Length >1)
+            {
+                string strDir = System.IO.Path.GetDirectoryName(tbOutFile.Text);
+                if(strDir.Length > 1)
+                {
+                    System.Diagnostics.Process.Start(strDir);
+                } else
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show("Can't open directory",
+                        "Program didn't parse directory from output file.",
+                        MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+            } else
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Can't open directory",
+                    "This button is linked to output file, and it is empty.",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
         private void btnLog_Click(object sender, RoutedEventArgs e)
         {
             string strfilename = $"{ AppDomain.CurrentDomain.BaseDirectory }\\FileAdjuster5.log";
