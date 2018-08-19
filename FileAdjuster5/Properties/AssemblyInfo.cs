@@ -51,8 +51,8 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.1.11.0")]
-[assembly: AssemblyFileVersion("5.1.11.0")]
+[assembly: AssemblyVersion("5.1.12.12")]
+[assembly: AssemblyFileVersion("5.1.12.12")]
 
 // Added for logging
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
