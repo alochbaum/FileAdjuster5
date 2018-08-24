@@ -111,7 +111,7 @@ namespace FileAdjuster5
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
-            // cblines stores the number of lines to work 
+            // cblines stores the number of lines in format <num of lines>space some other text
             string strTemp = cbLines.SelectedValue.ToString();
             string[] words = strTemp.Split(' ');
             if(!Int64.TryParse(words[0],out lLinesPerFile))
@@ -132,19 +132,7 @@ namespace FileAdjuster5
                     FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString(),tbExt.Text);
                 }
             }
-            Int64 lTemp = FileAdjSQLite.GetActionint();
-            lTemp++;
-            if (!blUsingActionsHistory)
-            {
-                rtbStatus.AppendText("Saving Action Grid \r\n");
-                foreach (DataRow myRow in MyDtable.Rows)
-                {
-                    FileAdjSQLite.WriteAction(myRow.Field<Int64>("Order"),
-                        lTemp, myRow.Field<string>("Action"),
-                        myRow.Field<string>("Parameter1"),
-                        myRow.Field<string>("Parameter2"));
-                }
-            }
+            if (!blUsingActionsHistory)SaveHistory();
             myStartTime = DateTime.Now;
             rtbStatus.AppendText($"Started work at {myStartTime.TimeOfDay}\r\n");
             int iCountListbox = lbFileNames.Items.Count;
@@ -264,8 +252,23 @@ namespace FileAdjuster5
                 FileAdjSQLite.GetActionDate(lLastAction);
             log.Debug(sTemp);
             rtbStatus.AppendText(sTemp+"\r\n");
+            blUsingActionsHistory = true;
         }
 
+        private void SaveHistory()
+        {
+            Int64 lTemp = FileAdjSQLite.GetActionint();
+            lTemp++;
+            rtbStatus.AppendText("Saving Action Grid \r\n");
+            foreach (DataRow myRow in MyDtable.Rows)
+            {
+                FileAdjSQLite.WriteAction(myRow.Field<Int64>("Order"),
+                    lTemp, myRow.Field<string>("Action"),
+                    myRow.Field<string>("Parameter1"),
+                    myRow.Field<string>("Parameter2"));
+            }
+            blUsingActionsHistory = false;
+        }
 
         private void MyWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -524,7 +527,7 @@ namespace FileAdjuster5
             GetString myGet = new GetString("Enter Comment String","A new set of actions start with a comment");
             if(myGet.ShowDialog()==true)
             {
-                blUsingActionsHistory = true;
+                blUsingActionsHistory = false;
                 MyDtable.Rows.Clear();
                 Int64 i = FileAdjSQLite.GetActionint();
                 MyDtable.Rows.Add(1, ++i, "Comment", myGet.GetAnswer(), "");
@@ -534,6 +537,7 @@ namespace FileAdjuster5
 
         private void BtnSavePreset_Click(object sender, RoutedEventArgs e)
         {
+            if (!blUsingActionsHistory) SaveHistory();
             Int64 iGroup = MyDtable.Rows[0].Field<Int64>(1);
             SavePreset mySavePreset = new SavePreset(iGroup);
             if (mySavePreset.ShowDialog() == true)

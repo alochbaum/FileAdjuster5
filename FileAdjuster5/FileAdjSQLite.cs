@@ -140,7 +140,8 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "Select DateAdded from ActionTable order by GroupID desc limit 1;";
+                string sql = "Select DateAdded from ActionTable where GroupID = " 
+                    + iGroup.ToString() + " order by TableID desc limit 1;";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
                 if (reader.HasRows)
