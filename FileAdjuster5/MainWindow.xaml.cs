@@ -259,13 +259,15 @@ namespace FileAdjuster5
         {
             Int64 lTemp = FileAdjSQLite.GetActionint();
             lTemp++;
-            rtbStatus.AppendText("Saving Action Grid \r\n");
+            rtbStatus.AppendText($"Saving Action Grid As Group {lTemp}\r\n");
             foreach (DataRow myRow in MyDtable.Rows)
             {
                 FileAdjSQLite.WriteAction(myRow.Field<Int64>("Order"),
                     lTemp, myRow.Field<string>("Action"),
                     myRow.Field<string>("Parameter1"),
                     myRow.Field<string>("Parameter2"));
+                // updating on screen numbers
+                myRow["Group"] = lTemp;
             }
             blUsingActionsHistory = false;
         }
