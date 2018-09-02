@@ -100,12 +100,22 @@ namespace FileAdjuster5
             // Show save file dialog box
             Nullable<bool> result = dlg.ShowDialog();
 
-            // Process save file dialog box results
             if (result == true)
             {
-                // Save document
-                //tbDBLocation.Text = dlg.FileName;
-                lbFileNames.Items.Add(dlg.FileName);
+                AddFile(dlg.FileName);
+            }
+        }
+
+        private void AddFile(string strFilename)
+        {
+            if (File.Exists(strFilename))
+            {
+                lbFileNames.Items.Add(strFilename);
+            } else
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("File doesn't exist",
+                    "File not added because it doesn't exit",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -218,6 +228,11 @@ namespace FileAdjuster5
         }
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
+        {
+            ClearFiles();
+        }
+
+        private void ClearFiles()
         {
             blUsingHistory = false;
             tbExt.Text = ".txt";
@@ -663,6 +678,12 @@ namespace FileAdjuster5
                     "This button is linked to output file, and it is empty.",
                     MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
+        }
+
+        private void btnOut2In_Click(object sender, RoutedEventArgs e)
+        {
+            ClearFiles();
+            AddFile(strFileOut);
         }
 
         private void btnLog_Click(object sender, RoutedEventArgs e)

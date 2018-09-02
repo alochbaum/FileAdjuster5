@@ -37,7 +37,7 @@
                     <AccessText>_&lt;</AccessText>
                 </Button>
             </StackPanel>
-            <ListBox x:Name="lbFileNames" />
+            <ListBox x:Name="lbFileNames" FlowDirection="RightToLeft" />
         </StackPanel>
         <Rectangle Grid.Column="1" Grid.Row="0">
             <Rectangle.Fill>
@@ -59,9 +59,10 @@
                 <Label Content="extension: "></Label>
                 <TextBox x:Name="tbExt" VerticalAlignment="Center">.txt</TextBox>
             </StackPanel>
-            <TextBox x:Name="tbOutFile"></TextBox>
+            <TextBox x:Name="tbOutFile" FlowDirection="RightToLeft"/>
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
+                <Button x:Name="btnOut2In" Margin="5,0,0,0" ToolTip="Clears Input files and puts current output file to be new input" Click="btnOut2In_Click">Out2In</Button>
                 <Button x:Name="btnLog" Margin="5,0,0,0" Click="btnLog_Click" ToolTip="Loads program log file in Notepad ++ program">Log</Button>
             </StackPanel>
         </StackPanel>
