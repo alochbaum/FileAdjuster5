@@ -29,7 +29,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <PublisherName>Andrew Lochbaum</PublisherName>
     <ApplicationRevision>13</ApplicationRevision>
-    <ApplicationVersion>5.1.12.%2a</ApplicationVersion>
+    <ApplicationVersion>5.1.13.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -56,7 +56,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>42E06C28E720230CA4D1C69598837574DC8FDBD4</ManifestCertificateThumbprint>

@@ -119,6 +119,7 @@ namespace FileAdjuster5
                 log.Error("Error: Using default lines couldn't parse number of lines.");
                 lLinesPerFile = 10000;
             }
+            log.Debug($"Start button with line limit of {lLinesPerFile} ");
             btnCancel.IsEnabled = true;
             btnOpenNotePad.IsEnabled = false;
             btnStart.IsEnabled = false;
@@ -277,29 +278,39 @@ namespace FileAdjuster5
             List<string> lInFiles = (List<string>)e.Argument;
             long lNumOfLines = 0;
             bool blWorkingInsideFileList = false;
+            long lNumFiles = lInFiles.Count;
+            long lCurNumFile = 0, lCurBytesRead = 0;
+            byte[] inbuffer = new byte[16 * 4096];
+            byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
+            byte[] strbuffer = new byte[2003];
+            string strHoldLast50 = "";
+            int read, icount, iStrLen = 0;
+            int iOut = 0;
+            long lStoredPosition = 0;
+            bool blHitLastLine = false;
+            bool blLineOverRun = false;
+
             foreach (string sInFile in lInFiles)
             {
                 input = File.Open(sInFile, FileMode.Open);
+                lCurNumFile++;
                 // skipping opening new file if blWorkingInsideFileList and Combine
                 if (!(blCombineFiles&&blWorkingInsideFileList))
                     output = File.Open(strFileOut, FileMode.Create);
                 blWorkingInsideFileList = true;
-                lPosition = 0;
+                lPosition = 0;  // stores output file position
                 FileInfo f = new FileInfo(sInFile);
                 lFileSize = f.Length;
-                byte[] inbuffer = new byte[16 * 4096];
-                byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
-                byte[] strbuffer = new byte[2003];
-                string strHoldLast50 = "";
-                int read, icount, iStrLen = 0;
-                long lStoredPosition = 0;
-                bool blHitLastLine = false;
-                bool blLineOverRun = false;
+                strHoldLast50 = "";
+                iOut = read = icount= iStrLen = 0;
+                lStoredPosition = 0;
+                blHitLastLine = false;
+                blLineOverRun = false;
 
-                int iOut = 0;
                 // looping the full file size
                 while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
                 {
+                    lCurBytesRead += 65376;
                     iOut = 0;
                     // looping the input buffer
                     for (icount = 0; icount < read; icount++)
@@ -365,6 +376,7 @@ namespace FileAdjuster5
                             lNumOfLines = 0;
                             iOut = 0;
                         }
+
                     }  // end looping input buffer
                        // writing to output buffer
                     if (iOut > 0)
@@ -373,7 +385,9 @@ namespace FileAdjuster5
                         lPosition += read;
                         // checking to see if user click cancel, if they did get out of loop
                         if (MyWorker.CancellationPending) break;
-                        MyWorker.ReportProgress((int)(((double)lPosition / (double)lFileSize) * 100.0));
+                        MyWorker.ReportProgress(
+                             (int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
+                             (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
                     } // end looping output files
                 } // finished reading last block
                   // finish writing out block
@@ -691,11 +705,18 @@ namespace FileAdjuster5
         
         void MyWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            pbProgress.Value = e.ProgressPercentage;
+            int i = e.ProgressPercentage;
+            //log.Debug($"Progress of {i}");
+            int ii = i % 100;
+            pbProgress.Value = ii;
+            if (i > 1000)
+                pbFiles.Value = (i - ii) / 1000;
+            else pbFiles.Value = 0;
         }
         void MyWorker_Complete(object sender, RunWorkerCompletedEventArgs e)
         {
             pbProgress.Value = 0;
+            pbFiles.Value = 0;
             tbOutFile.Text = strFileOut;
             btnStart.IsEnabled = true;
             btnOpenNotePad.IsEnabled = true;
