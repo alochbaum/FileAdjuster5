@@ -61,7 +61,8 @@
             </StackPanel>
             <TextBox x:Name="tbOutFile" FlowDirection="RightToLeft"/>
             <StackPanel Orientation="Horizontal">
-                <CheckBox x:Name="cbxCombineFiles" IsChecked="True">Combine Files</CheckBox>
+                <CheckBox x:Name="cbxCombineFiles" Margin="5,0,0,0" IsChecked="True">Combine Files</CheckBox>
+                <CheckBox x:Name="cbxFileHeaders" Margin="5,0,0,0" IsChecked="True">Headers</CheckBox>
                 <Button x:Name="btnOut2In" Margin="5,0,0,0" ToolTip="Clears Input files and puts current output file to be new input" Click="btnOut2In_Click">Out2In</Button>
                 <Button x:Name="btnLog" Margin="5,0,0,0" Click="btnLog_Click" ToolTip="Loads program log file in Notepad ++ program">Log</Button>
             </StackPanel>

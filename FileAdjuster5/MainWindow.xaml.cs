@@ -43,6 +43,8 @@ namespace FileAdjuster5
         private bool blUsingActionsHistory = false;
         // Passes Combine Files to thread
         private bool blCombineFiles = true;
+        // Passes Use Headers to thread
+        private bool blUseHeaders = true;
         // Passes string extension to NextFile function when used in thread
         private string strExt = ".txt";
         // Private passes list of filenames to thread
@@ -153,6 +155,7 @@ namespace FileAdjuster5
                 strFileOut = tbOutFile.Text;
                 strExt = tbExt.Text;
                 blCombineFiles = (bool)cbxCombineFiles.IsChecked;
+                blUseHeaders = (bool)cbxFileHeaders.IsChecked;
                 List<string> lFileList = new List<string>();
                 for (int i = 0; i < iCountListbox; i++)
                 {
@@ -314,6 +317,16 @@ namespace FileAdjuster5
                     output = File.Open(strFileOut, FileMode.Create);
                 blWorkingInsideFileList = true;
                 lPosition = 0;  // stores output file position
+                // writing header
+                if (blUseHeaders)
+                {
+                    const string csBound = "========\r\n";
+                    byte[] baBound = Encoding.ASCII.GetBytes(csBound);
+                    output.Write(baBound, 0, 10);
+                    byte[] baFile = Encoding.ASCII.GetBytes(sInFile + "\r\n");
+                    output.Write(baFile, 0, baFile.Length);
+                    output.Write(baBound, 0, 10);
+                }
                 FileInfo f = new FileInfo(sInFile);
                 lFileSize = f.Length;
                 strHoldLast50 = "";
