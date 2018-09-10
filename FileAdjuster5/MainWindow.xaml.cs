@@ -21,6 +21,15 @@ using System.Diagnostics;
 
 namespace FileAdjuster5
 {
+    [Flags] public enum _eChecked : Int64
+    {
+        CombineFile = 0,
+        Headers     = 1 << 0,
+        Reserved    = 1 << 1,
+        NoDate      = 1 << 2,
+        NoBracket   = 1 << 3,
+        NoSecond    = 1 << 4
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -42,6 +51,7 @@ namespace FileAdjuster5
         // Same for Action History
         private bool blUsingActionsHistory = false;
         // Passes Combine Files to thread
+        Int64 I64_eChecked = 0;
         private bool blCombineFiles = true;
         // Passes Use Headers to thread
         private bool blUseHeaders = true;
@@ -164,6 +174,26 @@ namespace FileAdjuster5
                 }
                 MyWorker.RunWorkerAsync(lFileList);
             }
+        }
+
+        private Int64 CollectChecks()
+        {
+            _eChecked Ireturn = 0;
+            if (cbxCombineFiles.IsChecked == true) Ireturn |= _eChecked.CombineFile;
+            if (cbxFileHeaders.IsChecked == true) Ireturn |= _eChecked.Headers;
+            if (cbxNoBracket.IsChecked == true) Ireturn |= _eChecked.NoBracket;
+            if (cbxNoDate.IsChecked == true) Ireturn |= _eChecked.NoDate;
+            if (cbxNoSecond.IsChecked == true) Ireturn |= _eChecked.NoSecond;
+            return (Int64)Ireturn;
+        }
+
+        private void SetChecks(_eChecked InCheck)
+        {
+            if ((InCheck & _eChecked.CombineFile) != 0) cbxCombineFiles.IsChecked = true;
+            if ((InCheck & _eChecked.Headers) != 0) cbxFileHeaders.IsChecked = true;
+            if ((InCheck & _eChecked.NoBracket) != 0) cbxNoBracket.IsChecked = true;
+            if ((InCheck & _eChecked.NoDate) != 0) cbxNoDate.IsChecked = true;
+            if ((InCheck & _eChecked.NoSecond) != 0) cbxNoSecond.IsChecked = true;
         }
 
         private void StackPanel_Drop(object sender, DragEventArgs e)
