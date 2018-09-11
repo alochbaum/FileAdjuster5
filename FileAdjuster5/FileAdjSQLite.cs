@@ -155,6 +155,12 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return strReturn;
         }
+
+        static public Int64 GetPresetFlags(Int64 iGroup)
+        {
+            Int64 iReturn = 3;
+            return iReturn;
+        }
         static public bool WriteHistory(Int64 iGroup,string strFileName,string strExt)
         {
             bool blreturn = false;

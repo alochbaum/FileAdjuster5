@@ -23,7 +23,8 @@ namespace FileAdjuster5
     public partial class FindPreset : Window
     {
         private DataTable MyDTPresets = new DataTable();
-        public Int64 iGroup = -1;
+        private Int64 iGroup = -1;
+        private Int64 iFlag = 3;
         private static readonly log4net.ILog log =
 log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
