@@ -273,7 +273,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return blreturn;
         }
-        static public bool WritePreset(string strGroup, string strTitle, Int64 iGroup)
+        static public bool WritePreset(string strGroup, string strTitle, Int64 iGroup, Int64 iFlag)
         {
             bool blreturn = false;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -282,8 +282,8 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sqlcmd = "insert into ActionPreset (PTypeId,PresetName,GroupID) " +
-                    " select PTypeID,'" + strTitle + "','" + iGroup.ToString() +
+                string sqlcmd = "insert into ActionPreset (PTypeId,PresetName,GroupID,Flags) " +
+                    " select PTypeID,'" + strTitle + "','" + iGroup.ToString() + iFlag.ToString() +"','" +
                     "' from ActionPresetType where PresetType = '" + strGroup + "';";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
                 int rows = command.ExecuteNonQuery();

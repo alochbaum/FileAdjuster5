@@ -51,10 +51,7 @@ namespace FileAdjuster5
         // Same for Action History
         private bool blUsingActionsHistory = false;
         // Passes Combine Files to thread
-        Int64 I64_eChecked = 0;
-        private bool blCombineFiles = true;
-        // Passes Use Headers to thread
-        private bool blUseHeaders = true;
+        private Int64 I64_eChecked = 0;
         // Passes string extension to NextFile function when used in thread
         private string strExt = ".txt";
         // Private passes list of filenames to thread
@@ -115,6 +112,11 @@ namespace FileAdjuster5
             if (result != null && result == true)
             {
                 AddFile(dlg.FileName);
+                log.Debug($"Added File { dlg.FileName}");
+            }
+            else
+            {
+                if (result == null) log.Debug("File Open Dialog returned null");
             }
         }
 
@@ -164,8 +166,7 @@ namespace FileAdjuster5
                 // Load up passing private variable for thread
                 strFileOut = tbOutFile.Text;
                 strExt = tbExt.Text;
-                blCombineFiles = (bool)cbxCombineFiles.IsChecked;
-                blUseHeaders = (bool)cbxFileHeaders.IsChecked;
+                I64_eChecked = CollectChecks();
                 List<string> lFileList = new List<string>();
                 for (int i = 0; i < iCountListbox; i++)
                 {
@@ -206,6 +207,7 @@ namespace FileAdjuster5
                 foreach (string file in files)
                 {
                     lbFileNames.Items.Add(file);
+                    log.Debug($"Dropped file {file}");
                 }
             }
         }
@@ -343,12 +345,15 @@ namespace FileAdjuster5
                 input = File.Open(sInFile, FileMode.Open);
                 lCurNumFile++;
                 // skipping opening new file if blWorkingInsideFileList and Combine
-                if (!(blCombineFiles&&blWorkingInsideFileList))
+                if (!(blWorkingInsideFileList&&(!((I64_eChecked & (Int64)_eChecked.CombineFile) == 0))))
+                {
                     output = File.Open(strFileOut, FileMode.Create);
+                }
+
                 blWorkingInsideFileList = true;
                 lPosition = 0;  // stores output file position
                 // writing header
-                if (blUseHeaders)
+                if ((I64_eChecked & (Int64)_eChecked.Headers)!=0)
                 {
                     const string csBound = "========\r\n";
                     byte[] baBound = Encoding.ASCII.GetBytes(csBound);
@@ -453,12 +458,12 @@ namespace FileAdjuster5
                 {
                     output.Write(outbuffer, 0, iOut);
                 }
-                if(!blCombineFiles)
+                if((I64_eChecked & (Int64)_eChecked.CombineFile) != 0)
                 output.Close();
                 input.Close();
                 if (MyWorker.CancellationPending) e.Cancel = true;
             } // end of input files
-            if (blCombineFiles) output.Close();
+            if ((I64_eChecked & (Int64)_eChecked.CombineFile) != 0) output.Close();
         }
 
         private bool DoICopyStr(string strIn)
@@ -563,7 +568,7 @@ namespace FileAdjuster5
             return blReturn;
         }
 
-        private void btnOpenNotePad_Click(object sender, RoutedEventArgs e)
+        private void BtnOpenNotePad_Click(object sender, RoutedEventArgs e)
         {
             Process myProcess = new Process();
             try
@@ -596,7 +601,7 @@ namespace FileAdjuster5
             myAddRow.Close();
         }
 
-        private void btnClearRows_Click(object sender, RoutedEventArgs e)
+        private void BtnClearRows_Click(object sender, RoutedEventArgs e)
         {
             GetString myGet = new GetString("Enter Comment String","A new set of actions start with a comment");
             if(myGet.ShowDialog()==true)
@@ -612,8 +617,9 @@ namespace FileAdjuster5
         private void BtnSavePreset_Click(object sender, RoutedEventArgs e)
         {
             if (!blUsingActionsHistory) SaveHistory();
+            I64_eChecked = CollectChecks();
             Int64 iGroup = MyDtable.Rows[0].Field<Int64>(1);
-            SavePreset mySavePreset = new SavePreset(iGroup);
+            SavePreset mySavePreset = new SavePreset(iGroup,I64_eChecked);
             if (mySavePreset.ShowDialog() == true)
             {
                 string sTemp = $"Saved preset for group {iGroup}";
@@ -633,7 +639,7 @@ namespace FileAdjuster5
             }
         }
 
-        private void btnSwapAbove_Click(object sender, RoutedEventArgs e)
+        private void BtnSwapAbove_Click(object sender, RoutedEventArgs e)
         {
             if(dgActions.SelectedIndex<1)
             {
@@ -660,7 +666,7 @@ namespace FileAdjuster5
             }
         }
 
-        private void btnQuickInsert_Click(object sender, RoutedEventArgs e)
+        private void BtnQuickInsert_Click(object sender, RoutedEventArgs e)
         {
             if (Clipboard.ContainsText(TextDataFormat.Text))
             {
@@ -685,7 +691,7 @@ namespace FileAdjuster5
 
         }
 
-        private void btnQuickExclude_Click(object sender, RoutedEventArgs e)
+        private void BtnQuickExclude_Click(object sender, RoutedEventArgs e)
         {
             if (Clipboard.ContainsText(TextDataFormat.Text))
             {
@@ -701,7 +707,7 @@ namespace FileAdjuster5
 
         }
 
-        private void btnOpenDir_Click(object sender, RoutedEventArgs e)
+        private void BtnOpenDir_Click(object sender, RoutedEventArgs e)
         {
             if(tbOutFile.Text.Length >1)
             {
@@ -723,13 +729,13 @@ namespace FileAdjuster5
             }
         }
 
-        private void btnOut2In_Click(object sender, RoutedEventArgs e)
+        private void BtnOut2In_Click(object sender, RoutedEventArgs e)
         {
             ClearFiles();
             AddFile(strFileOut);
         }
 
-        private void btnLog_Click(object sender, RoutedEventArgs e)
+        private void BtnLog_Click(object sender, RoutedEventArgs e)
         {
             string strfilename = $"{ AppDomain.CurrentDomain.BaseDirectory }\\FileAdjuster5.log";
             Process myProcess = new Process();
@@ -746,7 +752,7 @@ namespace FileAdjuster5
             }
         }
 
-        private void btnDelRow_Click(object sender, RoutedEventArgs e)
+        private void BtnDelRow_Click(object sender, RoutedEventArgs e)
         {
             if (MyDtable.Rows.Count < 2)
             {

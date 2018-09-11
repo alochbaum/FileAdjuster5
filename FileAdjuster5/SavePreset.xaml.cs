@@ -20,9 +20,11 @@ namespace FileAdjuster5
     public partial class SavePreset : Window
     {
         private Int64 iGroupID = 0;
-        public SavePreset(Int64 inGroup)
+        private Int64 iFlags = 0;
+        public SavePreset(Int64 inGroup, Int64 iFlagsInt)
         {
             iGroupID = inGroup;
+            iFlags = iFlagsInt;
             InitializeComponent();
         }
 
@@ -40,7 +42,7 @@ namespace FileAdjuster5
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
-            FileAdjSQLite.WritePreset(cbGroups.Text, tbTitle.Text, iGroupID);
+            FileAdjSQLite.WritePreset(cbGroups.Text, tbTitle.Text, iGroupID, iFlags);
             this.DialogResult = true;
         }
 

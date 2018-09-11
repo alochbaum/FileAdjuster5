@@ -63,8 +63,8 @@
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="cbxCombineFiles" Margin="5,0,0,0" IsChecked="True">Combine Files</CheckBox>
                 <CheckBox x:Name="cbxFileHeaders" Margin="5,0,0,0" IsChecked="True">Headers</CheckBox>
-                <Button x:Name="btnOut2In" Margin="5,0,0,0" ToolTip="Clears Input files and puts current output file to be new input" Click="btnOut2In_Click">Out2In</Button>
-                <Button x:Name="btnLog" Margin="5,0,0,0" Click="btnLog_Click" ToolTip="Loads program log file in Notepad ++ program">Log</Button>
+                <Button x:Name="btnOut2In" Margin="5,0,0,0" ToolTip="Clears Input files and puts current output file to be new input" Click="BtnOut2In_Click">Out2In</Button>
+                <Button x:Name="btnLog" Margin="5,0,0,0" Click="BtnLog_Click" ToolTip="Loads program log file in Notepad ++ program">Log</Button>
             </StackPanel>
         </StackPanel>
         <Rectangle Grid.Column="3" Grid.Row="0">
@@ -78,10 +78,10 @@
         <StackPanel Grid.Column="4" Grid.Row="0"  Margin="0,0,0,7">
             <StackPanel Orientation="Horizontal">
                 <Label>Number of Lines in Output</Label>
-                <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False" Click="btnOpenNotePad_Click" ToolTip="Open Output File in Notepad++ program (alt +)" >
+                <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False" Click="BtnOpenNotePad_Click" ToolTip="Open Output File in Notepad++ program (alt +)" >
                     <AccessText>Notepad_++</AccessText>
                 </Button>
-                <Button x:Name="btnOpenDir" Margin="5,0,0,0" ToolTip="Open Output File's directory (alt d)" Click="btnOpenDir_Click" >
+                <Button x:Name="btnOpenDir" Margin="5,0,0,0" ToolTip="Open Output File's directory (alt d)" Click="BtnOpenDir_Click" >
                     <AccessText>dir</AccessText>
                 </Button>
             </StackPanel>
@@ -100,15 +100,15 @@
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
                 <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click">Add Row</Button>
-                <Button x:Name="btnQuickInsert" Margin="0,0,5,0" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="btnQuickInsert_Click">
+                <Button x:Name="btnQuickInsert" Margin="0,0,5,0" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="BtnQuickInsert_Click">
                     <AccessText>_Q-I</AccessText>
                 </Button>
-                <Button x:Name="btnQuickExclude" Margin="0,0,5,0" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="btnQuickExclude_Click" >
+                <Button x:Name="btnQuickExclude" Margin="0,0,5,0" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
                     <AccessText>Q-_X</AccessText>
                 </Button>
-                <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="btnClearRows_Click" Content="Clear or New Action"/>
-                <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="btnDelRow_Click">Delete Row</Button>
-                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="btnSwapAbove_Click">Swap with Row Above</Button>
+                <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="BtnClearRows_Click" Content="Clear or New Action"/>
+                <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="BtnDelRow_Click">Delete Row</Button>
+                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click">Swap with Row Above</Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click">Save as Preset</Button>
                 <Button x:Name="btnExportPresets" Margin="0,0,5,0">Export Presets</Button>
