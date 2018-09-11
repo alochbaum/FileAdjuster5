@@ -112,7 +112,7 @@ namespace FileAdjuster5
             // Show save file dialog box
             Nullable<bool> result = dlg.ShowDialog();
 
-            if (result == true)
+            if (result != null && result == true)
             {
                 AddFile(dlg.FileName);
             }
