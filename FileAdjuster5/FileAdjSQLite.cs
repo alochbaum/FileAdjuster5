@@ -159,6 +159,25 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         static public Int64 GetPresetFlags(Int64 iGroup)
         {
             Int64 iReturn = 3;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select Flags from ActionPreset where GroupID = "
+                    + iGroup.ToString() + ";";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                        iReturn = reader.GetInt64(0);
+                }
+
+                reader.Close();
+                m_dbConnection.Close();
+            }
             return iReturn;
         }
         static public bool WriteHistory(Int64 iGroup,string strFileName,string strExt)

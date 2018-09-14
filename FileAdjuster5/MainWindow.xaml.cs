@@ -636,6 +636,8 @@ namespace FileAdjuster5
                 Int64 iTemp = MyFindPreset.GetGroup();
                 MyDtable = GetTable(iTemp);
                 dgActions.DataContext = MyDtable.DefaultView;
+                Int64 iTemp2 = FileAdjSQLite.GetPresetFlags(iTemp);
+                SetChecks((_eChecked)iTemp2);
             }
         }
 
