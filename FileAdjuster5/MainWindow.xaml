@@ -121,9 +121,9 @@
                 </Button>
             </StackPanel>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">no date +</CheckBox>
-                <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">no [ +</CheckBox>
-                <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below which don't start with second parameter">not starting with second parameter</CheckBox>
+                <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below which don't start with Parameter2">include not starting with Parameter2 +</CheckBox>
+                <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">not date +</CheckBox>
+                <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [</CheckBox>
             </StackPanel>
             <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True"/>
         </StackPanel>

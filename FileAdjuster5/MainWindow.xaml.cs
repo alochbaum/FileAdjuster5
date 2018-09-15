@@ -35,8 +35,7 @@ namespace FileAdjuster5
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly log4net.ILog log =
-    log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private FileStream input;
         private FileStream output;
         private long lNullsNum = 0, lPosition = 0, 
@@ -44,8 +43,10 @@ namespace FileAdjuster5
         // This holds current out file
         private string strFileOut="";
         private BackgroundWorker MyWorker;
-        private string strRTB = "";
-        private bool blPosNum = true;
+        // holds the count of null characters
+        private Int64 iCountOfNulls = 0;
+        // This is set for thread if working an include to allow next line to be check
+        private bool blIncludeCheckNextLine = false;
         // If using File History this is set, so history isn't saved twice
         private bool blUsingHistory = true;
         // Same for Action History
@@ -168,6 +169,8 @@ namespace FileAdjuster5
                 strExt = tbExt.Text;
                 I64_eChecked = CollectChecks();
                 List<string> lFileList = new List<string>();
+                // Clear number of null characters found in file
+                iCountOfNulls = 0;
                 for (int i = 0; i < iCountListbox; i++)
                 {
                     lFileList.Add(lbFileNames.Items[i].ToString());
@@ -338,10 +341,8 @@ namespace FileAdjuster5
             byte[] inbuffer = new byte[16 * 4096];
             byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
             byte[] strbuffer = new byte[2003];
-            string strHoldLast50 = "";
             int read, icount, iStrLen = 0;
             int iOut = 0;
-            long lStoredPosition = 0;
             bool blHitLastLine = false;
             bool blLineOverRun = false;
 
@@ -369,9 +370,7 @@ namespace FileAdjuster5
                 }
                 FileInfo f = new FileInfo(sInFile);
                 lFileSize = f.Length;
-                strHoldLast50 = "";
                 iOut = read = icount= iStrLen = 0;
-                lStoredPosition = 0;
                 blHitLastLine = false;
                 blLineOverRun = false;
 
@@ -414,22 +413,7 @@ namespace FileAdjuster5
                         }
                         else // Found a null byte in file
                         {
-                            if (lPosition == lStoredPosition)
-                                lNullsNum++;
-                            else
-                            {
-                                {
-                                    strRTB = strHoldLast50;
-                                    if (blPosNum)
-                                    {
-                                        string s1 = $"Position {lStoredPosition} has {lNullsNum} null characters";
-                                        strRTB += s1 + "\r\n";
-                                    }
-                                    lNullsNum = -1;
-                                }
-                                lNullsNum++;
-                            }
-                            lStoredPosition = lPosition;
+                            iCountOfNulls++;
                         } // End check for null bytes
                         // if you hit last line change the files
                         if (blHitLastLine)
@@ -482,15 +466,29 @@ namespace FileAdjuster5
                 if (dRow[3].ToString().Length > 1)
                 {
                     // if doing include check for the flags
-                    if (blDoingInclude)
+                    if (blIncludeCheckNextLine)
                     {
+
                         if((I64_eChecked & (Int64)_eChecked.NoBracket) != 0)
                         {
                             if (strIn[0] != '[') return true;
-                        } else if((I64_eChecked & (Int64)_eChecked.NoDate) != 0)
+                        }
+                        if ((I64_eChecked & (Int64)_eChecked.NoDate) != 0)
                         {
                             // Date can be 8/8/2018 to 11/11/2018 or 8 to 10 characters, so split off first 11 characters and look for space
-
+                            string[] strSplit = strIn.Split(' ');
+                            if (strSplit[0].Length > 7 && strSplit[0].Length < 11)
+                            {
+                                DateTime dateTime2;
+                                if (!DateTime.TryParse(strSplit[0], out dateTime2)) return true;
+                            } else { return true; }
+                        }
+                        if((I64_eChecked & (Int64)_eChecked.NoSecond) != 0)
+                        {
+                            if (dRow[4] != null && dRow[4].ToString().Length > 0)
+                            {
+                                if (strIn.IndexOf(dRow[4].ToString()) == 0) return true;
+                            }
                         }
                     }
                     string sTemp = dRow[2].ToString();
@@ -498,8 +496,16 @@ namespace FileAdjuster5
                     {
                         case "Exclude":
                             // check in includes ran out first
-                            if (blDoingInclude && !blReturn) return false;
-                            if (strIn.IndexOf(dRow[3].ToString()) >= 0) return false;
+                            if (blDoingInclude && !blReturn)
+                            {
+                                blIncludeCheckNextLine = false;
+                                return false;
+                            }
+                            if (strIn.IndexOf(dRow[3].ToString()) >= 0)
+                            {
+                                blIncludeCheckNextLine = false;
+                                return false;
+                            }
                             break;
                         case "Include":
                             // Found and include, reversing return logic for next couple
@@ -508,13 +514,21 @@ namespace FileAdjuster5
                             {
                                 blDoingInclude = true;
                                 blReturn = false;
-                            }   
-                            if (strIn.IndexOf(dRow[3].ToString()) >= 0)return true;
+                            }
+                            if (strIn.IndexOf(dRow[3].ToString()) >= 0)
+                            {
+                                blIncludeCheckNextLine = true;
+                                return true;
+                            }
                             break;
                         case "Any_Case_Exclude":
                             // check in includes ran out first
                             if (blDoingInclude && !blReturn) return false;
-                            if (strIn.ToUpper().IndexOf(dRow[3].ToString().ToUpper()) >= 0) return false;
+                            if (strIn.ToUpper().IndexOf(dRow[3].ToString().ToUpper()) >= 0)
+                            {
+                                blIncludeCheckNextLine = false;
+                                return false;
+                            }
                             break;
                         case "Any_Case_Include":
                             if (!blDoingInclude)
@@ -522,7 +536,11 @@ namespace FileAdjuster5
                                 blDoingInclude = true;
                                 blReturn = false;
                             }
-                            if (strIn.ToUpper().IndexOf(dRow[3].ToString().ToUpper()) >= 0) return true;
+                            if (strIn.ToUpper().IndexOf(dRow[3].ToString().ToUpper()) >= 0)
+                            {
+                                blIncludeCheckNextLine = true;
+                                return true;
+                            }
                             break;
                         // time case is type of include case
                         case "Time_Window":
@@ -572,6 +590,7 @@ namespace FileAdjuster5
                             }
                             else if (!blInsideTW)
                             {// some line don't start with time, if this is case check if blInsideTW
+                                blIncludeCheckNextLine = false;
                                 return false;
                             }
                     
@@ -582,6 +601,8 @@ namespace FileAdjuster5
                     }
                 }
             }
+            // turning off the doing include if there is a false
+            if (!blReturn) blIncludeCheckNextLine = false;
             return blReturn;
         }
 
@@ -810,6 +831,7 @@ namespace FileAdjuster5
             btnStart.IsEnabled = true;
             btnOpenNotePad.IsEnabled = true;
             btnCancel.IsEnabled = false;
+            if (iCountOfNulls > 0) rtbStatus.AppendText($"Found {iCountOfNulls} null characters in files which weren't copied");
             TimeSpan mySpan = DateTime.Now - myStartTime;
             rtbStatus.AppendText($"{DateTime.Now.TimeOfDay} Finished with file in {mySpan.Seconds} seconds\r\n");
         }

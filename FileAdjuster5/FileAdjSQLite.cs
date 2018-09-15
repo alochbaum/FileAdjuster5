@@ -169,6 +169,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     + iGroup.ToString() + ";";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
+                // This could return null
                 if (reader.HasRows)
                 {
                     while (reader.Read())
@@ -308,7 +309,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
                 string sqlcmd = "insert into ActionPreset (PTypeId,PresetName,GroupID,Flags) " +
-                    " select PTypeID,'" + strTitle + "','" + iGroup.ToString() + iFlag.ToString() +"','" +
+                    " select PTypeID,'" + strTitle + "','" + iGroup.ToString() + "','" + iFlag.ToString() +"','" +
                     "' from ActionPresetType where PresetType = '" + strGroup + "';";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
                 int rows = command.ExecuteNonQuery();
