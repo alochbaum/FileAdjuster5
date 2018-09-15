@@ -23,9 +23,9 @@ namespace FileAdjuster5
 {
     [Flags] public enum _eChecked : Int64
     {
-        CombineFile = 0,
+        None        = 0,
         Headers     = 1 << 0,
-        Reserved    = 1 << 1,
+        CombineFile = 1 << 1,
         NoDate      = 1 << 2,
         NoBracket   = 1 << 3,
         NoSecond    = 1 << 4
@@ -63,21 +63,21 @@ namespace FileAdjuster5
         {
             InitializeComponent();
             // Adding the version number to the title
-            MainFrame.Title = "File Adjuster version:" + Assembly.GetExecutingAssembly().GetName().Version;
+            MainFrame.Title = "File Adjuster version: " + Assembly.GetExecutingAssembly().GetName().Version;
             // Adding section to catch event when items are added to listbox of files
-            ((INotifyCollectionChanged)lbFileNames.Items).CollectionChanged +=
-    LbFileNames_CollectionChanged;
+            ((INotifyCollectionChanged)lbFileNames.Items).CollectionChanged +=LbFileNames_CollectionChanged;
             log.Info("FileAdjuster is starting up.");
             // Setting up a worker thread
             MyWorker = (BackgroundWorker)this.FindResource("MyWorker");
-            tbOutFile.Text = AppDomain.CurrentDomain.BaseDirectory;
+            // displaying database and current working directory
             rtbStatus.AppendText($"Datafile directory:");
             rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
             rtbStatus.AppendText($"Program location {AppDomain.CurrentDomain.BaseDirectory}\r\n");
-            // Get the DataTable.
+            // Get the Preset 0 in two parts first the actions then the checkboxes
             MyDtable = GetTable(0);
             dgActions.DataContext = MyDtable.DefaultView;
-
+            // Setting checkboxes on for 2 items
+            SetChecks(_eChecked.CombineFile|_eChecked.Headers);
         }
         static DataTable GetTable(Int64 iGroup)
         {
@@ -191,10 +191,15 @@ namespace FileAdjuster5
         private void SetChecks(_eChecked InCheck)
         {
             if ((InCheck & _eChecked.CombineFile) != 0) cbxCombineFiles.IsChecked = true;
+            else cbxCombineFiles.IsChecked = false;
             if ((InCheck & _eChecked.Headers) != 0) cbxFileHeaders.IsChecked = true;
+            else cbxFileHeaders.IsChecked = false;
             if ((InCheck & _eChecked.NoBracket) != 0) cbxNoBracket.IsChecked = true;
+            else cbxNoBracket.IsChecked = false;
             if ((InCheck & _eChecked.NoDate) != 0) cbxNoDate.IsChecked = true;
+            else cbxNoDate.IsChecked = false;
             if ((InCheck & _eChecked.NoSecond) != 0) cbxNoSecond.IsChecked = true;
+            else cbxNoSecond.IsChecked = false;
         }
 
         private void StackPanel_Drop(object sender, DragEventArgs e)
@@ -476,6 +481,18 @@ namespace FileAdjuster5
                 // no use doing work if first parameter is empty
                 if (dRow[3].ToString().Length > 1)
                 {
+                    // if doing include check for the flags
+                    if (blDoingInclude)
+                    {
+                        if((I64_eChecked & (Int64)_eChecked.NoBracket) != 0)
+                        {
+                            if (strIn[0] != '[') return true;
+                        } else if((I64_eChecked & (Int64)_eChecked.NoDate) != 0)
+                        {
+                            // Date can be 8/8/2018 to 11/11/2018 or 8 to 10 characters, so split off first 11 characters and look for space
+
+                        }
+                    }
                     string sTemp = dRow[2].ToString();
                     switch (sTemp)
                     {
