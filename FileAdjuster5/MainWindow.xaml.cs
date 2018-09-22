@@ -28,7 +28,8 @@ namespace FileAdjuster5
         CombineFile = 1 << 1,
         NoDate      = 1 << 2,
         NoBracket   = 1 << 3,
-        NoSecond    = 1 << 4
+        NoSecond    = 1 << 4,
+        NoBlank     = 1 << 5
     }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -188,6 +189,7 @@ namespace FileAdjuster5
             if (cbxNoBracket.IsChecked == true) Ireturn |= _eChecked.NoBracket;
             if (cbxNoDate.IsChecked == true) Ireturn |= _eChecked.NoDate;
             if (cbxNoSecond.IsChecked == true) Ireturn |= _eChecked.NoSecond;
+            if (cbxNoBlankLines.IsChecked == true) Ireturn |= _eChecked.NoBlank;
             return (Int64)Ireturn;
         }
 
@@ -203,6 +205,8 @@ namespace FileAdjuster5
             else cbxNoDate.IsChecked = false;
             if ((InCheck & _eChecked.NoSecond) != 0) cbxNoSecond.IsChecked = true;
             else cbxNoSecond.IsChecked = false;
+            if ((InCheck & _eChecked.NoBlank) != 0) cbxNoBlankLines.IsChecked = true;
+            else cbxNoBlankLines.IsChecked = false;
         }
 
         private void StackPanel_Drop(object sender, DragEventArgs e)
@@ -457,8 +461,14 @@ namespace FileAdjuster5
 
         private bool DoICopyStr(string strIn)
         {
-
-            if (strIn == null || strIn.Length < 1) return false;
+            if ((I64_eChecked & (Int64)_eChecked.NoBlank) != 0)
+            {
+                if (strIn == null || strIn.Length < 3) return false;
+            }
+            else
+            {
+                if (strIn == null || strIn.Length < 2) return false;
+            }
             bool blReturn = true, blDoingInclude = false, blInsideTW = false;
             foreach (DataRow dRow in MyDtable.Rows)
             {
