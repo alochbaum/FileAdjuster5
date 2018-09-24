@@ -107,14 +107,19 @@ namespace FileAdjuster5
                 Title = "Select File to Add To List (It will not auto start)",
                 Filter = "All Files|*.*"
             };
+            dlg.Multiselect = true;
 
             // Show save file dialog box
             Nullable<bool> result = dlg.ShowDialog();
 
             if (result != null && result == true)
             {
-                AddFile(dlg.FileName);
-                log.Debug($"Added File { dlg.FileName}");
+                // Read the files
+                foreach (String file in dlg.FileNames)
+                {
+                    AddFile(file);
+                    log.Debug($"Added File {file}");
+                }
             }
             else
             {

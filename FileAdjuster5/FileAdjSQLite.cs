@@ -18,6 +18,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         static public string DBFile()
         {
             //return @"c:\iTX Software\FileAdj.db";
+            // For the next line not to error you need to add System.Deployment reference
             if (ApplicationDeployment.IsNetworkDeployed)
             {
                 log.Debug("SQLite class is detecting that is Network Deployed");
