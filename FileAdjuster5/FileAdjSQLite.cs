@@ -192,9 +192,11 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
                 string sqlcmd = "INSERT INTO FileHistory (group_id,file_name,ext" +
-                   ")VALUES (" +iGroup.ToString()+",'"+
-                    strFileName + "','"+ strExt + "');";
+                   ")VALUES (" +iGroup.ToString()+",@File,@Ext);";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                // protected from single quotes in the passed strings
+                command.Parameters.Add(new SQLiteParameter("File", strFileName));
+                command.Parameters.Add(new SQLiteParameter("Ext", strExt));
                 int rows = command.ExecuteNonQuery();
                 if (rows == 1) blreturn=true;
                 m_dbConnection.Close();
@@ -222,6 +224,9 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return mList;
         }
+        //
+        // Currently this function isn't protected against single quotes in the strings
+        //
         static public bool WriteAction(Int64 iOrder, Int64 iGroup, string strType, string Param1, string Param2 )
         {
             bool blreturn = false;
@@ -246,9 +251,11 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 {
                     sql = "INSERT INTO ActionTable (DisplayOrder,GroupID,ActionTypeID," +
                         "Parameter1,Parameter2) VALUES (" + iOrder.ToString() + "," +
-                        iGroup.ToString() +"," + lType.ToString() + ",'"+Param1+"','"+
-                        Param2+ "');";
+                        iGroup.ToString() +"," + lType.ToString() + ",@Param1,@Param2);";
                     command = new SQLiteCommand(sql, m_dbConnection);
+                    // protected from single quotes in the passed strings
+                    command.Parameters.Add(new SQLiteParameter("Param1", Param1));
+                    command.Parameters.Add(new SQLiteParameter("Param2", Param2));
                     int rows = command.ExecuteNonQuery();
                     if (rows == 1) blreturn = true;
                 }
@@ -292,8 +299,10 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sqlcmd = "INSERT INTO ActionPresetType (PresetType) VALUES ('" + strGroup + "');";
+                string sqlcmd = "INSERT INTO ActionPresetType (PresetType) VALUES (@strGroup);";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                // protected from single quotes in the passed strings
+                command.Parameters.Add(new SQLiteParameter("strGroup", strGroup));
                 int rows = command.ExecuteNonQuery();
                 if (rows == 1) blreturn = true;
                 m_dbConnection.Close();
@@ -310,9 +319,12 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
                 string sqlcmd = "insert into ActionPreset (PTypeId,PresetName,GroupID,Flags) " +
-                    " select PTypeID,'" + strTitle + "','" + iGroup.ToString() + "','" + iFlag.ToString() +"','" +
-                    "' from ActionPresetType where PresetType = '" + strGroup + "';";
+                    " select PTypeID,@strTitle,@strGroup,'" + iFlag.ToString() +
+                    "' from ActionPresetType where PresetType = @strGroup;";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                // protected from single quotes in the passed strings
+                command.Parameters.Add(new SQLiteParameter("strGroup", strGroup));
+                command.Parameters.Add(new SQLiteParameter("strTitle", strTitle));
                 int rows = command.ExecuteNonQuery();
                 if (rows == 1) blreturn = true;
                 m_dbConnection.Close();

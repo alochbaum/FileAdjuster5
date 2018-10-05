@@ -456,12 +456,12 @@ namespace FileAdjuster5
                 {
                     output.Write(outbuffer, 0, iOut);
                 }
-                if((I64_eChecked & (Int64)_eChecked.CombineFile) != 0)
-                output.Close();
+                if((I64_eChecked & (Int64)_eChecked.CombineFile) == 0)
+                    output.Close();
                 input.Close();
                 if (MyWorker.CancellationPending) e.Cancel = true;
             } // end of input files
-            if ((I64_eChecked & (Int64)_eChecked.CombineFile) != 0) output.Close();
+            output.Close();  // closing combined files or if missed check above
         }
 
         private bool DoICopyStr(string strIn)
