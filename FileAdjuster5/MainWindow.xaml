@@ -15,7 +15,7 @@
             <ColumnDefinition Width="2" />
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="2" />
-            <ColumnDefinition Width="247"/>
+            <ColumnDefinition Width="252"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -111,7 +111,7 @@
                 <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click">Swap with Row Above</Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click">Save as Preset</Button>
-                <Button x:Name="btnExportPresets" Margin="0,0,5,0">Export Presets</Button>
+                <Button x:Name="btnExportPresets" Margin="0,0,5,0" AutomationProperties.HelpText="This exports presets to a database file." Click="btnExportPresets_Click">Export Presets</Button>
                 <Button x:Name="btnLoadPreset" Margin="0,0,5,0" Click="BtnLoadPreset_Click" ToolTip="Loads Action Presets (alt L)">
                     <AccessText>_Load Preset</AccessText>
                 </Button>

@@ -356,6 +356,39 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return tableReturn;
         }
+        static public void SavePresets(string StrFile)
+        {
+            SQLiteConnection.CreateFile(StrFile);
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                SQLiteConnection m_dbConnection = new SQLiteConnection();
+                m_dbConnection.ConnectionString = "Data Source=" +StrFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "CREATE TABLE 'ActionPreset' ( 'PresetID' INTEGER PRIMARY KEY AUTOINCREMENT, 'PTypeID' INTEGER, 'PresetName' TEXT, 'GroupID' INTEGER, 'Flags' INTEGER, 'DateAdded' TEXT );";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+                sql = "CREATE TABLE 'ActionPresetType' ( 'PTypeID' INTEGER PRIMARY KEY AUTOINCREMENT, 'PresetType' TEXT );";
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+                sql = "CREATE TABLE 'ActionTable' ( 'TableID' INTEGER PRIMARY KEY AUTOINCREMENT, 'DisplayOrder' INTEGER, 'GroupID' INTEGER, 'ActionTypeID' INTEGER, 'Parameter1' TEXT, 'Parameter2' TEXT, 'DateAdded' TEXT );";
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+                sql = "ATTACH '"+strDBFile+"' AS md;";
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+                sql = "insert into ActionPreset select * from md.ActionPreset;";
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+                sql = "insert into ActionPresetType select * from md.ActionPresetType;";
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+                sql = "insert into ActionTable select at.* from md.ActionTable at join md.ActionPreset ap where at.GroupID = ap.GroupID;";
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+
+            }
+        }
     }
     
 }

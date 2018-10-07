@@ -790,6 +790,20 @@ namespace FileAdjuster5
             AddFile(strFileOut);
         }
 
+        private void btnExportPresets_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog()
+            {
+                Title = "Enter database file to save presets to",
+                Filter = "sqlite|*.sqlite"
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                if (File.Exists(dlg.FileName)) File.Delete(dlg.FileName);
+                FileAdjSQLite.SavePresets(dlg.FileName);               
+            }
+        }
+
         private void BtnLog_Click(object sender, RoutedEventArgs e)
         {
             string strfilename = $"{ AppDomain.CurrentDomain.BaseDirectory }\\FileAdjuster5.log";
