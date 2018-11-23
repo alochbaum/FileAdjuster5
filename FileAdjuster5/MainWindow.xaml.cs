@@ -626,7 +626,7 @@ namespace FileAdjuster5
             Process myProcess = new Process();
             try
             {
-                Process.Start("notepad++.exe", strFileOut);
+                Process.Start("notepad++.exe",$"\"{strFileOut}\"");
             }
             catch
             {
