@@ -37,7 +37,7 @@
                     <AccessText>_&lt;</AccessText>
                 </Button>
             </StackPanel>
-            <ListBox x:Name="lbFileNames" FlowDirection="RightToLeft" />
+            <ListBox x:Name="lbFileNames" FlowDirection="RightToLeft" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
         </StackPanel>
         <Rectangle Grid.Column="1" Grid.Row="0">
             <Rectangle.Fill>
@@ -49,20 +49,22 @@
         </Rectangle>
         <StackPanel Grid.Column="2" Grid.Row="0" Margin="0,0,0,7">
             <StackPanel Orientation="Horizontal">
-                <Label>Output Name(s)</Label>
+                <Label>Output File(s)</Label>
                 <Button x:Name="btnStart" Click="BtnStart_Click" Margin="0,0,5,0" ToolTip="Starts splitting clips in to lines at right to output files with actions (alt s)">
-                    <AccessText>_Start</AccessText>
+                    <AccessText FontWeight="Bold" ToolTip="Click here when you are ready to process files&#x0a;on the right with actions below.">_Start</AccessText>
                 </Button>
-                <Button x:Name="btnCancel" Click="BtnCancel_Click" IsEnabled="False" Margin="0,0,5,0">
+                <Button x:Name="btnCancel" Click="BtnCancel_Click" IsEnabled="False" Margin="0,0,5,0" ToolTip="If processing, this will cancel on next 4K block.">
                     <AccessText>Ca_ncel</AccessText>
                 </Button>
-                <Label Content="extension: "></Label>
+                <Label Content="ext:"></Label>
                 <TextBox x:Name="tbExt" VerticalAlignment="Center">.txt</TextBox>
+                <CheckBox x:Name="cbxComment" VerticalAlignment="Center" Margin="5,0,0,0" 
+                          ToolTip="Clicking this uses the first word in the first comment for the output file name.">Comment</CheckBox>
             </StackPanel>
             <TextBox x:Name="tbOutFile" FlowDirection="RightToLeft"/>
             <StackPanel Orientation="Horizontal">
-                <CheckBox x:Name="cbxCombineFiles" Margin="5,0,0,0" IsChecked="True">Combine Files</CheckBox>
-                <CheckBox x:Name="cbxFileHeaders" Margin="5,0,0,0" IsChecked="True">Headers</CheckBox>
+                <CheckBox x:Name="cbxCombineFiles" Margin="5,0,0,0" IsChecked="True" VerticalAlignment="Center" ToolTip="Checking this doesn't make individual outputs for each input file (unless lines are exceeded).">Combine Files</CheckBox>
+                <CheckBox x:Name="cbxFileHeaders" Margin="5,0,0,0" IsChecked="True" VerticalAlignment="Center" ToolTip="If &quot;Combine Files&quot; is checked this added a header with each file name.">Headers</CheckBox>
                 <Button x:Name="btnOut2In" Margin="5,0,0,0" ToolTip="Clears Input files and puts current output file to be new input" Click="BtnOut2In_Click">Out2In</Button>
                 <Button x:Name="btnLog" Margin="5,0,0,0" Click="BtnLog_Click" ToolTip="Loads program log file in Notepad ++ program">Log</Button>
             </StackPanel>
@@ -85,9 +87,9 @@
                     <AccessText>dir</AccessText>
                 </Button>
             </StackPanel>
-            <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" />
-            <ProgressBar x:Name="pbProgress" Height="8" MinHeight="4" SmallChange="1"></ProgressBar>
-            <ProgressBar x:Name="pbFiles" Height="8" MinHeight="4" SmallChange="1"></ProgressBar>
+            <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" ToolTip="Selects the size of the output file." />
+            <ProgressBar x:Name="pbProgress" Height="8" MinHeight="4" SmallChange="1" ToolTip="Number of total files, (set full for last file)."></ProgressBar>
+            <ProgressBar x:Name="pbFiles" Height="8" MinHeight="4" SmallChange="1" ToolTip="Amount of single file done."></ProgressBar>
         </StackPanel>
         <Rectangle Grid.Row="1" Grid.ColumnSpan="5">
             <Rectangle.Fill>
@@ -99,19 +101,19 @@
         </Rectangle>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click">Add Row</Button>
+                <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">Add Row</Button>
                 <Button x:Name="btnQuickInsert" Margin="0,0,5,0" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="BtnQuickInsert_Click">
                     <AccessText>_Q-I</AccessText>
                 </Button>
                 <Button x:Name="btnQuickExclude" Margin="0,0,5,0" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
                     <AccessText>Q-_X</AccessText>
                 </Button>
-                <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="BtnClearRows_Click" Content="Clear or New Action"/>
-                <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="BtnDelRow_Click">Delete Row</Button>
-                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click">Swap with Row Above</Button>
+                <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="BtnClearRows_Click" Content="Clear or New Action" ToolTip="Clears all rows below and asks you to created first comment row"/>
+                <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">Delete Row</Button>
+                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">Swap with Row Above</Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
-                <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click">Save as Preset</Button>
-                <Button x:Name="btnExportPresets" Margin="0,0,5,0" AutomationProperties.HelpText="This exports presets to a database file." Click="btnExportPresets_Click">Export Presets</Button>
+                <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click" ToolTip="Saves current actions below and checkboxes as a preset.">Save as Preset</Button>
+                <Button x:Name="btnExportPresets" Margin="0,0,5,0" ToolTip="This exports presets to a database file." Click="btnExportPresets_Click">Export Presets</Button>
                 <Button x:Name="btnLoadPreset" Margin="0,0,5,0" Click="BtnLoadPreset_Click" ToolTip="Loads Action Presets (alt L)">
                     <AccessText>_Load Preset</AccessText>
                 </Button>
@@ -124,7 +126,7 @@
                 <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below which don't start with Parameter2">include not starting with Parameter2 +</CheckBox>
                 <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">not date +</CheckBox>
                 <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --  </CheckBox>
-                <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines">no blank lines (no just includes)</CheckBox>
+                <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines">no blank lines (not just includes)</CheckBox>
             </StackPanel>
             <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True"/>
         </StackPanel>
@@ -137,8 +139,7 @@
             </Rectangle.Fill>
         </Rectangle>
         <RichTextBox x:Name="rtbStatus" Grid.Row="4" Grid.ColumnSpan="5" Margin="0,5,0,0" AllowDrop="False" 
-                     Focusable="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" 
-                     VerticalScrollBarVisibility="Visible">
+                     IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Visible">
             <RichTextBox.Resources>
                 <Style TargetType="{x:Type Paragraph}">
                     <Setter Property="Margin" Value="0"/>

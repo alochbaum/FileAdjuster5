@@ -234,7 +234,19 @@ namespace FileAdjuster5
             if (lbFileNames.Items.Count > 0)
             {
                 strExt = tbExt.Text;  // passing extension because function below is also used in thread
-                tbOutFile.Text = NextFreeFilename(lbFileNames.Items[0].ToString());
+                // if comment checkbox is selected replated the incoming string
+                if (cbxComment.IsChecked == true)
+                {
+                    DataRow drow = MyDtable.Rows[0];
+                    string strTemp = drow.Field<string>("Parameter1");
+                    strTemp = System.IO.Path.GetDirectoryName(lbFileNames.Items[0].ToString()) + "\\" +
+                        strTemp.Substring(0, strTemp.IndexOf(' ')) + "-0" + strExt;
+                    tbOutFile.Text = NextFreeFilename(strTemp);
+                }
+                else
+                {
+                    tbOutFile.Text = NextFreeFilename(lbFileNames.Items[0].ToString());
+                }
             } else
             {
                 tbOutFile.Text = "";
@@ -275,7 +287,7 @@ namespace FileAdjuster5
                         strReturn = baseDir + "\\" + strFile +"-0" + tbExt.Text;
                     }
                 } while (File.Exists(strReturn));
-            }
+            } else { return inStr; }
             return strReturn;
         }
 
