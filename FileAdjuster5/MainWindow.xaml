@@ -59,7 +59,7 @@
                 <Label Content="ext:"></Label>
                 <TextBox x:Name="tbExt" VerticalAlignment="Center">.txt</TextBox>
                 <CheckBox x:Name="cbxComment" VerticalAlignment="Center" Margin="5,0,0,0" 
-                          ToolTip="Clicking this uses the first word in the first comment for the output file name.">Comment</CheckBox>
+                          ToolTip="Clicking this uses the first word in the first comment for the output file name." Checked="CbxComment_Checked" Unchecked="CbxComment_Unchecked">Comment</CheckBox>
             </StackPanel>
             <TextBox x:Name="tbOutFile" FlowDirection="RightToLeft"/>
             <StackPanel Orientation="Horizontal">

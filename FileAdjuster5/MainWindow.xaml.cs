@@ -68,7 +68,7 @@ namespace FileAdjuster5
             MainFrame.Title = "File Adjuster version: " + Assembly.GetExecutingAssembly().GetName().Version;
             // Adding section to catch event when items are added to listbox of files
             ((INotifyCollectionChanged)lbFileNames.Items).CollectionChanged +=LbFileNames_CollectionChanged;
-            log.Info("FileAdjuster is starting up.");
+            log.Info($"{MainFrame.Title} is starting up.");
             // Setting up a worker thread
             MyWorker = (BackgroundWorker)this.FindResource("MyWorker");
             // displaying database and current working directory
@@ -231,6 +231,11 @@ namespace FileAdjuster5
 
         private void LbFileNames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            SetOutFile();
+        }
+
+        private void SetOutFile()
+        {
             if (lbFileNames.Items.Count > 0)
             {
                 strExt = tbExt.Text;  // passing extension because function below is also used in thread
@@ -247,10 +252,12 @@ namespace FileAdjuster5
                 {
                     tbOutFile.Text = NextFreeFilename(lbFileNames.Items[0].ToString());
                 }
-            } else
+            }
+            else
             {
                 tbOutFile.Text = "";
             }
+
         }
 
         private string NextFreeFilename(string inStr)
@@ -814,6 +821,16 @@ namespace FileAdjuster5
                 if (File.Exists(dlg.FileName)) File.Delete(dlg.FileName);
                 FileAdjSQLite.SavePresets(dlg.FileName);               
             }
+        }
+
+        private void CbxComment_Checked(object sender, RoutedEventArgs e)
+        {
+            SetOutFile();
+        }
+
+        private void CbxComment_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SetOutFile();
         }
 
         private void BtnLog_Click(object sender, RoutedEventArgs e)
