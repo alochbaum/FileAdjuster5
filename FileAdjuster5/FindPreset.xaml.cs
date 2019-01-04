@@ -48,5 +48,10 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         {
             return iGroup;
         }
+
+        private void DgPresets_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+            BtnOK_Click(this,new System.Windows.RoutedEventArgs());
+        }
     }
 }

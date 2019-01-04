@@ -11,7 +11,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Name="dgPresets" ItemsSource="{Binding}" CanUserReorderColumns="False" IsReadOnly="True"/>
+        <DataGrid x:Name="dgPresets" ItemsSource="{Binding}" CanUserReorderColumns="False" IsReadOnly="True" SelectedCellsChanged="DgPresets_SelectedCellsChanged"/>
         <StackPanel Grid.Row="1"  Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnOK" IsDefault="True"  Width="60" Click="BtnOK_Click">
                 <AccessText>_OK</AccessText>
