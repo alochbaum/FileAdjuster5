@@ -174,7 +174,12 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 if (reader.HasRows)
                 {
                     while (reader.Read())
-                        iReturn = reader.GetInt64(0);
+                        if (reader[0].GetType() != typeof(DBNull))
+                        {
+                            iReturn = reader.GetInt64(0);
+                        } else {
+                            iReturn = 3;
+                        }
                 }
 
                 reader.Close();
