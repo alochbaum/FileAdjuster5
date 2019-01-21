@@ -376,111 +376,119 @@ namespace FileAdjuster5
 
             foreach (string sInFile in lInFiles)
             {
-                input = File.Open(sInFile, FileMode.Open);
-                lCurNumFile++;
-                // skipping opening new file if blWorkingInsideFileList and Combine
-                if (!(blWorkingInsideFileList&&(!((I64_eChecked & (Int64)_eChecked.CombineFile) == 0))))
+                if (File.Exists(sInFile))
                 {
-                    output = File.Open(strFileOut, FileMode.Create);
-                }
-
-                blWorkingInsideFileList = true;
-                lPosition = 0;  // stores output file position
-                // writing header
-                if ((I64_eChecked & (Int64)_eChecked.Headers)!=0)
-                {
-                    const string csBound = "========\r\n";
-                    byte[] baBound = Encoding.ASCII.GetBytes(csBound);
-                    output.Write(baBound, 0, 10);
-                    byte[] baFile = Encoding.ASCII.GetBytes(sInFile + "\r\n");
-                    output.Write(baFile, 0, baFile.Length);
-                    output.Write(baBound, 0, 10);
-                }
-                FileInfo f = new FileInfo(sInFile);
-                lFileSize = f.Length;
-                iOut = read = icount= iStrLen = 0;
-                blHitLastLine = false;
-                blLineOverRun = false;
-
-                // looping the full file size
-                while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
-                {
-                    lCurBytesRead += 65376;
-                    iOut = 0;
-                    // looping the input buffer
-                    for (icount = 0; icount < read; icount++)
+                    input = File.Open(sInFile, FileMode.Open);
+                    lCurNumFile++;
+                    // skipping opening new file if blWorkingInsideFileList and Combine
+                    if (!(blWorkingInsideFileList && (!((I64_eChecked & (Int64)_eChecked.CombineFile) == 0))))
                     {
-                        // Start checking for null bytes
-                        if (inbuffer[icount] != 0)
-                        {
-                            if (iStrLen > 1999)
-                            {
-                                strbuffer[iStrLen++] = (byte)'\r';
-                                strbuffer[iStrLen++] = (byte)'\n';
-                                blLineOverRun = true;
-                            }
-                            else
-                                strbuffer[iStrLen++] = inbuffer[icount];
-                            if (inbuffer[icount] == '\n' || blLineOverRun)
-                            {
-                                blLineOverRun = false;
-                                if (DoICopyStr(System.Text.Encoding.Default.GetString(strbuffer, 0, iStrLen)))
-                                {
-                                    // Insert string testing section here
-                                    Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
-                                    iOut += iStrLen;
-                                    lNumOfLines++;
-                                    if (lNumOfLines >= lLinesPerFile)
-                                    {
-                                        blHitLastLine = true;
-                                    }
-                                }
-                                // reset string weither I copy it or not
-                                iStrLen = 0;
-                            }
-                        }
-                        else // Found a null byte in file
-                        {
-                            iCountOfNulls++;
-                        } // End check for null bytes
-                        // if you hit last line change the files
-                        if (blHitLastLine)
-                        {
-                            blHitLastLine = false;
-                            icount++;
-                            outbuffer[iOut] = inbuffer[icount];
-                            output.Write(outbuffer, 0, iOut);
-                            output.Close();
-                            strFileOut = NextFreeFilename(strFileOut);
-                            output = File.Open(strFileOut, FileMode.Create);
-                            lNumOfLines = 0;
-                            iOut = 0;
-                        }
+                        output = File.Open(strFileOut, FileMode.Create);
+                    }
 
-                    }  // end looping input buffer
-                       // writing to output buffer
+                    blWorkingInsideFileList = true;
+                    lPosition = 0;  // stores output file position
+                                    // writing header
+                    if ((I64_eChecked & (Int64)_eChecked.Headers) != 0)
+                    {
+                        const string csBound = "========\r\n";
+                        byte[] baBound = Encoding.ASCII.GetBytes(csBound);
+                        output.Write(baBound, 0, 10);
+                        byte[] baFile = Encoding.ASCII.GetBytes(sInFile + "\r\n");
+                        output.Write(baFile, 0, baFile.Length);
+                        output.Write(baBound, 0, 10);
+                    }
+                    FileInfo f = new FileInfo(sInFile);
+                    lFileSize = f.Length;
+                    iOut = read = icount = iStrLen = 0;
+                    blHitLastLine = false;
+                    blLineOverRun = false;
+
+                    // looping the full file size
+                    while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
+                    {
+                        lCurBytesRead += 65376;
+                        iOut = 0;
+                        // looping the input buffer
+                        for (icount = 0; icount < read; icount++)
+                        {
+                            // Start checking for null bytes
+                            if (inbuffer[icount] != 0)
+                            {
+                                if (iStrLen > 1999)
+                                {
+                                    strbuffer[iStrLen++] = (byte)'\r';
+                                    strbuffer[iStrLen++] = (byte)'\n';
+                                    blLineOverRun = true;
+                                }
+                                else
+                                    strbuffer[iStrLen++] = inbuffer[icount];
+                                if (inbuffer[icount] == '\n' || blLineOverRun)
+                                {
+                                    blLineOverRun = false;
+                                    if (DoICopyStr(System.Text.Encoding.Default.GetString(strbuffer, 0, iStrLen)))
+                                    {
+                                        // Insert string testing section here
+                                        Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
+                                        iOut += iStrLen;
+                                        lNumOfLines++;
+                                        if (lNumOfLines >= lLinesPerFile)
+                                        {
+                                            blHitLastLine = true;
+                                        }
+                                    }
+                                    // reset string weither I copy it or not
+                                    iStrLen = 0;
+                                }
+                            }
+                            else // Found a null byte in file
+                            {
+                                iCountOfNulls++;
+                            } // End check for null bytes
+                              // if you hit last line change the files
+                            if (blHitLastLine)
+                            {
+                                blHitLastLine = false;
+                                icount++;
+                                outbuffer[iOut] = inbuffer[icount];
+                                output.Write(outbuffer, 0, iOut);
+                                output.Close();
+                                strFileOut = NextFreeFilename(strFileOut);
+                                output = File.Open(strFileOut, FileMode.Create);
+                                lNumOfLines = 0;
+                                iOut = 0;
+                            }
+
+                        }  // end looping input buffer
+                           // writing to output buffer
+                        if (iOut > 0)
+                        {
+                            output.Write(outbuffer, 0, iOut);
+                            lPosition += read;
+                            // checking to see if user click cancel, if they did get out of loop
+                            if (MyWorker.CancellationPending) break;
+                            MyWorker.ReportProgress(
+                                 (int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
+                                 (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
+                        } // end looping output files
+                    } // finished reading last block
+                      // finish writing out block
                     if (iOut > 0)
                     {
                         output.Write(outbuffer, 0, iOut);
-                        lPosition += read;
-                        // checking to see if user click cancel, if they did get out of loop
-                        if (MyWorker.CancellationPending) break;
-                        MyWorker.ReportProgress(
-                             (int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
-                             (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
-                    } // end looping output files
-                } // finished reading last block
-                  // finish writing out block
-                if (iOut > 0)
-                {
-                    output.Write(outbuffer, 0, iOut);
+                    }
+                    if ((I64_eChecked & (Int64)_eChecked.CombineFile) == 0)
+                        output.Close();
+                    input.Close();
+                    if (MyWorker.CancellationPending) e.Cancel = true;
                 }
-                if((I64_eChecked & (Int64)_eChecked.CombineFile) == 0)
-                    output.Close();
-                input.Close();
-                if (MyWorker.CancellationPending) e.Cancel = true;
-            } // end of input files
-            output.Close();  // closing combined files or if missed check above
+                else
+                {
+                    MyWorker.ReportProgress((int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
+                        (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
+                }// end looping output files// end of input files
+                if(output!=null)output.Close();  // closing combined files or if missed check above
+            }
         }
 
         private bool DoICopyStr(string strIn)
