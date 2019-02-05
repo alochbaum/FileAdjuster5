@@ -487,8 +487,8 @@ namespace FileAdjuster5
                     MyWorker.ReportProgress((int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
                         (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
                 }// end looping output files// end of input files
-                if(output!=null)output.Close();  // closing combined files or if missed check above
             }
+            if (output != null) output.Close();  // closing combined files or if missed check above
         }
 
         private bool DoICopyStr(string strIn)
