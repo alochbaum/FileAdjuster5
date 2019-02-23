@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
         x:Name="MainFrame"
-        Title="MainWindow" Height="550" Width="890" Icon="Icon.ico">
+        Title="MainWindow" Height="600" Width="890" Icon="Icon.ico">
     <Grid Margin="10,5,10,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
@@ -18,11 +18,11 @@
             <ColumnDefinition Width="252"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MaxHeight="280"/>
             <RowDefinition Height="2"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MaxHeight="220"/>
             <RowDefinition Height="2"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
             <StackPanel Orientation="Horizontal" Drop="StackPanel_Drop" AllowDrop="True">
@@ -37,7 +37,7 @@
                     <AccessText>_&lt;</AccessText>
                 </Button>
             </StackPanel>
-            <ListBox x:Name="lbFileNames" FlowDirection="RightToLeft" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+            <ListBox x:Name="lbFileNames" FlowDirection="RightToLeft" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Auto" MaxHeight="200" />
         </StackPanel>
         <Rectangle Grid.Column="1" Grid.Row="0">
             <Rectangle.Fill>
@@ -128,7 +128,7 @@
                 <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --  </CheckBox>
                 <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines">no blank lines (not just includes)</CheckBox>
             </StackPanel>
-            <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True"/>
+            <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True" MaxHeight="180"/>
         </StackPanel>
         <Rectangle Grid.Row="3" Grid.ColumnSpan="5">
             <Rectangle.Fill>

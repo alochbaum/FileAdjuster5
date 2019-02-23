@@ -234,32 +234,57 @@ namespace FileAdjuster5
             SetOutFile();
         }
 
+        /// <summary>
+        /// This function populates the output file name, or clears is if there is no in files.
+        /// File name is the root directory of first file in list, and file name -0 and extension choice
+        /// or first word of top comment. Lastly the file name is sent to next name to increment
+        /// numbr if needed, then set in outfile field
+        /// </summary>
         private void SetOutFile()
         {
-            if (lbFileNames.Items.Count > 0)
-            {
-                strExt = tbExt.Text;  // passing extension because function below is also used in thread
-                // if comment checkbox is selected replated the incoming string
-                if (cbxComment.IsChecked == true)
-                {
-                    DataRow drow = MyDtable.Rows[0];
-                    string strTemp = drow.Field<string>("Parameter1");
-                    strTemp = System.IO.Path.GetDirectoryName(lbFileNames.Items[0].ToString()) + "\\" +
-                        strTemp.Substring(0, strTemp.IndexOf(' ')) + "-0" + strExt;
-                    tbOutFile.Text = NextFreeFilename(strTemp);
-                }
-                else
-                {
-                    tbOutFile.Text = NextFreeFilename(lbFileNames.Items[0].ToString());
-                }
-            }
-            else
+            // clear name if no in file
+            if (lbFileNames.Items.Count < 1)
             {
                 tbOutFile.Text = "";
+                return;
             }
-
+            // find directory and non-comment name
+            string strTempDir, strTempFile, strTemp;
+            strTemp = lbFileNames.Items[0].ToString();
+            strTempDir = System.IO.Path.GetDirectoryName(strTemp);
+            strTempFile = System.IO.Path.GetFileNameWithoutExtension(strTemp);
+            // if comment is set find first word in comment or "null"
+            if (cbxComment.IsChecked == true)
+            {
+                DataRow drow = MyDtable.Rows[0];
+                strTemp = drow.Field<string>("Parameter1");
+                int iTempSpacePosition = 0;
+                // zero length you can index
+                if (strTemp.Length>0) iTempSpacePosition = strTemp.IndexOf(' ',1);
+                // if didn't find space one character deep determine if any word is there
+                if(iTempSpacePosition < 1)
+                {
+                    if (strTemp.Length < 2) strTempFile = "null";
+                    else strTempFile = strTemp;
+                }
+                else // found space in phrase
+                {
+                    strTempFile = strTemp.Substring(0, iTempSpacePosition);
+                }
+            }
+            // form out file from pieces
+            strTemp = strTempDir + "\\" + strTempFile + "-0" + tbExt.Text;
+            // find next available file
+            tbOutFile.Text = NextFreeFilename(strTemp);
         }
 
+        /// <summary>
+        /// This checks if out file name exists and if it does increaments the -number at the end
+        /// </summary>
+        /// <param name="inStr">
+        /// Standard out file name used by this program directory/filename-number.extension
+        /// </param>
+        /// <returns></returns>
         private string NextFreeFilename(string inStr)
         {
             string strReturn = "";
