@@ -323,6 +323,19 @@ namespace FileAdjuster5
             return strReturn;
         }
 
+        /// <summary>
+        /// This function clears the status windows and then adds sent text, if logging is set to true it also
+        /// logs the message
+        /// </summary>
+        /// <param name="inStr"></param>
+        /// <param name="blLog"></param>
+        private void ClearStatusAndShow(string inStr, bool blLog = false)
+        {
+            rtbStatus.Document.Blocks.Clear();
+            rtbStatus.AppendText(inStr);
+            if (blLog) log.Info(inStr);
+        }
+
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
             ClearFiles();
@@ -864,6 +877,42 @@ namespace FileAdjuster5
         private void CbxComment_Unchecked(object sender, RoutedEventArgs e)
         {
             SetOutFile();
+        }
+
+        private void BtnInc_Click(object sender, RoutedEventArgs e)
+        {
+            // find next available file
+            tbOutFile.Text = NextFreeFilename(tbOutFile.Text);
+        }
+
+        /// <summary>
+        /// Cleans up all files that match output file name in the directory
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnCleanUp_Click(object sender, RoutedEventArgs e)
+        {
+            // checking to see if tbOutfile text is null or short
+            string strTemp = tbOutFile.Text;
+            if(string.IsNullOrEmpty(strTemp)||strTemp.Length<11)
+            {
+                ClearStatusAndShow("Output file string is null or too short to clean up files");
+                return;
+            }
+            string strTempDir, strTempFile, strTempExt;
+            strTempDir = System.IO.Path.GetDirectoryName(strTemp);
+            strTempFile = System.IO.Path.GetFileNameWithoutExtension(strTemp);
+            strTempFile = strTempFile.Substring(0, strTempFile.LastIndexOf('-'));
+            strTempExt = System.IO.Path.GetExtension(strTemp);
+            int iCount = 0;
+            var dir = new DirectoryInfo(strTempDir);
+ 
+            foreach (var file in dir.EnumerateFiles(strTempFile+"-*"+strTempExt))
+            {
+                iCount++;
+                file.Delete();
+            }
+            ClearStatusAndShow($"Deleted {iCount} files in {strTempDir} matching pattern {strTempFile}-*{strTempExt}", true);
         }
 
         private void BtnLog_Click(object sender, RoutedEventArgs e)

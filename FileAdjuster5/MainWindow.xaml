@@ -67,6 +67,12 @@
                 <CheckBox x:Name="cbxFileHeaders" Margin="5,0,0,0" IsChecked="True" VerticalAlignment="Center" ToolTip="If &quot;Combine Files&quot; is checked this added a header with each file name.">Headers</CheckBox>
                 <Button x:Name="btnOut2In" Margin="5,0,0,0" ToolTip="Clears Input files and puts current output file to be new input" Click="BtnOut2In_Click">Out2In</Button>
                 <Button x:Name="btnLog" Margin="5,0,0,0" Click="BtnLog_Click" ToolTip="Loads program log file in Notepad ++ program">Log</Button>
+                <Button x:Name="btnInc" ToolTip="Increments (alt-n) output file if that file exits (automatic on comment mode or new input files)" Margin="5,0,0,0" Click="BtnInc_Click">
+                    <AccessText>I_nc</AccessText>
+                </Button>
+                <Button x:Name="btnCleanUp" ToolTip="Clean Up (alt-u) deletes all output files that match -number pattern above this button" Margin="5,0,0,0" Click="BtnCleanUp_Click">
+                    <AccessText>C_U</AccessText>
+                </Button>
             </StackPanel>
         </StackPanel>
         <Rectangle Grid.Column="3" Grid.Row="0">
@@ -108,7 +114,9 @@
                 <Button x:Name="btnQuickExclude" Margin="0,0,5,0" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
                     <AccessText>Q-_X</AccessText>
                 </Button>
-                <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="BtnClearRows_Click" Content="Clear or New Action" ToolTip="Clears all rows below and asks you to created first comment row"/>
+                <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="BtnClearRows_Click" ToolTip="Clears all rows below and asks you to created first comment row (alt-w)">
+                    <AccessText>Clear or Ne_w Action</AccessText>
+                </Button>
                 <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">Delete Row</Button>
                 <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">Swap with Row Above</Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
@@ -126,7 +134,8 @@
                 <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below which don't start with Parameter2">include not starting with Parameter2 +</CheckBox>
                 <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">not date +</CheckBox>
                 <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --  </CheckBox>
-                <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines">no blank lines (not just includes)</CheckBox>
+                <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines (alt-b)">
+                    <AccessText>no _blank lines (not just includes)</AccessText></CheckBox>
             </StackPanel>
             <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True" MaxHeight="180"/>
         </StackPanel>
