@@ -20,7 +20,7 @@ namespace FileAdjuster5
     public partial class AddTime : Window
     {
         private int iOtherChanges = 3;
-        private bool bltpEndLoaded = false, bltsDurLoaded = false;
+        //private bool bltpEndLoaded = false, bltsDurLoaded = false;
         public AddTime()
         {
             InitializeComponent();
