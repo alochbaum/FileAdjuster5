@@ -107,18 +107,21 @@
         </Rectangle>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">Add Row</Button>
                 <Button x:Name="btnQuickInsert" Margin="0,0,5,0" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="BtnQuickInsert_Click">
                     <AccessText>_Q-I</AccessText>
                 </Button>
                 <Button x:Name="btnQuickExclude" Margin="0,0,5,0" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
                     <AccessText>Q-_X</AccessText>
                 </Button>
+                <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">Add Row</Button>
+                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">Swap with Row Above</Button>
+                <Button x:Name="btnEditParams" Margin="0,0,5,0" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditParams_Click">
+                    <AccessText>_Edit Params</AccessText>
+                    </Button>
+                <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">Delete Row</Button>
                 <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="BtnClearRows_Click" ToolTip="Clears all rows below and asks you to created first comment row (alt-w)">
                     <AccessText>Clear or Ne_w Action</AccessText>
                 </Button>
-                <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">Delete Row</Button>
-                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">Swap with Row Above</Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click" ToolTip="Saves current actions below and checkboxes as a preset.">Save as Preset</Button>
                 <Button x:Name="btnExportPresets" Margin="0,0,5,0" ToolTip="This exports presets to a database file." Click="btnExportPresets_Click">Export Presets</Button>

@@ -727,8 +727,9 @@ namespace FileAdjuster5
                 blUsingActionsHistory = false;
                 MyDtable.Rows.Clear();
                 Int64 i = FileAdjSQLite.GetActionint();
-                MyDtable.Rows.Add(1, ++i, "Comment", myGet.GetAnswer(), "");
-                log.Info("Cleared action");
+                string strCommet1Param = myGet.GetAnswer();
+                MyDtable.Rows.Add(1, ++i, "Comment", strCommet1Param, "");
+                ClearStatusAndShow($"Created new action starting with {strCommet1Param}", true);
             }
         }
 
@@ -915,6 +916,27 @@ namespace FileAdjuster5
             ClearStatusAndShow($"Deleted {iCount} files in {strTempDir} matching pattern {strTempFile}-*{strTempExt}", true);
         }
 
+        private void BtnEditParams_Click(object sender, RoutedEventArgs e)
+        {
+            int iTemp = dgActions.SelectedIndex;
+            if (iTemp > -1 && iTemp < MyDtable.Rows.Count)
+            {
+                TwoParams send2 = new TwoParams();
+                send2.Param1 = MyDtable.Rows[iTemp].Field<string>("Parameter1");
+                send2.Param2 = MyDtable.Rows[iTemp].Field<string>("Parameter2");
+                string strType = MyDtable.Rows[iTemp].Field<string>("Action");
+                send2 = WinEditParams.GetEdit(strType, send2);
+                if (send2 != null)
+                {
+                    MyDtable.Rows[iTemp][3] = send2.Param1;
+                    MyDtable.Rows[iTemp][4] = send2.Param2;
+                 }
+            }
+            else Xceed.Wpf.Toolkit.MessageBox.Show("You have to select a valid Action Group row to edit.", 
+                "Operational Hint-Left click on row",MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
+        }
+
         private void BtnLog_Click(object sender, RoutedEventArgs e)
         {
             string strfilename = $"{ AppDomain.CurrentDomain.BaseDirectory }\\FileAdjuster5.log";
@@ -936,8 +958,9 @@ namespace FileAdjuster5
         {
             if (MyDtable.Rows.Count < 2)
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show("Operational Training",
-                    "Sorry you can't delete last row.",MessageBoxButton.OK,
+                Xceed.Wpf.Toolkit.MessageBox.Show("Sorry you can't delete last row.",
+                    "Operational Training",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Exclamation);
             }
             else
@@ -947,8 +970,9 @@ namespace FileAdjuster5
                 {
                     MyDtable.Rows[iTemp].Delete();
                 }
-                else Xceed.Wpf.Toolkit.MessageBox.Show("Operational Hint-Left click on row", 
-                    "You have to select a valid row.",MessageBoxButton.OK,
+                else Xceed.Wpf.Toolkit.MessageBox.Show(
+                    "You have to select a valid row to delete and you can't delete the top row. ", 
+                    "Operational Hint-Left click on row", MessageBoxButton.OK,
                     MessageBoxImage.Exclamation);
             }
         }
