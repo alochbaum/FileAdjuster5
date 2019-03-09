@@ -271,6 +271,11 @@ namespace FileAdjuster5
                 {
                     strTempFile = strTemp.Substring(0, iTempSpacePosition);
                 }
+                // need to clean file names characters
+                foreach(char c in System.IO.Path.GetInvalidFileNameChars())
+                {
+                    strTempFile=strTempFile.Replace(c, '_');
+                }
             }
             // form out file from pieces
             strTemp = strTempDir + "\\" + strTempFile + "-0" + tbExt.Text;

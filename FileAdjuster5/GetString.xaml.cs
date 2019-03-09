@@ -41,6 +41,7 @@ namespace FileAdjuster5
         {
             wndGetString.Title = strTitle;
             lbAnswer.Content = strQuestion;
+            tbAnswer.Focus();
         }
     }
 }

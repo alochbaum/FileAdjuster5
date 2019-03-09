@@ -34,7 +34,7 @@
                     <AccessText>_Clear</AccessText>
                 </Button>
                 <Button x:Name="btnHistory" Click="BtnHistory_Click" ToolTip="Load file(s) from previous starts. (alt less than)" >
-                    <AccessText>_&lt;</AccessText>
+                    <AccessText>&lt;_-</AccessText>
                 </Button>
             </StackPanel>
             <ListBox x:Name="lbFileNames" FlowDirection="RightToLeft" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Auto" MaxHeight="200" />
@@ -108,13 +108,14 @@
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
                 <Button x:Name="btnQuickInsert" Margin="0,0,5,0" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="BtnQuickInsert_Click">
-                    <AccessText>_Q-I</AccessText>
+                    <AccessText>Q-_I</AccessText>
                 </Button>
                 <Button x:Name="btnQuickExclude" Margin="0,0,5,0" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
                     <AccessText>Q-_X</AccessText>
                 </Button>
                 <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">Add Row</Button>
-                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">Swap with Row Above</Button>
+                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">
+                    <AccessText>Swa_p with Row Above</AccessText></Button>
                 <Button x:Name="btnEditParams" Margin="0,0,5,0" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditParams_Click">
                     <AccessText>_Edit Params</AccessText>
                     </Button>
