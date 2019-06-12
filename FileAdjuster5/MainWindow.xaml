@@ -135,7 +135,7 @@
                 </Button>
             </StackPanel>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below which don't start with Parameter2">include not starting with Parameter2 +</CheckBox>
+                <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below if they start with any Parameter2 in any row.">include if starting with Parameter2 +</CheckBox>
                 <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">not date +</CheckBox>
                 <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --  </CheckBox>
                 <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines (alt-b)">

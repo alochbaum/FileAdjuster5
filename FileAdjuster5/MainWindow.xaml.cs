@@ -553,7 +553,7 @@ namespace FileAdjuster5
                     // if doing include check for the flags
                     if (blIncludeCheckNextLine)
                     {
-
+                        // No bracket check
                         if((I64_eChecked & (Int64)_eChecked.NoBracket) != 0)
                         {
                             if (strIn[0] != '[') return true;

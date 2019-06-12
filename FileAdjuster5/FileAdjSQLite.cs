@@ -361,6 +361,10 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return tableReturn;
         }
+        /// <summary>
+        /// This is function to export presets to a new database
+        /// </summary>
+        /// <param name="StrFile">The file name to use for saved database</param>
         static public void SavePresets(string StrFile)
         {
             SQLiteConnection.CreateFile(StrFile);
