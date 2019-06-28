@@ -888,7 +888,18 @@ namespace FileAdjuster5
         private void BtnInc_Click(object sender, RoutedEventArgs e)
         {
             // find next available file
-            tbOutFile.Text = NextFreeFilename(tbOutFile.Text);
+            string strTemp = NextFreeFilename(tbOutFile.Text);
+            if(strTemp == tbOutFile.Text)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Didn't increament the outfile.",
+                                "There isn't a file with current out file name.", MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                tbOutFile.Text = strTemp;
+            }
+
         }
 
         /// <summary>
@@ -940,6 +951,11 @@ namespace FileAdjuster5
             else Xceed.Wpf.Toolkit.MessageBox.Show("You have to select a valid Action Group row to edit.", 
                 "Operational Hint-Left click on row",MessageBoxButton.OK,
                 MessageBoxImage.Exclamation);
+        }
+
+        private void RtbStatus_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            rtbStatus.ScrollToEnd();
         }
 
         private void BtnLog_Click(object sender, RoutedEventArgs e)

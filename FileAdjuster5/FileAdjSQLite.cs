@@ -56,7 +56,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "select * from ActionType order by ActionTypeID;";
+                string sql = "select * from ActionType order by ActionType;";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -76,7 +76,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "select * from ActionPresetType order by PTypeID;";
+                string sql = "select * from ActionPresetType order by PresetType;";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
