@@ -57,9 +57,9 @@ namespace FileAdjuster5
         // Passes string extension to NextFile function when used in thread
         private string strExt = ".txt";
         // Private passes list of filenames to thread
-        //private List<string> lFileList;
         private DateTime myStartTime;
         private DataTable MyDtable = new DataTable();
+        private List<jobReport> myRport = new List<jobReport>();
 
         public MainWindow()
         {

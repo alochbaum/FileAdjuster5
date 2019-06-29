@@ -138,6 +138,7 @@
     <Compile Include="FindPreset.xaml.cs">
       <DependentUpon>FindPreset.xaml</DependentUpon>
     </Compile>
+    <Compile Include="jobReport.cs" />
     <Compile Include="ReadLastFromLog.cs" />
     <Compile Include="SavePreset.xaml.cs">
       <DependentUpon>SavePreset.xaml</DependentUpon>
