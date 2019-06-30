@@ -416,6 +416,9 @@ namespace FileAdjuster5
             int iOut = 0;
             bool blHitLastLine = false;
             bool blLineOverRun = false;
+            // First Entry in my Rport is for non-existing file errors
+            myRport.Add(new jobReport { filename = "", error = "", lines = 0 });
+
 
             foreach (string sInFile in lInFiles)
             {
@@ -476,7 +479,7 @@ namespace FileAdjuster5
                                         // Insert string testing section here
                                         Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
                                         iOut += iStrLen;
-                                        myRport[(int)lCurNumFile - 1].lines++;
+                                        myRport[(int)lCurNumFile].lines++;
                                         lNumOfLines++;
                                         if (lNumOfLines >= lLinesPerFile)
                                         {
@@ -528,14 +531,17 @@ namespace FileAdjuster5
                         output.Close();
                     input.Close();
                     // on closing input file write error
-                    myRport[(int)lCurNumFile - 1].error = $"Nulls: {lNullsInFile}";
+                    myRport[(int)lCurNumFile].error = $"Nulls: {lNullsInFile}";
                     if (MyWorker.CancellationPending) e.Cancel = true;
-                }
-                else
+                } 
+                else  //file didn't exist
                 {
-                    MyWorker.ReportProgress((int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
-                        (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
+                    myRport[0].filename = "Error missing file(s):";
+                    myRport[0].error += " " + sInFile + " ";
+                    myRport[0].lines++;
                 }// end looping output files// end of input files
+                MyWorker.ReportProgress((int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
+    (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
             }
             if (output != null) output.Close();  // closing combined files or if missed check above
         }
@@ -1016,7 +1022,6 @@ namespace FileAdjuster5
         }
         void MyWorker_Complete(object sender, RunWorkerCompletedEventArgs e)
         {
-            string strS = "";
             pbProgress.Value = 0;
             pbFiles.Value = 0;
             tbOutFile.Text = strFileOut;
@@ -1026,8 +1031,8 @@ namespace FileAdjuster5
             if (iCountOfNulls > 0) rtbStatus.AppendText($"Found {iCountOfNulls} null characters in files which weren't copied");
             foreach (jobReport jR in myRport)
             {
-                LogAndAppend($"  lines written: {jR.lines}\t{jR.filename}\t{jR.error}");
-                
+                // the report starts with 0 entry for skipped files that has empty filename if no error
+                if(jR.filename.Length>2)LogAndAppend($"  lines written: {jR.lines}\t{jR.filename}\t{jR.error}");
             }
             myRport.Clear();
             TimeSpan mySpan = DateTime.Now - myStartTime;
