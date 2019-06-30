@@ -408,7 +408,7 @@ namespace FileAdjuster5
             long lNumOfLines = 0;
             bool blWorkingInsideFileList = false;
             long lNumFiles = lInFiles.Count;
-            long lCurNumFile = 0, lCurBytesRead = 0;
+            long lCurNumFile = 0, lCurBytesRead = 0, lNullsInFile =0;
             byte[] inbuffer = new byte[16 * 4096];
             byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
             byte[] strbuffer = new byte[2003];
@@ -423,6 +423,8 @@ namespace FileAdjuster5
                 {
                     input = File.Open(sInFile, FileMode.Open);
                     lCurNumFile++;
+                    myRport.Add(new jobReport { filename = sInFile, error = "", lines = 0 });
+                    lNullsInFile = 0;
                     // skipping opening new file if blWorkingInsideFileList and Combine
                     if (!(blWorkingInsideFileList && (!((I64_eChecked & (Int64)_eChecked.CombineFile) == 0))))
                     {
@@ -474,6 +476,7 @@ namespace FileAdjuster5
                                         // Insert string testing section here
                                         Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
                                         iOut += iStrLen;
+                                        myRport[(int)lCurNumFile - 1].lines++;
                                         lNumOfLines++;
                                         if (lNumOfLines >= lLinesPerFile)
                                         {
@@ -487,6 +490,7 @@ namespace FileAdjuster5
                             else // Found a null byte in file
                             {
                                 iCountOfNulls++;
+                                lNullsInFile++;
                             } // End check for null bytes
                               // if you hit last line change the files
                             if (blHitLastLine)
@@ -523,6 +527,8 @@ namespace FileAdjuster5
                     if ((I64_eChecked & (Int64)_eChecked.CombineFile) == 0)
                         output.Close();
                     input.Close();
+                    // on closing input file write error
+                    myRport[(int)lCurNumFile - 1].error = $"Nulls: {lNullsInFile}";
                     if (MyWorker.CancellationPending) e.Cancel = true;
                 }
                 else
@@ -1017,6 +1023,11 @@ namespace FileAdjuster5
             btnOpenNotePad.IsEnabled = true;
             btnCancel.IsEnabled = false;
             if (iCountOfNulls > 0) rtbStatus.AppendText($"Found {iCountOfNulls} null characters in files which weren't copied");
+            foreach (jobReport jR in myRport)
+            {
+                rtbStatus.AppendText($"  lines written: {jR.lines}\t{jR.filename}\t{jR.error}\r\n");
+            }
+            myRport.Clear();
             TimeSpan mySpan = DateTime.Now - myStartTime;
             rtbStatus.AppendText($"{DateTime.Now.TimeOfDay} Finished with file in {mySpan.Seconds} seconds\r\n");
         }
