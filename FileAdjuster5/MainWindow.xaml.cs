@@ -1016,6 +1016,7 @@ namespace FileAdjuster5
         }
         void MyWorker_Complete(object sender, RunWorkerCompletedEventArgs e)
         {
+            string strS = "";
             pbProgress.Value = 0;
             pbFiles.Value = 0;
             tbOutFile.Text = strFileOut;
@@ -1025,13 +1026,18 @@ namespace FileAdjuster5
             if (iCountOfNulls > 0) rtbStatus.AppendText($"Found {iCountOfNulls} null characters in files which weren't copied");
             foreach (jobReport jR in myRport)
             {
-                rtbStatus.AppendText($"  lines written: {jR.lines}\t{jR.filename}\t{jR.error}\r\n");
+                LogAndAppend($"  lines written: {jR.lines}\t{jR.filename}\t{jR.error}");
+                
             }
             myRport.Clear();
             TimeSpan mySpan = DateTime.Now - myStartTime;
-            rtbStatus.AppendText($"{DateTime.Now.TimeOfDay} Finished with file in {mySpan.Seconds} seconds\r\n");
+            LogAndAppend($"{DateTime.Now.TimeOfDay} Complete in {mySpan.Seconds} seconds, last {tbOutFile.Text}");
         }
-    
+        private void LogAndAppend(string strIn)
+        {
+            log.Info(strIn);
+            rtbStatus.AppendText(strIn+"\r\n");
+        }
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             MyWorker.CancelAsync();
