@@ -1,0 +1,30 @@
+﻿<Window x:Class="FileAdj5DB.MainDBWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileAdj5DB"
+        mc:Ignorable="d"
+        Title="MainDBWindow" Height="250" Width="500">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="1" Grid.Column="2" Margin="5">Source Database</Label>
+        <Button Grid.Row="2"  Grid.Column="1" Margin="5" Click="Button_Click">Select</Button>
+        <TextBox x:Name="tbSourceDB" Grid.Row="2" Grid.Column="2" Margin="5">C:\Users\andy\Source\Repos\FileAdjuster5\FileAdjuster5\FileAdj.sqlite</TextBox>
+
+    </Grid>
+</Window>
