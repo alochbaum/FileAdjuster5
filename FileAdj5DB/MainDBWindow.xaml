@@ -23,8 +23,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="1" Grid.Column="2" Margin="5">Source Database</Label>
-        <Button Grid.Row="2"  Grid.Column="1" Margin="5" Click="Button_Click">Select</Button>
+        <Button x:Name="btnSelect" Grid.Row="2"  Grid.Column="1" Margin="5" Click="Button_Click">Select</Button>
         <TextBox x:Name="tbSourceDB" Grid.Row="2" Grid.Column="2" Margin="5">C:\Users\andy\Source\Repos\FileAdjuster5\FileAdjuster5\FileAdj.sqlite</TextBox>
+        <Button x:Name="btnList" Grid.Row="3" Grid.Column="1" Margin="5" Click="BtnList_Click">List</Button>
+        <RichTextBox x:Name="rtbStatus" Grid.Row="3" Grid.ColumnSpan="8"></RichTextBox>
 
     </Grid>
 </Window>

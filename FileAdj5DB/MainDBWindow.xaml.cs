@@ -43,5 +43,10 @@ namespace FileAdj5DB
                 tbSourceDB.Text = dlg.FileName;
             }
         }
+
+        private void BtnList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
