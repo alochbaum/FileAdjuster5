@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CData2Table.cs" />
     <Compile Include="cPreset.cs" />
     <Compile Include="SqLiteModifer.cs" />
     <Page Include="MainDBWindow.xaml">

@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -52,6 +54,7 @@ namespace FileAdj5DB
             {
                 rtbStatus.AppendText($"{cp.iId.ToString()} {cp.Name}\r\n");
             }
+            DataTable myTable =  myList.ToDataTable();
         }
     }
 }
