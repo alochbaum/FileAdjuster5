@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FileAdj5DB
 {
-    class cPreset
+    class CPreset
     {
-        public int iId { get; set; }
+        public Int64 iId { get; set; }
         public string Name { get; set; }
     }
 }

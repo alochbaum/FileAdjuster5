@@ -46,7 +46,12 @@ namespace FileAdj5DB
 
         private void BtnList_Click(object sender, RoutedEventArgs e)
         {
-
+            SqLiteModifer mySQL = new SqLiteModifer();
+            List<CPreset> myList = mySQL.GetCPresets(tbSourceDB.Text);
+            foreach (CPreset cp in myList)
+            {
+                rtbStatus.AppendText($"{cp.iId.ToString()} {cp.Name}\r\n");
+            }
         }
     }
 }
