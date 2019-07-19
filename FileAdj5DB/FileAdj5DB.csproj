@@ -75,7 +75,14 @@
     </ApplicationDefinition>
     <Compile Include="CData2Table.cs" />
     <Compile Include="cPreset.cs" />
+    <Compile Include="EditPresets.xaml.cs">
+      <DependentUpon>EditPresets.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SqLiteModifer.cs" />
+    <Page Include="EditPresets.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainDBWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
