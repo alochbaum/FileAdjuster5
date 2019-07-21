@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,31 @@ namespace FileAdj5DB
     /// </summary>
     public partial class EditPresets : Window
     {
-        public EditPresets()
+        private DataTable myDT = new DataTable();
+        private List<CPreset> myLCP = new List<CPreset>();
+        private SqLiteModifer mySQL = new SqLiteModifer();
+        private string inTdb, inIdb;
+        public EditPresets(string inTargetDB,string inInputDB)
         {
+            inTdb = inTargetDB;
+            inIdb = inInputDB;
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            DisplayGridFromDB(inTdb);
+        }
+        /// <summary>
+        /// This loads Display Grid with Presets from Database String
+        /// </summary>
+        /// <param name="strDB">Full filepath of database</param>
+        private void DisplayGridFromDB(string strDB)
+        {
+            myLCP = mySQL.GetCPresets(inTdb);
+            myDT = myLCP.ToDataTable<CPreset>();
+            DisplayGrid.ItemsSource = myLCP;
+            DisplayGrid.DataContext = myDT.DefaultView;
         }
     }
 }

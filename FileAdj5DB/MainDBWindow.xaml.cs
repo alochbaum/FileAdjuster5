@@ -34,7 +34,7 @@ namespace FileAdj5DB
             {
                 Title = "Select File to Add To List (It will not auto start)",
                 Filter = "All Files|*.*",
-                InitialDirectory = System.IO.Path.GetFullPath(tbSourceDB.Text)
+                InitialDirectory = System.IO.Path.GetFullPath(tbTargetDB.Text)
             };
 
             // Show save file dialog box
@@ -42,19 +42,14 @@ namespace FileAdj5DB
 
             if (result != null && result == true)
             {
-                tbSourceDB.Text = dlg.FileName;
+                tbTargetDB.Text = dlg.FileName;
             }
         }
 
-        private void BtnList_Click(object sender, RoutedEventArgs e)
+        private void BtnPresetGroups_Click(object sender, RoutedEventArgs e)
         {
-            SqLiteModifer mySQL = new SqLiteModifer();
-            List<CPreset> myList = mySQL.GetCPresets(tbSourceDB.Text);
-            foreach (CPreset cp in myList)
-            {
-                rtbStatus.AppendText($"{cp.iId.ToString()} {cp.Name}\r\n");
-            }
-            DataTable myTable =  myList.ToDataTable();
+            EditPresets myEP = new EditPresets(tbTargetDB.Text,tbInputDB.Text);
+            myEP.Show();
         }
     }
 }
