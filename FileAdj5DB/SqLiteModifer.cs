@@ -11,7 +11,7 @@ namespace FileAdj5DB
 {
     class SqLiteModifer
     {
-        public List <CPreset> GetCPresets(string strDB)
+        public List<CPreset> GetCPresets(string strDB)
         {
             List<CPreset> lreturn = new List<CPreset>();
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -32,6 +32,20 @@ namespace FileAdj5DB
                 m_dbConnection.Close();
             }
             return lreturn;
+        }
+        
+        public bool RenamePresetType(string strDB, string strOld, string strNew)
+        {
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            if (File.Exists(strDB))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDB + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "UPDATE ActionPresetType SET PresetType='" + strNew + "' WHERE PresetType='" + strOld + ";";
+                m_dbConnection.Close();
+                return true;
+            }
+            return false;
         }
     }
 }

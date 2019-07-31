@@ -35,6 +35,19 @@ namespace FileAdj5DB
         {
             DisplayGridFromDB(inTdb);
         }
+
+        private void BtnEditName_Click(object sender, RoutedEventArgs e)
+        {
+            if (DisplayGrid.SelectedIndex == -1)
+                MessageBox.Show("You have to select row", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            else
+            {
+                CPreset PresetRow = (CPreset)DisplayGrid.SelectedItems[0];
+                MessageBox.Show(PresetRow.Name);
+
+            }
+        }
+
         /// <summary>
         /// This loads Display Grid with Presets from Database String
         /// </summary>
