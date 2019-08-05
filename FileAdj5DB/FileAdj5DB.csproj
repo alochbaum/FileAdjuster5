@@ -78,6 +78,7 @@
     <Compile Include="EditPresets.xaml.cs">
       <DependentUpon>EditPresets.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RichTBEnhance.cs" />
     <Compile Include="SqLiteModifer.cs" />
     <Page Include="EditPresets.xaml">
       <SubType>Designer</SubType>
