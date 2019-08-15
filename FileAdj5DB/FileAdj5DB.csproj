@@ -78,11 +78,18 @@
     <Compile Include="EditPresets.xaml.cs">
       <DependentUpon>EditPresets.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GetString.xaml.cs">
+      <DependentUpon>GetString.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RichTBEnhance.cs" />
     <Compile Include="SqLiteModifer.cs" />
     <Page Include="EditPresets.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GetString.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainDBWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

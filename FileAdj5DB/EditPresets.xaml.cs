@@ -43,8 +43,14 @@ namespace FileAdj5DB
             else
             {
                 CPreset PresetRow = (CPreset)DisplayGrid.SelectedItems[0];
-                MessageBox.Show(PresetRow.Name);
-
+                //MessageBox.Show(PresetRow.Name);
+                // Note, I just discovered that you could edit name in the display grid
+                // I think that is the best method.
+                GetString myGS = new GetString(PresetRow.Name + "?", "What is new name?");
+                if (myGS.ShowDialog() == true)
+                {
+                    MessageBox.Show(myGS.GetAnswer());
+                }
             }
         }
 
