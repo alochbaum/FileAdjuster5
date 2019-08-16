@@ -54,6 +54,11 @@ namespace FileAdj5DB
             }
         }
 
+        private void DisplayGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            MessageBox.Show(DisplayGrid.Columns[1].GetCellContent(e.Row).ToString());
+        }
+
         /// <summary>
         /// This loads Display Grid with Presets from Database String
         /// </summary>
