@@ -56,7 +56,9 @@ namespace FileAdj5DB
 
         private void DisplayGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            MessageBox.Show(DisplayGrid.Columns[1].GetCellContent(e.Row).ToString());
+            TextBox objTextBox = (TextBox)e.EditingElement;
+            MessageBox.Show(objTextBox.Text);
+            //MessageBox.Show(DisplayGrid.)
         }
 
         /// <summary>
