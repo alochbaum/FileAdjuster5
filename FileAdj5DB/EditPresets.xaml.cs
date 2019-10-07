@@ -36,29 +36,11 @@ namespace FileAdj5DB
             DisplayGridFromDB(inTdb);
         }
 
-        private void BtnEditName_Click(object sender, RoutedEventArgs e)
-        {
-            if (DisplayGrid.SelectedIndex == -1)
-                MessageBox.Show("You have to select row", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            else
-            {
-                CPreset PresetRow = (CPreset)DisplayGrid.SelectedItems[0];
-                //MessageBox.Show(PresetRow.Name);
-                // Note, I just discovered that you could edit name in the display grid
-                // I think that is the best method.
-                GetString myGS = new GetString(PresetRow.Name + "?", "What is new name?");
-                if (myGS.ShowDialog() == true)
-                {
-                    MessageBox.Show(myGS.GetAnswer());
-                }
-            }
-        }
-
         private void DisplayGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             TextBox objTextBox = (TextBox)e.EditingElement;
-            DataGridRow objRow = (DataGridRow)e.Row;
-            MessageBox.Show(objTextBox.Text+" "+e.EditAction.ToString()+" row "+objRow.ITem);
+            CPreset PresetRow = (CPreset)DisplayGrid.SelectedItems[0];
+            MessageBox.Show(objTextBox.Text, PresetRow.iId.ToString());
             //MessageBox.Show(DisplayGrid.)
         }
 

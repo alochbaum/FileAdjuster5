@@ -51,5 +51,10 @@ namespace FileAdj5DB
             EditPresets myEP = new EditPresets(tbTargetDB.Text,tbInputDB.Text);
             myEP.Show();
         }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            // add checking saved changes here
+        }
     }
 }
