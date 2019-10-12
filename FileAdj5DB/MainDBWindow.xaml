@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdj5DB"
         mc:Ignorable="d"
-        Title="MainDBWindow" Height="250" Width="500" Closing="Window_Closing">
+        Title="MainDBWindow" Height="250" Width="550" Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5"/>
@@ -23,9 +23,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="1" Grid.Column="2" Margin="5">Target Database about Optional Input Database</Label>
-        <Button x:Name="btnSelectTDB" Grid.Row="2"  Grid.Column="1" Margin="5" Click="Button_Click">Select</Button>
+        <Button x:Name="btnSelectTDB" Grid.Row="2"  Grid.Column="1" Margin="5" Click="Btn_SeletFile">Target DB Select</Button>
         <TextBox x:Name="tbTargetDB" Grid.Row="2" Grid.Column="2" Margin="5">C:\Users\andy\Source\Repos\FileAdjuster5\FileAdjuster5\FileAdj.sqlite</TextBox>
-        <Button x:Name="btnSelectInDB" Grid.Row="3"  Grid.Column="1" Margin="5" Click="Button_Click">Select</Button>
+        <Button x:Name="btnSelectInDB" Grid.Row="3"  Grid.Column="1" Margin="5" Click="Btn_SeletFile">Source DB Select</Button>
         <TextBox x:Name="tbInputDB" Grid.Row="3" Grid.Column="2" Margin="5">C:\Users\andy\Desktop\FileAdj.sqlite</TextBox>       
         <Button x:Name="btnPresetGroups" Grid.Row="4" Grid.Column="1" Margin="5" Click="BtnPresetGroups_Click">PresetGroups</Button>
         <RichTextBox x:Name="rtbStatus" Grid.Row="8" Grid.ColumnSpan="8"></RichTextBox>

@@ -11,7 +11,7 @@ namespace FileAdj5DB
 {
     class SqLiteModifer
     {
-        public List<CPreset> GetCPresets(string strDB)
+        public List<CPreset> GetCPresetsTypes(string strDB)
         {
             List<CPreset> lreturn = new List<CPreset>();
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -34,14 +34,17 @@ namespace FileAdj5DB
             return lreturn;
         }
         
-        public bool RenamePresetType(string strDB, string strOld, string strNew)
+        public bool RenamePresetType(string strDB, string strId, string strNew)
         {
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             if (File.Exists(strDB))
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDB + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "UPDATE ActionPresetType SET PresetType='" + strNew + "' WHERE PresetType='" + strOld + ";";
+                string sql = "UPDATE ActionPresetType SET PresetType='" + strNew + "' WHERE PTypeID=" + strId + ";";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                // this command is getting error datebase is locked when database is open in other program
+                command.ExecuteNonQuery();
                 m_dbConnection.Close();
                 return true;
             }

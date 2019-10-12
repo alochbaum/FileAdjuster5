@@ -28,8 +28,10 @@ namespace FileAdj5DB
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Btn_SeletFile(object sender, RoutedEventArgs e)
         {
+            Button inButton = (Button)sender;
+            string strContent = inButton.Content.ToString();
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
             {
                 Title = "Select File to Add To List (It will not auto start)",
@@ -42,7 +44,9 @@ namespace FileAdj5DB
 
             if (result != null && result == true)
             {
-                tbTargetDB.Text = dlg.FileName;
+                if (strContent[0].Equals('T'))
+                    tbTargetDB.Text = dlg.FileName;
+                else tbInputDB.Text = dlg.FileName;
             }
         }
 

@@ -41,6 +41,7 @@ namespace FileAdj5DB
             TextBox objTextBox = (TextBox)e.EditingElement;
             CPreset PresetRow = (CPreset)DisplayGrid.SelectedItems[0];
             MessageBox.Show(objTextBox.Text, PresetRow.iId.ToString());
+            mySQL.RenamePresetType(inTdb, PresetRow.iId.ToString(), objTextBox.Text);
             //MessageBox.Show(DisplayGrid.)
         }
 
@@ -50,7 +51,7 @@ namespace FileAdj5DB
         /// <param name="strDB">Full filepath of database</param>
         private void DisplayGridFromDB(string strDB)
         {
-            myLCP = mySQL.GetCPresets(inTdb);
+            myLCP = mySQL.GetCPresetsTypes(inTdb);
             myDT = myLCP.ToDataTable<CPreset>();
             DisplayGrid.ItemsSource = myLCP;
             DisplayGrid.DataContext = myDT.DefaultView;
