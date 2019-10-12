@@ -21,7 +21,7 @@ namespace FileAdj5DB
     public partial class EditPresets : Window
     {
         private DataTable myDT = new DataTable();
-        private List<CPreset> myLCP = new List<CPreset>();
+        private List<CPresetType> myLCP = new List<CPresetType>();
         private SqLiteModifer mySQL = new SqLiteModifer();
         private string inTdb, inIdb;
         public EditPresets(string inTargetDB,string inInputDB)
@@ -39,20 +39,20 @@ namespace FileAdj5DB
         private void DisplayGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             TextBox objTextBox = (TextBox)e.EditingElement;
-            CPreset PresetRow = (CPreset)DisplayGrid.SelectedItems[0];
+            CPresetType PresetRow = (CPresetType)DisplayGrid.SelectedItems[0];
             MessageBox.Show(objTextBox.Text, PresetRow.iId.ToString());
             mySQL.RenamePresetType(inTdb, PresetRow.iId.ToString(), objTextBox.Text);
             //MessageBox.Show(DisplayGrid.)
         }
 
         /// <summary>
-        /// This loads Display Grid with Presets from Database String
+        /// This loads Display Grid with Preset Types from Database String
         /// </summary>
         /// <param name="strDB">Full filepath of database</param>
         private void DisplayGridFromDB(string strDB)
         {
             myLCP = mySQL.GetCPresetsTypes(inTdb);
-            myDT = myLCP.ToDataTable<CPreset>();
+            myDT = myLCP.ToDataTable<CPresetType>();
             DisplayGrid.ItemsSource = myLCP;
             DisplayGrid.DataContext = myDT.DefaultView;
         }

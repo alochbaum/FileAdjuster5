@@ -11,9 +11,9 @@ namespace FileAdj5DB
 {
     class SqLiteModifer
     {
-        public List<CPreset> GetCPresetsTypes(string strDB)
+        public List<CPresetType> GetCPresetsTypes(string strDB)
         {
-            List<CPreset> lreturn = new List<CPreset>();
+            List<CPresetType> lreturn = new List<CPresetType>();
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             if (File.Exists(strDB))
             {
@@ -25,13 +25,24 @@ namespace FileAdj5DB
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    lreturn.Add(new CPreset { iId = (Int64)reader["PTypeID"], Name = (string)reader["PresetType"] });
-                    //lreturn.Add(new CPreset { iId = 0, Name = (string)reader["PresetType"] });
+                    lreturn.Add(new CPresetType { iId = (Int64)reader["PTypeID"], Name = (string)reader["PresetType"] });
+                    //lreturn.Add(new CPresetType { iId = 0, Name = (string)reader["PresetType"] });
                 }
                 reader.Close();
                 m_dbConnection.Close();
             }
             return lreturn;
+        }
+
+        public List<CDisplayPreset> GetDisplayPresets(string strDB)
+        {
+            List<CDisplayPreset> lReturn = new List<CDisplayPreset>();
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            if (File.Exists(strDB))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDB + ";Version=3;";
+                m_dbConnection.Open();
+            }
         }
         
         public bool RenamePresetType(string strDB, string strId, string strNew)

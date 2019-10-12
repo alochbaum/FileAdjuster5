@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace FileAdj5DB
 {
-    public class CPreset
+    public class CPresetType
     {
         public Int64 iId { get; set; }
         public string Name { get; set; }
+    }
+    public class CDisplayPreset
+    {
+        public int PresetID { get; set; }
+        public string PresetTypeName { get; set; }
+        public string PresetName { get; set; }
     }
 }
