@@ -42,7 +42,24 @@ namespace FileAdj5DB
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDB + ";Version=3;";
                 m_dbConnection.Open();
+                string sql = "select ap.PTypeID, at.PresetType, ap.PresetName, ap.DateAdded" +
+                     " from ActionPreset ap join ActionPresetType at on ap.PTypeID = at.PTypeID" +
+                     " order by ap.PTypeID, ap.GroupID; ";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    lReturn.Add(new CDisplayPreset {
+                        PresetID = (Int64)reader["PTypeID"],
+                        PresetTypeName = (string)reader["PresetType"],
+                        PresetName = (string)reader["PresetName"],
+                        Date = (string)reader["DateAdded"]
+                    });
+                }
+                reader.Close();
+                m_dbConnection.Close();
             }
+            return lReturn;
         }
         
         public bool RenamePresetType(string strDB, string strId, string strNew)

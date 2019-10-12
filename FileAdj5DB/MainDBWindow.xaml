@@ -28,6 +28,7 @@
         <Button x:Name="btnSelectInDB" Grid.Row="3"  Grid.Column="1" Margin="5" Click="Btn_SeletFile">Source DB Select</Button>
         <TextBox x:Name="tbInputDB" Grid.Row="3" Grid.Column="2" Margin="5">C:\Users\andy\Desktop\FileAdj.sqlite</TextBox>       
         <Button x:Name="btnPresetGroups" Grid.Row="4" Grid.Column="1" Margin="5" Click="BtnPresetGroups_Click">PresetGroups</Button>
+        <Button x:Name="btnMovePresets" Grid.Row="4" Grid.Column="2" Margin="5" Click="BtnMovePresets_Click">Move Presets</Button>
         <RichTextBox x:Name="rtbStatus" Grid.Row="8" Grid.ColumnSpan="8"></RichTextBox>
 
     </Grid>

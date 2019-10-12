@@ -36,8 +36,17 @@ namespace FileAdj5DB
             DisplayMoveGridFromDB(inTdb);
         }
 
+        private void DGMoveGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+
+        }
+
         private void DisplayMoveGridFromDB(string inTdb)
         {
+            myLDP = mySQL.GetDisplayPresets(inTdb);
+            myDT = myLDP.ToDataTable<CDisplayPreset>();
+            DGMoveGrid.ItemsSource = myLDP;
+            DGMoveGrid.DataContext = myDT.DefaultView;
 
         }
     }

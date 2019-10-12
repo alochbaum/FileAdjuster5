@@ -19,6 +19,6 @@
             <ColumnDefinition Width="660*"/>
             <ColumnDefinition Width="60*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="MoveGrid" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2" Grid.Row="3" CellEditEnding="DisplayGrid_CellEditEnding" />
+        <DataGrid x:Name="DGMoveGrid" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2" Grid.Row="3" CellEditEnding="DGMoveGrid_CellEditEnding" />
     </Grid>
 </Window>

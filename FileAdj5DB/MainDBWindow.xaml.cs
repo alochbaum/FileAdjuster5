@@ -60,5 +60,11 @@ namespace FileAdj5DB
         {
             // add checking saved changes here
         }
+
+        private void BtnMovePresets_Click(object sender, RoutedEventArgs e)
+        {
+            MovePresets myMP = new MovePresets(tbTargetDB.Text, tbInputDB.Text);
+            myMP.Show();
+        }
     }
 }

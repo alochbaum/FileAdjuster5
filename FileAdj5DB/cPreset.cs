@@ -13,8 +13,9 @@ namespace FileAdj5DB
     }
     public class CDisplayPreset
     {
-        public int PresetID { get; set; }
+        public Int64 PresetID { get; set; }
         public string PresetTypeName { get; set; }
         public string PresetName { get; set; }
+        public string Date { get; set; }
     }
 }
