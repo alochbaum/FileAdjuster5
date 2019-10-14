@@ -23,12 +23,12 @@ namespace FileAdj5DB
         private DataTable myDT = new DataTable();
         private List<CDisplayPreset> myLDP = new List<CDisplayPreset>();
         private SqLiteModifer mySQL = new SqLiteModifer();
-        private string inTdb, inIdb;
+        private string inTdb, inSdb;
  
-        public MovePresets(string inTargetDB, string inInputDB)
+        public MovePresets(string inTargetDB, string inSourceDB)
         {
             inTdb = inTargetDB;
-            inIdb = inInputDB;
+            inSdb = inSourceDB;
             InitializeComponent();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -41,9 +41,25 @@ namespace FileAdj5DB
 
         }
 
-        private void DisplayMoveGridFromDB(string inTdb)
+        private void BtnMove_Click(object sender, RoutedEventArgs e)
         {
-            myLDP = mySQL.GetDisplayPresets(inTdb);
+            if (DGMoveGrid.SelectedValue!=null)
+            {
+                CDisplayPreset myDP = (CDisplayPreset)DGMoveGrid.SelectedItems[0];
+                MessageBox.Show(myDP.PresetID.ToString(),myDP.PresetTypeName);
+                if (mySQL.GetIsPresetType(inTdb, myDP.PresetTypeName))
+                {
+                    MessageBox.Show("Good");
+                }
+            } else
+            {
+                MessageBox.Show("You have to select row to move","Please Select Row");
+            }
+        }
+
+        private void DisplayMoveGridFromDB(string inIdb)
+        {
+            myLDP = mySQL.GetDisplayPresets(inIdb);
             myDT = myLDP.ToDataTable<CDisplayPreset>();
             DGMoveGrid.ItemsSource = myLDP;
             DGMoveGrid.DataContext = myDT.DefaultView;

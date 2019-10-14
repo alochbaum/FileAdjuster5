@@ -42,7 +42,7 @@ namespace FileAdj5DB
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDB + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "select ap.PTypeID, at.PresetType, ap.PresetName, ap.DateAdded" +
+                string sql = "select ap.PresetID, at.PresetType, ap.PresetName, ap.DateAdded" +
                      " from ActionPreset ap join ActionPresetType at on ap.PTypeID = at.PTypeID" +
                      " order by ap.PTypeID, ap.GroupID; ";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
@@ -50,7 +50,7 @@ namespace FileAdj5DB
                 while (reader.Read())
                 {
                     lReturn.Add(new CDisplayPreset {
-                        PresetID = (Int64)reader["PTypeID"],
+                        PresetID = (Int64)reader["PresetID"],
                         PresetTypeName = (string)reader["PresetType"],
                         PresetName = (string)reader["PresetName"],
                         Date = (string)reader["DateAdded"]
@@ -62,6 +62,11 @@ namespace FileAdj5DB
             return lReturn;
         }
         
+        public bool GetIsPresetType(string strDB,string strPresetType)
+        {
+            // Need to add test logic
+            return true;
+        }
         public bool RenamePresetType(string strDB, string strId, string strNew)
         {
             SQLiteConnection m_dbConnection = new SQLiteConnection();
