@@ -61,11 +61,35 @@ namespace FileAdj5DB
             }
             return lReturn;
         }
-        
+        /// <summary>
+        /// This just checks to see if PresetType Name is in the incoming database
+        /// </summary>
+        /// <param name="strDB"></param>
+        /// <param name="strPresetType"></param>
+        /// <returns></returns>
         public bool GetIsPresetType(string strDB,string strPresetType)
         {
-            // Need to add test logic
-            return true;
+            bool blReturn = false;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            if (File.Exists(strDB))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDB + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select PresetType from ActionPresetType where PresetType = '" +
+                    strPresetType+"';";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    blReturn = true;
+                }
+                m_dbConnection.Close();
+            }
+            return blReturn;
+        }
+        public int MovePreset(string strSourceDB, string strTargetDB, string strPresetID)
+        {
+            return 0;
         }
         public bool RenamePresetType(string strDB, string strId, string strNew)
         {

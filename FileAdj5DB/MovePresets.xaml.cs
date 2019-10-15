@@ -46,11 +46,15 @@ namespace FileAdj5DB
             if (DGMoveGrid.SelectedValue!=null)
             {
                 CDisplayPreset myDP = (CDisplayPreset)DGMoveGrid.SelectedItems[0];
-                MessageBox.Show(myDP.PresetID.ToString(),myDP.PresetTypeName);
+                ////MessageBox.Show(myDP.PresetID.ToString(),myDP.PresetTypeName);
                 if (mySQL.GetIsPresetType(inTdb, myDP.PresetTypeName))
                 {
-                    MessageBox.Show("Good");
+                    int i = mySQL.MovePreset(inSdb, inTdb, myDP.PresetName);
+                    if (i != 0)
+                        MessageBox.Show($"Error {i} moving preset");
+                    else MessageBox.Show("No errors while moving", "Its Good!");
                 }
+                else MessageBox.Show("There isn't a Preset Type with that name", "Error in Target DB");
             } else
             {
                 MessageBox.Show("You have to select row to move","Please Select Row");
