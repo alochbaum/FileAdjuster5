@@ -50,9 +50,9 @@ namespace FileAdj5DB
             }
         }
 
-        private void BtnPresetGroups_Click(object sender, RoutedEventArgs e)
+        private void BtnSrcPresetGrps_Click(object sender, RoutedEventArgs e)
         {
-            EditPresets myEP = new EditPresets(tbTargetDB.Text,tbInputDB.Text);
+            EditPresets myEP = new EditPresets(tbInputDB.Text,true,tbTargetDB.Text);
             myEP.Show();
         }
 
@@ -65,6 +65,12 @@ namespace FileAdj5DB
         {
             MovePresets myMP = new MovePresets(tbTargetDB.Text, tbInputDB.Text);
             myMP.Show();
+        }
+
+        private void BtnTgtPresetGrps_Click(object sender, RoutedEventArgs e)
+        {
+            EditPresets myEP = new EditPresets(tbTargetDB.Text);
+            myEP.Show();
         }
     }
 }

@@ -23,12 +23,22 @@ namespace FileAdj5DB
         private DataTable myDT = new DataTable();
         private List<CPresetType> myLCP = new List<CPresetType>();
         private SqLiteModifer mySQL = new SqLiteModifer();
-        private string inTdb, inIdb;
-        public EditPresets(string inTargetDB,string inInputDB)
+        private string inTdb,inTargetDB;
+        private bool blShowAddBtn;
+        public EditPresets(string inWorkingDB, bool blIsSource = false, string strTargetDB="")
         {
-            inTdb = inTargetDB;
-            inIdb = inInputDB;
+            inTdb = inWorkingDB;
+            inTargetDB = strTargetDB;
+            blShowAddBtn = blIsSource;
             InitializeComponent();
+            if (!blShowAddBtn)
+            {
+                btnAdd2Target.IsEnabled = false;
+                wndEditPresets.Title = "Editing the Preset Groups in Source DB";
+            } else
+            {
+                wndEditPresets.Title = "Editing the Preset Groups in Target DB";
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -43,6 +53,17 @@ namespace FileAdj5DB
             MessageBox.Show(objTextBox.Text, PresetRow.iId.ToString());
             mySQL.RenamePresetType(inTdb, PresetRow.iId.ToString(), objTextBox.Text);
             //MessageBox.Show(DisplayGrid.)
+        }
+
+        private void BtnAdd2Target_Click(object sender, RoutedEventArgs e)
+        {
+            if (DisplayGrid.SelectedItems.Count == 0)
+                MessageBox.Show("Please select a row", "No row selected");
+            else
+            {
+                CPresetType PresetRow = (CPresetType)DisplayGrid.SelectedItems[0];
+
+            }
         }
 
         /// <summary>
