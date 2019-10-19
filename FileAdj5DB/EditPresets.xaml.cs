@@ -62,7 +62,9 @@ namespace FileAdj5DB
             else
             {
                 CPresetType PresetRow = (CPresetType)DisplayGrid.SelectedItems[0];
-
+                string strResult = mySQL.AddPresetType(PresetRow.Name, inTargetDB);
+                if (strResult != "Done") MessageBox.Show(strResult,"Error Adding Preset Type");
+                else MessageBox.Show($"New entry: {PresetRow.Name}", "Added to Target DB");
             }
         }
 

@@ -87,6 +87,39 @@ namespace FileAdj5DB
             }
             return blReturn;
         }
+        /// <summary>
+        /// This adds a row to ActionPresetType
+        /// </summary>
+        /// <param name="strName"></param>
+        /// This is name of PresetType to add
+        /// <param name="strTargetDB"></param>
+        /// This is file name of the SQLite3 database 
+        /// <returns></returns>
+        /// Returns an "Done" string for good results or error message
+        public string AddPresetType(string strName,string strTargetDB)
+        {
+   
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            if (File.Exists(strTargetDB))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strTargetDB + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "INSERT INTO ActionPresetType (PresetType) VALUES (@data);";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                command.CommandType = CommandType.Text;
+                command.Parameters.AddWithValue("data", strName);
+                try
+                {
+                    command.ExecuteNonQuery();
+                    m_dbConnection.Close();
+                }
+                catch (Exception Ex)
+                {
+                    return Ex.Message;
+                }
+            }
+            return "Done";
+        }
         public int MovePreset(string strSourceDB, string strTargetDB, string strPresetID)
         {
             return 0;
