@@ -49,9 +49,9 @@ namespace FileAdj5DB
                 ////MessageBox.Show(myDP.PresetID.ToString(),myDP.PresetTypeName);
                 if (mySQL.GetIsPresetType(inTdb, myDP.PresetTypeName))
                 {
-                    int i = mySQL.MovePreset(inSdb, inTdb, myDP.PresetName);
-                    if (i != 0)
-                        MessageBox.Show($"Error {i} moving preset");
+                    string strResult = mySQL.MovePreset(inSdb, inTdb, myDP.PresetName);
+                    if (strResult!="Done")
+                        MessageBox.Show($"Error {strResult} moving preset");
                     else MessageBox.Show("No errors while moving", "Its Good!");
                 }
                 else MessageBox.Show("There isn't a Preset Type with that name", "Error in Target DB");

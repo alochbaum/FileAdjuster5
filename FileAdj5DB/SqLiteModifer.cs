@@ -120,9 +120,35 @@ namespace FileAdj5DB
             }
             return "Done";
         }
-        public int MovePreset(string strSourceDB, string strTargetDB, string strPresetID)
+        public string MovePreset(string strSourceDB, string strTargetDB, string strPresetID)
         {
-            return 0;
+            Int64 iGroupID = GetHighestGroupID(strTargetDB);
+            if (iGroupID < 1) return "Couldn't get groupID in Target DB";
+            iGroupID++;
+
+            return "Done";
+        }
+        public Int64 GetHighestGroupID(string strDB)
+        {
+            Int64 iReturn = 0;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            if (File.Exists(strDB))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDB + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "Select GroupID from ActionTable order by GroupID desc limit 1;";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                        iReturn = reader.GetInt64(0);
+                }
+
+                reader.Close();
+                m_dbConnection.Close();
+            }
+            return iReturn;
         }
         public bool RenamePresetType(string strDB, string strId, string strNew)
         {
