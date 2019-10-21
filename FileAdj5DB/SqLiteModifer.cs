@@ -128,10 +128,39 @@ namespace FileAdj5DB
             CPreset myPreset = GetPreset(strSourceDB, strPresetName);
             if (myPreset == null) return "Problem reading Preset in Source DB";
             List<CAction> ListAction = GetActions(strSourceDB, myPreset.GroupID.ToString());
-            return WritePreset(strTargetDB, myPreset, iGroupID);
-            //return $"Done";
+            string strTemp =  WritePreset(strTargetDB, myPreset, iGroupID);
+            if (strTemp != "Done") return $"Error writing preset {strTemp}";
+            strTemp = WriteActionList(strTargetDB, ListAction, iGroupID);
+            return $"Done";
         }
- //       static public bool WritePreset(string strGroup, string strTitle, Int64 iGroup, Int64 iFlag)
+        static public string WriteActionList(string strTargetDB, List<CAction> ListAction,Int64 iGroupID)
+        {
+            string rStr = "Error";
+            // already checked if file existed
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            m_dbConnection.ConnectionString = "Data Source=" + strTargetDB + ";Version=3;";
+            m_dbConnection.Open();
+            try
+            {
+                string sqlcmd = "";
+                foreach (CAction myAction in ListAction)
+                {
+                    sqlcmd = "Insert Into ActionTable (DisplayOrder,GroupID,ActionTypeID,"+
+                        "Parameter1,Parameter2,DateAdded) Values (" +
+                     myAction.DisplayOrder.ToString() + "," + iGroupID.ToString() + "," +
+                     myAction.ActionTypeID.ToString() + ",'" + myAction.Parameter1 + "','"+
+                     myAction.Parameter2 + "','"+ myAction.DateAdded + "');";
+                    SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                }
+                m_dbConnection.Close();
+            }
+            catch (Exception EforEach)
+            {
+                rStr = EforEach.Message;
+                return rStr;
+            }
+            return rStr;
+        }
         static public string WritePreset(string strTargetDB,CPreset myPreset,Int64 GroupID)
         {
             string rStr = "Error";
@@ -151,6 +180,7 @@ namespace FileAdj5DB
                 {
                     command.ExecuteNonQuery();
                     m_dbConnection.Close();
+                    rStr = "Done";
                 }
                 catch (Exception Ex)
                 {
