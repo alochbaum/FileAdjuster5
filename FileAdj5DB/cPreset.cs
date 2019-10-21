@@ -18,4 +18,23 @@ namespace FileAdj5DB
         public string PresetName { get; set; }
         public string Date { get; set; }
     }
+    public class CAction
+    {
+        public Int64 DisplayOrder { get; set; }
+        public Int64 GroupID { get; set; }
+        public Int64 ActionTypeID { get; set; }
+        public string Parameter1 { get; set; }
+        public string Parameter2 { get; set; }
+        public string DateAdded { get; set; }
+
+    }
+    public class CPreset
+    {
+        public Int64 PTypeID { get; set; }
+        public string PresetName { get; set; }
+        public Int64 GroupID { get; set; }
+        public Int64 Flags { get; set; }
+        public string DateAdded { get; set; }
+    }
+
 }
