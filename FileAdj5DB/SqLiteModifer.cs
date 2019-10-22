@@ -131,6 +131,7 @@ namespace FileAdj5DB
             string strTemp =  WritePreset(strTargetDB, myPreset, iGroupID);
             if (strTemp != "Done") return $"Error writing preset {strTemp}";
             strTemp = WriteActionList(strTargetDB, ListAction, iGroupID);
+            if (strTemp != "Done") return $"Error writing action {strTemp}";
             return $"Done";
         }
         static public string WriteActionList(string strTargetDB, List<CAction> ListAction,Int64 iGroupID)
@@ -143,6 +144,7 @@ namespace FileAdj5DB
             try
             {
                 string sqlcmd = "";
+                SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
                 foreach (CAction myAction in ListAction)
                 {
                     sqlcmd = "Insert Into ActionTable (DisplayOrder,GroupID,ActionTypeID,"+
@@ -150,8 +152,10 @@ namespace FileAdj5DB
                      myAction.DisplayOrder.ToString() + "," + iGroupID.ToString() + "," +
                      myAction.ActionTypeID.ToString() + ",'" + myAction.Parameter1 + "','"+
                      myAction.Parameter2 + "','"+ myAction.DateAdded + "');";
-                    SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                     command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                    command.ExecuteNonQuery();
                 }
+                rStr = "Done";
                 m_dbConnection.Close();
             }
             catch (Exception EforEach)
@@ -192,7 +196,6 @@ namespace FileAdj5DB
         public List<CAction> GetActions(string strSourceDB,string strGroupID)
         {
             List<CAction> rListAction = new List<CAction>();
-            CAction myAction = new CAction();
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             if (File.Exists(strSourceDB))
             {
@@ -207,13 +210,15 @@ namespace FileAdj5DB
                 {
                     while (reader.Read())
                     {
-                        myAction.DisplayOrder = reader.GetInt64(0);
-                        myAction.GroupID = reader.GetInt64(1);
-                        myAction.ActionTypeID = reader.GetInt64(2);
-                        myAction.Parameter1 = reader.GetString(3);
-                        myAction.Parameter2 = reader.GetString(4);
-                        myAction.DateAdded = reader.GetString(5);
-                        rListAction.Add(myAction);
+                        rListAction.Add(new CAction
+                        {
+                            DisplayOrder = reader.GetInt64(0),
+                            GroupID = reader.GetInt64(1),
+                            ActionTypeID = reader.GetInt64(2),
+                            Parameter1 = reader.GetString(3),
+                            Parameter2 = reader.GetString(4),
+                            DateAdded = reader.GetString(5)
+                        });
                     }
                 }
                 reader.Close();
