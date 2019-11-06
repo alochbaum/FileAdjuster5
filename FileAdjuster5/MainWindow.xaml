@@ -33,8 +33,11 @@
                 <Button x:Name="btbClear" Click="BtnClear_Click" Margin="0,0,5,0" ToolTip="Clears input file list (alt c)">
                     <AccessText>_Clear</AccessText>
                 </Button>
-                <Button x:Name="btnHistory" Click="BtnHistory_Click" ToolTip="Load file(s) from previous starts. (alt less than)" >
+                <Button x:Name="btnHistory" Click="BtnHistory_Click" Margin="0,0,5,0" ToolTip="Load file(s) from previous starts. (alt less than)" >
                     <AccessText>&lt;_-</AccessText>
+                </Button>
+                <Button x:Name="btnFileHist" ToolTip="Load list of files from History" >
+                    <AccessText>«-_H</AccessText>
                 </Button>
             </StackPanel>
             <ListBox x:Name="lbFileNames" FlowDirection="RightToLeft" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Auto" MaxHeight="200" />
@@ -130,8 +133,11 @@
                     <AccessText>_Load Preset</AccessText>
                 </Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
-                <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous start. (alt =)">
-                    <AccessText>&lt;_=</AccessText>
+                <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" Margin="0,0,5,0" ToolTip="Load a grid actions from a previous history. (alt =)">
+                    <AccessText>_=&gt;</AccessText>
+                </Button>
+                <Button x:Name="btnHistAction" ToolTip="Shows list of previous actions you can load">
+                    <AccessText>_h=»</AccessText>
                 </Button>
             </StackPanel>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
