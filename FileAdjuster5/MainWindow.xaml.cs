@@ -987,6 +987,16 @@ namespace FileAdjuster5
             }
         }
 
+        private void BtnFileHist_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnHistAction_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void BtnDelRow_Click(object sender, RoutedEventArgs e)
         {
             if (MyDtable.Rows.Count < 2)
