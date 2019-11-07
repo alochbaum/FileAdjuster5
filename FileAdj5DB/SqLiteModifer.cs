@@ -67,25 +67,33 @@ namespace FileAdj5DB
         /// <param name="strDB"></param>
         /// <param name="strPresetType"></param>
         /// <returns></returns>
-        public bool GetIsPresetType(string strDB,string strPresetType)
+        public Int64 GetIsPresetType(string strDB,string strPresetType)
         {
-            bool blReturn = false;
+            Int64 blI = -1;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             if (File.Exists(strDB))
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDB + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "select PresetType from ActionPresetType where PresetType = '" +
+                string sql = "select PTypeID from ActionPresetType where PresetType = '" +
                     strPresetType+"';";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                try
                 {
-                    blReturn = true;
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        blI = reader.GetInt64(0);
+                    }
                 }
+                catch (Exception)
+                {
+
+                }
+
                 m_dbConnection.Close();
             }
-            return blReturn;
+            return blI;
         }
         /// <summary>
         /// This adds a row to ActionPresetType
@@ -120,7 +128,8 @@ namespace FileAdj5DB
             }
             return "Done";
         }
-        public string MovePreset(string strSourceDB, string strTargetDB, string strPresetName)
+        public string MovePreset(string strSourceDB, string strTargetDB, string strPresetName,
+            Int64 iPresetID)
         {
             Int64 iGroupID = GetHighestGroupID(strTargetDB);
             if (iGroupID < 1) return "Couldn't get groupID in Target DB";
@@ -128,7 +137,8 @@ namespace FileAdj5DB
             CPreset myPreset = GetPreset(strSourceDB, strPresetName);
             if (myPreset == null) return "Problem reading Preset in Source DB";
             List<CAction> ListAction = GetActions(strSourceDB, myPreset.GroupID.ToString());
-            string strTemp =  WritePreset(strTargetDB, myPreset, iGroupID);
+            // Before writing preset we need to get presetID type
+            string strTemp =  WritePreset(strTargetDB, myPreset, iGroupID,iPresetID);
             if (strTemp != "Done") return $"Error writing preset {strTemp}";
             strTemp = WriteActionList(strTargetDB, ListAction, iGroupID);
             if (strTemp != "Done") return $"Error writing action {strTemp}";
@@ -165,7 +175,7 @@ namespace FileAdj5DB
             }
             return rStr;
         }
-        static public string WritePreset(string strTargetDB,CPreset myPreset,Int64 GroupID)
+        static public string WritePreset(string strTargetDB,CPreset myPreset,Int64 GroupID,Int64 PresetID)
         {
             string rStr = "Error";
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -174,7 +184,7 @@ namespace FileAdj5DB
                 m_dbConnection.ConnectionString = "Data Source=" + strTargetDB + ";Version=3;";
                 m_dbConnection.Open();
                 string sqlcmd = "Insert Into ActionPreset (PTypeId,PresetName,GroupID,Flags) Values (" +
-                     myPreset.PTypeID.ToString() + ",'" + myPreset.PresetName.ToString() + "'," + 
+                     PresetID.ToString() + ",'" + myPreset.PresetName.ToString() + "'," + 
                      GroupID.ToString() + ","+ myPreset.Flags.ToString() +");";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
                 // protected from single quotes in the passed strings
