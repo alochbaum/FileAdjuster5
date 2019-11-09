@@ -31,6 +31,7 @@
             <Button x:Name="btnNext">Next</Button>
             <Label>Before this Date:</Label>
             <wpfTool:DateTimePicker x:Name="dtpDate" Margin="5,0,10,0" MinWidth="220" TimePickerVisibility="Hidden" ValueChanged="DtpDate_ValueChanged" Format="LongDate"></wpfTool:DateTimePicker>
+            <Button x:Name="btnDelete" IsEnabled="False">Delete before date</Button>
             <Button x:Name="btnLoad" Click="BtnLoad_Click">(OK) Load</Button>
             <Button x:Name="btnExit" IsCancel="True">Cancel</Button>
         </StackPanel>
