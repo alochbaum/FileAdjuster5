@@ -22,6 +22,17 @@ namespace FileAdjuster5
         public HIstoryWin()
         {
             InitializeComponent();
+            dtpDate.Value = DateTime.Now;
+        }
+
+        private void DtpDate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+
+        }
+
+        private void BtnLoad_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
         }
     }
 }
