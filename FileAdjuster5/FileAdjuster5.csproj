@@ -138,6 +138,7 @@
     <Compile Include="FindPreset.xaml.cs">
       <DependentUpon>FindPreset.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HistGridRows.cs" />
     <Compile Include="HIstoryWin.xaml.cs">
       <DependentUpon>HIstoryWin.xaml</DependentUpon>
     </Compile>

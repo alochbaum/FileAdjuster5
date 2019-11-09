@@ -19,8 +19,10 @@ namespace FileAdjuster5
     /// </summary>
     public partial class HIstoryWin : Window
     {
-        public HIstoryWin()
+        private bool bIsActions = false;
+        public HIstoryWin(bool IsActions=true)
         {
+            bIsActions = IsActions;
             InitializeComponent();
             dtpDate.Value = DateTime.Now;
         }
@@ -29,7 +31,16 @@ namespace FileAdjuster5
         {
 
         }
-
+        /// <summary>
+        /// This loads the grid with all the Files or Actions
+        /// </summary>
+        /// <param name="inDT">The Date Value</param>
+        /// <returns></returns>
+        private Int64 LoadByDate(DateTime inDT)
+        {
+            Int64 iReturn = -1;
+            return iReturn;
+        }
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;

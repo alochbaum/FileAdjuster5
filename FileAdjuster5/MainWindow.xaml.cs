@@ -989,7 +989,7 @@ namespace FileAdjuster5
 
         private void BtnFileHist_Click(object sender, RoutedEventArgs e)
         {
-            HIstoryWin myHwin = new HIstoryWin();
+            HIstoryWin myHwin = new HIstoryWin(false;);
             myHwin.ShowDialog();
         }
 
