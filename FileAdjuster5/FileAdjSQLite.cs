@@ -66,6 +66,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return mList;
         }
+
         static public List<string> GetPresetTypes()
         {
             List<string> mList = new List<string>();
@@ -358,6 +359,25 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     tableReturn.Rows.Add(reader[0], reader[1], reader[2], reader[3]);
                 reader.Close();
                 m_dbConnection.Close();
+            }
+            return tableReturn;
+        }
+        static public DataTable GetHistRows(DateTime inDateTime, bool IsActionRows)
+        {
+            DataTable tableReturn = new DataTable();
+            tableReturn.Columns.Add("Group_ID", typeof(Int64));
+            tableReturn.Columns.Add("Date Added", typeof(string));
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+            if (IsActionRows)
+            {
+                tableReturn.Columns.Add("Parameter1", typeof(string));
+                tableReturn.Columns.Add("Parameter2", typeof(string));
+            }
+            else
+            {
+                tableReturn.Columns.Add("FileName", typeof(string));
             }
             return tableReturn;
         }

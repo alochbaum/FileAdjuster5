@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace FileAdjuster5
         private Int64 LoadByDate(DateTime inDT)
         {
             Int64 iReturn = -1;
+            DataTable m_DataTable = FileAdjSQLite.GetHistRows(inDT, bIsActions);
             return iReturn;
         }
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
