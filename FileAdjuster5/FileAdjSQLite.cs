@@ -396,12 +396,12 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 {
                     m_dbConnection.Open();
                     // select group_id,date_added,file_name from FileHistory order by group_id limit 1
-                    string sql = "select group_id,date_added,file_name from FileHistory where DisplayOrder=1" +
-                        " and DateAdded <= datetime('" + strDateTime + "'); ";
+                    string sql = "select group_id,date_added,file_name from FileHistory" +
+                        " where date_added <= datetime('" + strDateTime + "'); ";
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
-                        tableReturn.Rows.Add(reader[0], reader[1], reader[2], reader[3]);
+                        tableReturn.Rows.Add(reader[0], reader[1], reader[2]);
                     reader.Close();
                     m_dbConnection.Close();
                 }

@@ -44,8 +44,8 @@ namespace FileAdjuster5
         private Int64 LoadByDate(DateTime inDT)
         {
             Int64 iReturn = -1;
-            MessageBox.Show(inDT.ToString("yyyy-MM-dd 00:00:00"));
             DataTable m_DataTable = FileAdjSQLite.GetHistRows(inDT, bIsActions);
+            DGHistGrid.DataContext = m_DataTable.DefaultView;
             return iReturn;
         }
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
