@@ -369,15 +369,42 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             tableReturn.Columns.Add("Date Added", typeof(string));
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             string strDBFile = DBFile();
+            string strDateTime = inDateTime.ToString("yyyy-MM-dd 00:00:00");
             m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
             if (IsActionRows)
             {
                 tableReturn.Columns.Add("Parameter1", typeof(string));
                 tableReturn.Columns.Add("Parameter2", typeof(string));
+                if (File.Exists(strDBFile))
+                {
+                    m_dbConnection.Open();
+                    // Select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1 and DateAdded <= datetime('2019-10-01 00:00:00');
+                    string sql = "select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1" +
+                        " and DateAdded <= datetime('"+strDateTime+"'); ";
+                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                        tableReturn.Rows.Add(reader[0], reader[1], reader[2], reader[3]);
+                    reader.Close();
+                    m_dbConnection.Close();
+                }
             }
             else
             {
                 tableReturn.Columns.Add("FileName", typeof(string));
+                if (File.Exists(strDBFile))
+                {
+                    m_dbConnection.Open();
+                    // select group_id,date_added,file_name from FileHistory order by group_id limit 1
+                    string sql = "select group_id,date_added,file_name from FileHistory where DisplayOrder=1" +
+                        " and DateAdded <= datetime('" + strDateTime + "'); ";
+                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                        tableReturn.Rows.Add(reader[0], reader[1], reader[2], reader[3]);
+                    reader.Close();
+                    m_dbConnection.Close();
+                }
             }
             return tableReturn;
         }

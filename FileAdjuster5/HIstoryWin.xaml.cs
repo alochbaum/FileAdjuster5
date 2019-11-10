@@ -20,13 +20,17 @@ namespace FileAdjuster5
     /// </summary>
     public partial class HIstoryWin : Window
     {
+        private DateTime m_DateTime = new DateTime();
         private bool bIsActions = false;
         public HIstoryWin(bool IsActions=true)
         {
             bIsActions = IsActions;
             InitializeComponent();
-            dtpDate.Value = DateTime.Now;
+            m_DateTime = DateTime.Now;
+            dtpDate.Value = m_DateTime;
+            LoadByDate(m_DateTime);
         }
+
 
         private void DtpDate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -40,6 +44,7 @@ namespace FileAdjuster5
         private Int64 LoadByDate(DateTime inDT)
         {
             Int64 iReturn = -1;
+            MessageBox.Show(inDT.ToString("yyyy-MM-dd 00:00:00"));
             DataTable m_DataTable = FileAdjSQLite.GetHistRows(inDT, bIsActions);
             return iReturn;
         }
