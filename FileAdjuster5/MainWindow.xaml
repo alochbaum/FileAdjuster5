@@ -30,7 +30,7 @@
                 <Button x:Name="btnAddFile" Click="BtnAddFile_Click" Margin="0,0,5,0" ToolTip="Add a file to input file list below (alt a)">
                     <AccessText>_Add File</AccessText>
                 </Button>
-                <Button x:Name="btbClear" Click="BtnClear_Click" Margin="0,0,5,0" ToolTip="Clears input file list (alt c)">
+                <Button x:Name="btbClear" Click="BtnClear_Click" Margin="0,0,5,0" ToolTip="Clears input file list (alt c)" Drop="BtbClear_Drop">
                     <AccessText>_Clear</AccessText>
                 </Button>
                 <Button x:Name="btnHistory" Click="BtnHistory_Click" Margin="0,0,5,0" ToolTip="Load file(s) from previous starts. (alt less than)" >

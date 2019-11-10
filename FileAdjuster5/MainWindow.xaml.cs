@@ -989,13 +989,23 @@ namespace FileAdjuster5
 
         private void BtnFileHist_Click(object sender, RoutedEventArgs e)
         {
-            HIstoryWin myHwin = new HIstoryWin(false;);
+            HIstoryWin myHwin = new HIstoryWin(false);
             myHwin.ShowDialog();
         }
 
         private void BtnHistAction_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void BtbClear_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Clearing Files First
+                ClearFiles();
+                // The other drop event will add the files
+            }
         }
 
         private void BtnDelRow_Click(object sender, RoutedEventArgs e)
