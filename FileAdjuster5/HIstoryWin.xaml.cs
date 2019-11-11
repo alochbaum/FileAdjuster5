@@ -22,13 +22,16 @@ namespace FileAdjuster5
     {
         private DateTime m_DateTime = new DateTime();
         private bool bIsActions = false;
+        private DataTable m_DataTable = new DataTable();
         public HIstoryWin(bool IsActions=true)
         {
             bIsActions = IsActions;
             InitializeComponent();
             m_DateTime = DateTime.Now;
             dtpDate.Value = m_DateTime;
-            LoadByDate(m_DateTime);
+           // LoadByDate(m_DateTime);
+            m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
+            DGHistGrid.DataContext = m_DataTable.DefaultView;
         }
 
 
@@ -44,8 +47,7 @@ namespace FileAdjuster5
         private Int64 LoadByDate(DateTime inDT)
         {
             Int64 iReturn = -1;
-            DataTable m_DataTable = FileAdjSQLite.GetHistRows(inDT, bIsActions);
-            DGHistGrid.DataContext = m_DataTable.DefaultView;
+            m_DataTable = FileAdjSQLite.GetHistRows(inDT, bIsActions);
             return iReturn;
         }
         private void BtnLoad_Click(object sender, RoutedEventArgs e)

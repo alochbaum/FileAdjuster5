@@ -397,7 +397,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     m_dbConnection.Open();
                     // select group_id,date_added,file_name from FileHistory order by group_id limit 1
                     string sql = "select group_id,date_added,file_name from FileHistory" +
-                        " where date_added <= datetime('" + strDateTime + "'); ";
+                        " where date_added <= datetime('" + strDateTime + "') limit 25; ";
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
