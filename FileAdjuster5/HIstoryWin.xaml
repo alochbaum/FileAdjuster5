@@ -25,7 +25,7 @@
             <ColumnDefinition Width="660*"/>
             <ColumnDefinition Width="30*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="DGHistGrid" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2" Grid.Row="3" />
+        <DataGrid x:Name="DGHistGrid" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2" Grid.Row="3" CanUserAddRows="True" ItemsSource="{Binding}"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
             <Button x:Name="btnPrev">Previous</Button>
             <Button x:Name="btnNext">Next</Button>

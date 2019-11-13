@@ -29,8 +29,8 @@ namespace FileAdjuster5
             InitializeComponent();
             m_DateTime = DateTime.Now;
             dtpDate.Value = m_DateTime;
-           // LoadByDate(m_DateTime);
-            m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
+            LoadByDate(m_DateTime);
+           // m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
             DGHistGrid.DataContext = m_DataTable.DefaultView;
         }
 
@@ -52,6 +52,7 @@ namespace FileAdjuster5
         }
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
+            //if() add if for no selection maybe return false
             this.DialogResult = true;
         }
     }

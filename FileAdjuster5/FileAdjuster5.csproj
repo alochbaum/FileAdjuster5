@@ -62,7 +62,7 @@
     <ManifestCertificateThumbprint>42E06C28E720230CA4D1C69598837574DC8FDBD4</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>

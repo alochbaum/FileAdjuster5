@@ -380,7 +380,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     m_dbConnection.Open();
                     // Select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1 and DateAdded <= datetime('2019-10-01 00:00:00');
                     string sql = "select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1" +
-                        " and DateAdded <= datetime('"+strDateTime+"'); ";
+                        " and DateAdded <= datetime('"+strDateTime+"') limit 14; ";
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
@@ -397,7 +397,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     m_dbConnection.Open();
                     // select group_id,date_added,file_name from FileHistory order by group_id limit 1
                     string sql = "select group_id,date_added,file_name from FileHistory" +
-                        " where date_added <= datetime('" + strDateTime + "') limit 25; ";
+                        " where date_added <= datetime('" + strDateTime + "') limit 14; ";
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())

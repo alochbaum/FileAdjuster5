@@ -991,11 +991,14 @@ namespace FileAdjuster5
         {
             HIstoryWin myHwin = new HIstoryWin(false);
             myHwin.ShowDialog();
+            myHwin.Close();
         }
 
         private void BtnHistAction_Click(object sender, RoutedEventArgs e)
         {
-
+            HIstoryWin m_Hwin = new HIstoryWin(true);
+            m_Hwin.ShowDialog();
+            m_Hwin.Close();
         }
 
         private void BtbClear_Drop(object sender, DragEventArgs e)
