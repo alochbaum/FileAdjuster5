@@ -34,10 +34,15 @@ namespace FileAdjuster5
             DGHistGrid.DataContext = m_DataTable.DefaultView;
         }
 
-
+        /// <summary>
+        /// The date value changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DtpDate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-
+            DateTime dt = (DateTime)dtpDate.Value;
+            FileAdjSQLite.GetHistRows(dt, bIsActions);
         }
         /// <summary>
         /// This loads the grid with all the Files or Actions
