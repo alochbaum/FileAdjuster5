@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -18,11 +19,12 @@ namespace FileAdjuster5
     /// <summary>
     /// Interaction logic for HIstoryWin.xaml
     /// </summary>
-    public partial class HIstoryWin : Window
+    public partial class HIstoryWin : INotifyPropertyChanged
     {
         private DateTime m_DateTime = new DateTime();
         private bool bIsActions = false;
         private DataTable m_DataTable = new DataTable();
+
         public HIstoryWin(bool IsActions=true)
         {
             bIsActions = IsActions;
@@ -32,6 +34,19 @@ namespace FileAdjuster5
             LoadByDate(m_DateTime);
            // m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
             DGHistGrid.DataContext = m_DataTable.DefaultView;
+        }
+
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        {
+            //add
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            //remove
+            //{
+            //    throw new NotImplementedException();
+            //}
         }
 
         /// <summary>
