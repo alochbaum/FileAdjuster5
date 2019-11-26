@@ -19,7 +19,7 @@ namespace FileAdjuster5
     /// <summary>
     /// Interaction logic for HIstoryWin.xaml
     /// </summary>
-    public partial class HIstoryWin : INotifyPropertyChanged
+    public partial class HIstoryWin : Window
     {
         private DateTime m_DateTime = new DateTime();
         private bool bIsActions = false;
@@ -32,22 +32,23 @@ namespace FileAdjuster5
             m_DateTime = DateTime.Now;
             dtpDate.Value = m_DateTime;
             LoadByDate(m_DateTime);
-           // m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
-            DGHistGrid.DataContext = m_DataTable.DefaultView;
+            // m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
+            // DGHistGrid.DataContext = m_DataTable.DefaultView;
+            DGHistGrid.UpdateLayout();
         }
 
-        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
-        {
-            //add
-            //{
-            //    throw new NotImplementedException();
-            //}
+        //event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        //{
+        //    //add
+        //    //{
+        //    //    throw new NotImplementedException();
+        //    //}
 
-            //remove
-            //{
-            //    throw new NotImplementedException();
-            //}
-        }
+        //    //remove
+        //    //{
+        //    //    throw new NotImplementedException();
+        //    //}
+        //}
 
         /// <summary>
         /// The date value changed
