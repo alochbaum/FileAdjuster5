@@ -32,7 +32,7 @@ namespace FileAdjuster5
             m_DateTime = DateTime.Now;
             dtpDate.Value = m_DateTime;
             LoadByDate(m_DateTime);
-            // m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
+            //m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
             // DGHistGrid.DataContext = m_DataTable.DefaultView;
             DGHistGrid.UpdateLayout();
         }
@@ -58,7 +58,8 @@ namespace FileAdjuster5
         private void DtpDate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             DateTime dt = (DateTime)dtpDate.Value;
-            FileAdjSQLite.GetHistRows(dt, bIsActions);
+            //m_DataTable = FileAdjSQLite.GetHistRows(dt, bIsActions);
+            LoadByDate(m_DateTime);
         }
         /// <summary>
         /// This loads the grid with all the Files or Actions
