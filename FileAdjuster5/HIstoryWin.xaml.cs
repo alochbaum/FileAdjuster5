@@ -33,8 +33,8 @@ namespace FileAdjuster5
             dtpDate.Value = m_DateTime;
             LoadByDate(m_DateTime);
             //m_DataTable = FileAdjSQLite.GetHistRows(m_DateTime, bIsActions);
-            // DGHistGrid.DataContext = m_DataTable.DefaultView;
-            DGHistGrid.UpdateLayout();
+            DGHistGrid.DataContext = m_DataTable.DefaultView;
+            //DGHistGrid.UpdateLayout();
         }
 
         //event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
