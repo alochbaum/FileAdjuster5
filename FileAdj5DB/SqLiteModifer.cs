@@ -160,12 +160,9 @@ namespace FileAdj5DB
                     sqlcmd = "Insert Into ActionTable (DisplayOrder,GroupID,ActionTypeID,"+
                         "Parameter1,Parameter2,DateAdded) Values (" +
                      myAction.DisplayOrder.ToString() + "," + iGroupID.ToString() + "," +
-                     myAction.ActionTypeID.ToString() + ",@Param1,@Param2,'" + 
-                     myAction.DateAdded + "');";
-                    command = new SQLiteCommand(sqlcmd, m_dbConnection);
-                    // protected from single quotes in the passed strings
-                    command.Parameters.Add(new SQLiteParameter("Param1", myAction.Parameter1));
-                    command.Parameters.Add(new SQLiteParameter("Param2", myAction.Parameter2));
+                     myAction.ActionTypeID.ToString() + ",'" + myAction.Parameter1 + "','"+
+                     myAction.Parameter2 + "','"+ myAction.DateAdded + "');";
+                     command = new SQLiteCommand(sqlcmd, m_dbConnection);
                     command.ExecuteNonQuery();
                 }
                 rStr = "Done";
@@ -193,7 +190,6 @@ namespace FileAdj5DB
                 // protected from single quotes in the passed strings
                 //command.Parameters.Add(new SQLiteParameter("strGroup", strGroup));
                 //command.Parameters.Add(new SQLiteParameter("strTitle", strTitle));
-
                 try
                 {
                     command.ExecuteNonQuery();
