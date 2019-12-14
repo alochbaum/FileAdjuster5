@@ -230,9 +230,16 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return mList;
         }
-        //
-        // Currently this function isn't protected against single quotes in the strings
-        //
+        /// <summary>
+        /// The function writes action to database, using parameters in case there are single quotes
+        /// in the parameter strings
+        /// </summary>
+        /// <param name="iOrder">display order on screen</param>
+        /// <param name="iGroup">group of the action</param>
+        /// <param name="strType">action type number not really a string</param>
+        /// <param name="Param1"></param>
+        /// <param name="Param2"></param>
+        /// <returns></returns>
         static public bool WriteAction(Int64 iOrder, Int64 iGroup, string strType, string Param1, string Param2 )
         {
             bool blreturn = false;
