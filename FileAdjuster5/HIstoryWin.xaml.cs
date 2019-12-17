@@ -30,6 +30,8 @@ namespace FileAdjuster5
             bIsActions = IsActions;
             InitializeComponent();
             m_DateTime = DateTime.Now;
+            // Adding one day to show today's results
+            m_DateTime = m_DateTime.AddDays(1);
             dtpDate.Value = m_DateTime;
             //LoadByDate(m_DateTime);
         }
