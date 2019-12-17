@@ -23,7 +23,7 @@ namespace FileAdjuster5
     {
         private DateTime m_DateTime = new DateTime();
         private bool bIsActions = false;
-        private DataTable m_DataTable = new DataTable();
+        private DataTable m_DataTable;
 
         public HIstoryWin(bool IsActions=true)
         {
@@ -31,8 +31,7 @@ namespace FileAdjuster5
             InitializeComponent();
             m_DateTime = DateTime.Now;
             dtpDate.Value = m_DateTime;
-            LoadByDate(m_DateTime);
-            DGchange.DataContext = m_DataTable.DefaultView;
+            //LoadByDate(m_DateTime);
         }
 
         /// <summary>
@@ -43,8 +42,7 @@ namespace FileAdjuster5
         private void DtpDate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             DateTime dt = (DateTime)dtpDate.Value;
-            //m_DataTable = FileAdjSQLite.GetHistRows(dt, bIsActions);
-           // LoadByDate(m_DateTime);
+            LoadByDate(dt);
         }
         /// <summary>
         /// This loads the grid with all the Files or Actions
@@ -54,7 +52,9 @@ namespace FileAdjuster5
         private Int64 LoadByDate(DateTime inDT)
         {
             Int64 iReturn = -1;
+            m_DataTable = new DataTable();
             m_DataTable = FileAdjSQLite.GetHistRows(inDT, bIsActions);
+            DGchange.DataContext = m_DataTable.DefaultView;
             return iReturn;
         }
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
@@ -62,5 +62,7 @@ namespace FileAdjuster5
             //if() add if for no selection maybe return false
             this.DialogResult = true;
         }
+
+
     }
 }

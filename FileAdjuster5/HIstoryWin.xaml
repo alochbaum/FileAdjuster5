@@ -29,11 +29,12 @@
             <Button x:Name="btnPrev">Previous</Button>
             <Button x:Name="btnNext">Next</Button>
             <Label>Before this Date:</Label>
-            <wpfTool:DateTimePicker x:Name="dtpDate" Margin="5,0,10,0" MinWidth="220" TimePickerVisibility="Hidden" ValueChanged="DtpDate_ValueChanged" Format="LongDate"></wpfTool:DateTimePicker>
+            <wpfTool:DateTimePicker x:Name="dtpDate" Margin="5,0,10,0" MinWidth="220" TimePickerVisibility="Hidden" ValueChanged="DtpDate_ValueChanged" Format="LongDate" AutoCloseCalendar="True"/>
             <Button x:Name="btnDelete" IsEnabled="False">Delete before date</Button>
             <Button x:Name="btnLoad" Click="BtnLoad_Click">(OK) Load</Button>
             <Button x:Name="btnExit" IsCancel="True">Cancel</Button>
         </StackPanel>
-        <DataGrid x:Name="DGchange" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding}"></DataGrid>
+        <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center">You need to click up/down after clicking on date in calendar, (I used a free control).</Label>
+        <DataGrid x:Name="DGchange" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding}" CanUserAddRows="False"></DataGrid>
     </Grid>
 </Window>
