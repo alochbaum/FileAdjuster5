@@ -26,8 +26,8 @@
             <ColumnDefinition Width="30*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
-            <Button x:Name="btnPrev">Previous</Button>
-            <Button x:Name="btnNext">Next</Button>
+            <Button x:Name="btnPrev" Click="BtnPrev_Click">Previous</Button>
+            <Button x:Name="btnNext" Click="BtnNext_Click">Top</Button>
             <Label>Before this Date:</Label>
             <wpfTool:DateTimePicker x:Name="dtpDate" Margin="5,0,10,0" MinWidth="220" TimePickerVisibility="Hidden" ValueChanged="DtpDate_ValueChanged" Format="LongDate" AutoCloseCalendar="True"/>
             <Button x:Name="btnDelete" IsEnabled="False">Delete before date</Button>

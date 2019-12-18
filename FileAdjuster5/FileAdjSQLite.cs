@@ -385,50 +385,49 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             string strDBFile = DBFile();
             m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
             if (IsActionRows)
-                if (IsActionRows)
+            {
+                tableReturn.Columns.Add("Parameter1", typeof(string));
+                tableReturn.Columns.Add("Parameter2", typeof(string));
+                string sql;
+                if (File.Exists(strDBFile))
                 {
-                    tableReturn.Columns.Add("Parameter1", typeof(string));
-                    tableReturn.Columns.Add("Parameter2", typeof(string));
+                    m_dbConnection.Open();
+                    if (IsPrevious)
+                        sql = "select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1" +
+                            " and GroupID <= " + iInGroupID.ToString() + " order by DateAdded desc limit 13; ";
+                    else
+                        sql = "select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1" +
+                            " and GroupID >= " + iInGroupID.ToString() + " order by DateAdded desc limit 13; ";
+                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                        tableReturn.Rows.Add(reader[0], reader[1], reader[2], reader[3]);
+                    reader.Close();
+                    m_dbConnection.Close();
+                }
+            }
+            else
+            {
+                tableReturn.Columns.Add("FileName", typeof(string));
+                if (File.Exists(strDBFile))
+                {
+                    m_dbConnection.Open();
                     string sql;
-                    if (File.Exists(strDBFile))
-                    {
-                        m_dbConnection.Open();
-                        if (IsPrevious)
-                            sql = "select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1" +
-                                " and GroupID <= " + iInGroupID.ToString() + " order by DateAdded desc limit 13; ";
-                        else
-                            sql = "select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1" +
-                                " and GroupID >= " + iInGroupID.ToString() + " order by DateAdded desc limit 13; ";
-                        SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                        SQLiteDataReader reader = command.ExecuteReader();
-                        while (reader.Read())
-                            tableReturn.Rows.Add(reader[0], reader[1], reader[2], reader[3]);
-                        reader.Close();
-                        m_dbConnection.Close();
-                    }
+                    if (IsPrevious)
+                        sql = "select group_id,date_added,file_name from FileHistory" +
+                          " where group_id <= " + iInGroupID.ToString() + " order by date_added desc limit 13; ";
+                    else
+                        sql = "select group_id,date_added,file_name from FileHistory" +
+                        " where group_id >= " + iInGroupID.ToString() + " order by date_added desc limit 13; ";
+                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                        tableReturn.Rows.Add(reader[0], reader[1], reader[2]);
+                    reader.Close();
+                    m_dbConnection.Close();
                 }
-                else
-                {
-                    tableReturn.Columns.Add("FileName", typeof(string));
-                    if (File.Exists(strDBFile))
-                    {
-                        m_dbConnection.Open();
-                        string sql;
-                        if (IsPrevious)
-                          sql = "select group_id,date_added,file_name from FileHistory" +
-                            " where group_id <= " + iInGroupID.ToString() + " order by DateAdded desc limit 13; ";
-                        else
-                            sql = "select group_id,date_added,file_name from FileHistory" +
-                            " where group_id >= " + iInGroupID.ToString() + " order by DateAdded desc limit 13; ";
-                        SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                        SQLiteDataReader reader = command.ExecuteReader();
-                        while (reader.Read())
-                            tableReturn.Rows.Add(reader[0], reader[1], reader[2]);
-                        reader.Close();
-                        m_dbConnection.Close();
-                    }
-                }
-            return tableReturn;
+            }
+            return tableReturn;        
         }
         /// <summary>
         /// This is the overloaded Function to return 13 history rows based on date
@@ -471,7 +470,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     m_dbConnection.Open();
                     // select group_id,date_added,file_name from FileHistory order by group_id limit 1
                     string sql = "select group_id,date_added,file_name from FileHistory" +
-                        " where date_added <= datetime('" + strDateTime + "') order by DateAdded desc limit 13; ";
+                        " where date_added <= datetime('" + strDateTime + "') order by date_added desc limit 13; ";
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())

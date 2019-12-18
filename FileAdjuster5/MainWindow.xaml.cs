@@ -997,7 +997,16 @@ namespace FileAdjuster5
         private void BtnHistAction_Click(object sender, RoutedEventArgs e)
         {
             HIstoryWin m_Hwin = new HIstoryWin(true);
-            m_Hwin.ShowDialog();
+            if ((bool)m_Hwin.ShowDialog())
+            {
+                MyDtable = GetTable(m_Hwin.GetOutGroup());
+                dgActions.DataContext = MyDtable.DefaultView;
+                string sTemp = "Got actions saved on: " +
+                    FileAdjSQLite.GetActionDate(m_Hwin.GetOutGroup());
+                log.Debug(sTemp);
+                rtbStatus.AppendText(sTemp + "\r\n");
+                blUsingActionsHistory = true; ;
+            }
             m_Hwin.Close();
         }
 
