@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,13 +61,19 @@ namespace FileAdjuster5
             m_DataTable = FileAdjSQLite.GetHistRows(inDT, bIsActions);
             DGchange.DataContext = m_DataTable.DefaultView;
         }
+        /// <summary>
+        /// This is OK to load the selected event
+        /// </summary>
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
             int iSelected = DGchange.SelectedIndex;
-            DataRow row = m_DataTable.Rows[iSelected];
-            DataRow newRow = m_DataTable.NewRow();
-            newRow.ItemArray = row.ItemArray;
-            iOutGroup = int.Parse(newRow["Group_ID"].ToString());
+            if (iSelected >= 0)
+            {
+                DataRow row = m_DataTable.Rows[iSelected];
+                DataRow newRow = m_DataTable.NewRow();
+                newRow.ItemArray = row.ItemArray;
+                iOutGroup = int.Parse(newRow["Group_ID"].ToString());
+            }
             //if() add if for no selection maybe return false
             this.DialogResult = true;
         }
@@ -77,10 +84,22 @@ namespace FileAdjuster5
             DataRow row = m_DataTable.Rows[12];
             DataRow newRow = m_DataTable.NewRow();
             newRow.ItemArray = row.ItemArray;
-            int iOrderNew = int.Parse(newRow["Group_ID"].ToString());
-            m_DataTable = new DataTable();
-            m_DataTable = FileAdjSQLite.GetHistRows((Int64)iOrderNew, true, bIsActions);
-            DGchange.DataContext = m_DataTable.DefaultView;
+            string strDateAdded = newRow[1].ToString();
+            try
+            {
+                DateTime dtDateTime = DateTime.ParseExact(strDateAdded, "yyyy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture);
+                dtpDate.Value = dtDateTime;
+            }
+            catch (Exception)
+            {
+
+               // throw;
+            }
+
+
+            //m_DataTable = new DataTable();
+            //m_DataTable = FileAdjSQLite.GetHistRows((Int64)iOrderNew, true, bIsActions);
+            //DGchange.DataContext = m_DataTable.DefaultView;
         }
 
         private void BtnNext_Click(object sender, RoutedEventArgs e)
@@ -89,10 +108,10 @@ namespace FileAdjuster5
             DataRow row = m_DataTable.Rows[0];
             DataRow newRow = m_DataTable.NewRow();
             newRow.ItemArray = row.ItemArray;
-            int iOrderNew = int.Parse(newRow["Group_ID"].ToString()) ;
-            m_DataTable = new DataTable();
-            m_DataTable = FileAdjSQLite.GetHistRows((Int64)iOrderNew, false, bIsActions);
-            DGchange.DataContext = m_DataTable.DefaultView;
+            string strDateDate = newRow[1].ToString();
+            DateTime dtDateJump = FileAdjSQLite.GetNextDate(strDateDate, bIsActions);
+            dtpDate.Value = dtDateJump;
+            //MessageBox.Show($"Date Added {dtDateJump.ToShortDateString()}");
         }
     }
 }

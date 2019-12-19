@@ -7,6 +7,7 @@ using System.Data.SQLite;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Globalization;
 
 namespace FileAdjuster5
 {
@@ -430,6 +431,51 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             return tableReturn;        
         }
         /// <summary>
+        /// This gets the next times in relation to a date
+        /// </summary>
+        /// <param name="inDateTime"></param>
+        /// <param name="iLimit"></param>
+        /// <returns></returns>
+        static public DateTime GetNextDate(string inDateTime,bool IsActionRows, int iLimit = 3)
+        {
+            DateTime returnDate = new DateTime();
+            returnDate = DateTime.Now;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            m_dbConnection.ConnectionString = "Data Source=" + DBFile() + ";Version=3;";
+            m_dbConnection.Open();
+            string sql = "";
+            //string strDateTime = inDateTime.ToString("yyyy-MM-dd 00:00:00");
+            string strTemp = "";
+            if (IsActionRows)
+            {
+                sql = "select DateAdded from ActionTable where DisplayOrder = 1 and DateAdded >= datetime('" + inDateTime + "') order by DateAdded limit @iLimit; ";
+            } else
+            {
+                 sql = "select date_added from FileHistory where date_added >= datetime('" + inDateTime + "') order by date_added limit @iLimit; ";
+            }
+            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            command.Parameters.Add(new SQLiteParameter("iLimit", iLimit));
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                strTemp = reader.GetString(0);
+            }
+            reader.Close();
+            m_dbConnection.Close();
+            if (strTemp.Length > 2)
+            {
+                try
+                {
+                    returnDate = DateTime.ParseExact(strTemp, "yyyy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture);
+                }
+                catch
+                {
+
+                }
+            }
+            return returnDate;
+        }
+        /// <summary>
         /// This is the overloaded Function to return 13 history rows based on date
         /// </summary>
         /// <param name="inDateTime">Date Time to search</param>
@@ -439,7 +485,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         {
             DataTable tableReturn = new DataTable();
             tableReturn.Columns.Add("Group_ID", typeof(Int64));
-            tableReturn.Columns.Add("Date Added", typeof(string));
+            tableReturn.Columns.Add("Date_Added", typeof(string));
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             string strDBFile = DBFile();
             string strDateTime = inDateTime.ToString("yyyy-MM-dd 00:00:00");

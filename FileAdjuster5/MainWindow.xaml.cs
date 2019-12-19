@@ -991,6 +991,15 @@ namespace FileAdjuster5
         {
             HIstoryWin myHwin = new HIstoryWin(false);
             myHwin.ShowDialog();
+            Int64 iGroupNum = myHwin.GetOutGroup();
+            if (iGroupNum >= 0)
+            {
+                MyDtable = GetTable(iGroupNum);
+                dgActions.DataContext = MyDtable.DefaultView;
+                string sTemp = $"Files list to restore file(s) in group {iGroupNum}";
+                log.Debug(sTemp);
+                rtbStatus.AppendText(sTemp + "\r\n");
+            }
             myHwin.Close();
         }
 
@@ -999,13 +1008,16 @@ namespace FileAdjuster5
             HIstoryWin m_Hwin = new HIstoryWin(true);
             if ((bool)m_Hwin.ShowDialog())
             {
-                MyDtable = GetTable(m_Hwin.GetOutGroup());
-                dgActions.DataContext = MyDtable.DefaultView;
-                string sTemp = "Got actions saved on: " +
-                    FileAdjSQLite.GetActionDate(m_Hwin.GetOutGroup());
-                log.Debug(sTemp);
-                rtbStatus.AppendText(sTemp + "\r\n");
-                blUsingActionsHistory = true; ;
+                Int64 iGroupNum = m_Hwin.GetOutGroup();
+                if (iGroupNum >= 0)
+                {
+                    MyDtable = GetTable(m_Hwin.GetOutGroup());
+                    dgActions.DataContext = MyDtable.DefaultView;
+                    string sTemp = $"History list to restore actions in group {iGroupNum}";
+                    log.Debug(sTemp);
+                    rtbStatus.AppendText(sTemp + "\r\n");
+                    blUsingActionsHistory = true;
+                }
             }
             m_Hwin.Close();
         }
