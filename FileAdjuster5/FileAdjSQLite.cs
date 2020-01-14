@@ -451,7 +451,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 sql = "select DateAdded from ActionTable where DisplayOrder = 1 and DateAdded >= datetime('" + inDateTime + "') order by DateAdded limit @iLimit; ";
             } else
             {
-                 sql = "select date_added from FileHistory where date_added >= datetime('" + inDateTime + "') order by date_added limit @iLimit; ";
+                 sql = "select distinct date_added from FileHistory where date_added >= datetime('" + inDateTime + "') order by date_added limit @iLimit; ";
             }
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
             command.Parameters.Add(new SQLiteParameter("iLimit", iLimit));
