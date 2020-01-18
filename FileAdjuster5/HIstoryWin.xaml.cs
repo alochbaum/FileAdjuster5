@@ -38,6 +38,8 @@ namespace FileAdjuster5
             m_DateTime = m_DateTime.AddDays(1);
             dtpDate.Value = m_DateTime;
             //LoadByDate(m_DateTime);
+            if (IsActions) HistWin.Title = "Action Histories (Select one and OK to load)";
+            else HistWin.Title = "File Histories (Select one and OK to load)";
         }
 
         /// <summary>
@@ -108,9 +110,10 @@ namespace FileAdjuster5
             DataRow row = m_DataTable.Rows[0];
             DataRow newRow = m_DataTable.NewRow();
             newRow.ItemArray = row.ItemArray;
-            string strDateDate = newRow[1].ToString();
-            DateTime dtDateJump = FileAdjSQLite.GetNextDate(strDateDate, bIsActions);
-            dtpDate.Value = dtDateJump;
+            string strGroup = newRow[0].ToString();
+            m_DataTable = new DataTable();
+            m_DataTable = FileAdjSQLite.GetNextDate(strGroup, bIsActions);
+            DGchange.DataContext = m_DataTable.DefaultView;
             //MessageBox.Show($"Date Added {dtDateJump.ToShortDateString()}");
         }
     }

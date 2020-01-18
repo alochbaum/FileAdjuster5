@@ -431,15 +431,16 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             return tableReturn;        
         }
         /// <summary>
-        /// This gets the next times in relation to a date
+        /// From group number it seeks table with next group
         /// </summary>
         /// <param name="inDateTime"></param>
         /// <param name="iLimit"></param>
         /// <returns></returns>
-        static public DateTime GetNextDate(string inDateTime,bool IsActionRows, int iLimit = 3)
+        static public DataTable GetNextDate(string inDateTime,bool IsActionRows, int iLimit = 3)
         {
-            DateTime returnDate = new DateTime();
-            returnDate = DateTime.Now;
+            DataTable tableReturn = new DataTable();
+            tableReturn.Columns.Add("Group_ID", typeof(Int64));
+            tableReturn.Columns.Add("Date Added", typeof(string));
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             m_dbConnection.ConnectionString = "Data Source=" + DBFile() + ";Version=3;";
             m_dbConnection.Open();
@@ -466,14 +467,14 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 try
                 {
-                    returnDate = DateTime.ParseExact(strTemp, "yyyy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture);
+                    //returnDate = DateTime.ParseExact(strTemp, "yyyy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture);
                 }
                 catch
                 {
 
                 }
             }
-            return returnDate;
+            return tableReturn;
         }
         /// <summary>
         /// This is the overloaded Function to return 13 history rows based on date
@@ -499,7 +500,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     m_dbConnection.Open();
                     // Select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1 and DateAdded <= datetime('2019-10-01 00:00:00');
                     string sql = "select GroupID,DateAdded,Parameter1,Parameter2 from ActionTable where DisplayOrder=1" +
-                        " and DateAdded <= datetime('"+strDateTime+"') order by DateAdded desc limit 13; ";
+                        " and DateAdded <= datetime('"+strDateTime+ "') order by DateAdded desc limit 13; ";
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
@@ -516,7 +517,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     m_dbConnection.Open();
                     // select group_id,date_added,file_name from FileHistory order by group_id limit 1
                     string sql = "select group_id,date_added,file_name from FileHistory" +
-                        " where date_added <= datetime('" + strDateTime + "') order by date_added desc limit 13; ";
+                        " where date_added <= datetime('" + strDateTime + "') group by group_id order by date_added desc limit 13; ";
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
