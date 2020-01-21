@@ -439,39 +439,32 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         static public DataTable GetNextDate(string strGroup,bool IsActionRows)
         {
             DataTable tableReturn = new DataTable();
+            Int64 iGroup=0;
             tableReturn.Columns.Add("Group_ID", typeof(Int64));
             tableReturn.Columns.Add("Date Added", typeof(string));
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             m_dbConnection.ConnectionString = "Data Source=" + DBFile() + ";Version=3;";
             m_dbConnection.Open();
-            string sql = "";
             //string strDateTime = inDateTime.ToString("yyyy-MM-dd 00:00:00");
-            string strTemp = "";
+            string sql = "";
             if (IsActionRows)
             {
-                sql = "select max(group_id) from (Select group_id from ActionTable where group_id>" + strGroup + "group by group_id limit 13); ";
+                sql = "select max(group_id) from (Select group_id from ActionTable where group_id>" + strGroup + " group by group_id limit 13); ";
             } else
             {
-                 sql = "select max(group_id) from (Select group_id from FileHistory where group_id>" + strGroup + "group by group_id limit 13); ";
+                sql = "select max(group_id) from (Select group_id from FileHistory where group_id>" + strGroup + " group by group_id limit 13); ";
             }
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                strTemp = reader.GetString(0);
+                iGroup = reader.GetInt64(0);
             }
             reader.Close();
             m_dbConnection.Close();
-            if (strTemp.Length > 2)
+            if (iGroup>0)
             {
-                try
-                {
-                    //returnDate = DateTime.ParseExact(strTemp, "yyyy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture);
-                }
-                catch
-                {
-
-                }
+                tableReturn = GetHistRows(iGroup, false, IsActionRows);
             }
             return tableReturn;
         }
