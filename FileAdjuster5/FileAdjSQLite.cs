@@ -436,7 +436,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         /// <param name="inDateTime"></param>
         /// <param name="iLimit"></param>
         /// <returns></returns>
-        static public DataTable GetNextDate(string inDateTime,bool IsActionRows, int iLimit = 3)
+        static public DataTable GetNextDate(string strGroup,bool IsActionRows)
         {
             DataTable tableReturn = new DataTable();
             tableReturn.Columns.Add("Group_ID", typeof(Int64));
@@ -449,13 +449,12 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             string strTemp = "";
             if (IsActionRows)
             {
-                sql = "select DateAdded from ActionTable where DisplayOrder = 1 and DateAdded >= datetime('" + inDateTime + "') order by DateAdded limit @iLimit; ";
+                sql = "select max(group_id) from (Select group_id from ActionTable where group_id>" + strGroup + "group by group_id limit 13); ";
             } else
             {
-                 sql = "select distinct date_added from FileHistory where date_added >= datetime('" + inDateTime + "') order by date_added limit @iLimit; ";
+                 sql = "select max(group_id) from (Select group_id from FileHistory where group_id>" + strGroup + "group by group_id limit 13); ";
             }
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-            command.Parameters.Add(new SQLiteParameter("iLimit", iLimit));
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
