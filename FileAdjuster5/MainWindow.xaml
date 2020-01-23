@@ -8,7 +8,19 @@
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
         x:Name="MainFrame"
-        Title="MainWindow" Height="600" Width="890" Icon="Icon.ico">
+        Title="MainWindow" Height="600" Width="900" Icon="Icon.ico">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <cm:BackgroundWorker x:Key="MyWorker"
+                             DoWork="MyWorker_DoWork"
+                             ProgressChanged="MyWorker_ProgressChanged"
+                             RunWorkerCompleted="MyWorker_Complete"
+                             WorkerReportsProgress="True"
+                             WorkerSupportsCancellation="True"
+                             ></cm:BackgroundWorker>
+    </Window.Resources>
     <Grid Margin="10,5,10,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
@@ -27,13 +39,13 @@
         <StackPanel Grid.Column="0" Grid.Row="0">
             <StackPanel Orientation="Horizontal" Drop="StackPanel_Drop" AllowDrop="True">
                 <Label>Source File(s) [drag here or]</Label>
-                <Button x:Name="btnAddFile" Click="BtnAddFile_Click" Margin="0,0,5,0" ToolTip="Add a file to input file list below (alt a)">
+                <Button x:Name="btnAddFile" Click="BtnAddFile_Click" ToolTip="Add a file to input file list below (alt a)">
                     <AccessText>_Add File</AccessText>
                 </Button>
-                <Button x:Name="btbClear" Click="BtnClear_Click" Margin="0,0,5,0" ToolTip="Clears input file list (alt c)" Drop="BtbClear_Drop">
+                <Button x:Name="btbClear" Click="BtnClear_Click" ToolTip="Clears input file list (alt c)" Drop="BtbClear_Drop">
                     <AccessText>_Clear</AccessText>
                 </Button>
-                <Button x:Name="btnHistory" Click="BtnHistory_Click" Margin="0,0,5,0" ToolTip="Load file(s) from previous starts. (alt less than)" >
+                <Button x:Name="btnHistory" Click="BtnHistory_Click" ToolTip="Load file(s) from previous starts. (alt less than)" >
                     <AccessText>&lt;_-</AccessText>
                 </Button>
                 <Button x:Name="btnFileHist" ToolTip="Load list of files from History" Click="BtnFileHist_Click" >
@@ -53,10 +65,10 @@
         <StackPanel Grid.Column="2" Grid.Row="0" Margin="0,0,0,7">
             <StackPanel Orientation="Horizontal">
                 <Label>Output File(s)</Label>
-                <Button x:Name="btnStart" Click="BtnStart_Click" Margin="0,0,5,0" ToolTip="Starts splitting clips in to lines at right to output files with actions (alt s)">
+                <Button x:Name="btnStart" Click="BtnStart_Click" ToolTip="Starts splitting clips in to lines at right to output files with actions (alt s)">
                     <AccessText FontWeight="Bold" ToolTip="Click here when you are ready to process files&#x0a;on the right with actions below.">_Start</AccessText>
                 </Button>
-                <Button x:Name="btnCancel" Click="BtnCancel_Click" IsEnabled="False" Margin="0,0,5,0" ToolTip="If processing, this will cancel on next 4K block.">
+                <Button x:Name="btnCancel" Click="BtnCancel_Click" IsEnabled="False" ToolTip="If processing, this will cancel on next 4K block.">
                     <AccessText>Ca_ncel</AccessText>
                 </Button>
                 <Label Content="ext:"></Label>
@@ -110,30 +122,31 @@
         </Rectangle>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <Button x:Name="btnQuickInsert" Margin="0,0,5,0" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="BtnQuickInsert_Click">
+                <Button x:Name="btnQuickInsert" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="BtnQuickInsert_Click">
                     <AccessText>Q-_I</AccessText>
                 </Button>
-                <Button x:Name="btnQuickExclude" Margin="0,0,5,0" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
+                <Button x:Name="btnQuickExclude" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
                     <AccessText>Q-_X</AccessText>
                 </Button>
-                <Button x:Name="btnAddRow" Margin="0,0,5,0" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">Add Row</Button>
-                <Button x:Name="btnSwapAbove" Margin="0,0,5,0" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">
-                    <AccessText>Swa_p with Row Above</AccessText></Button>
-                <Button x:Name="btnEditParams" Margin="0,0,5,0" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditParams_Click">
+                <Button x:Name="btnAddRow" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">Add Row</Button>
+                <Button x:Name="btnSwapAbove" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">
+                    <AccessText>Swa_p with Row Above</AccessText>
+                </Button>
+                <Button x:Name="btnEditParams" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditParams_Click">
                     <AccessText>_Edit Params</AccessText>
-                    </Button>
-                <Button x:Name="btnDelRow" Margin="0,0,5,0" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">Delete Row</Button>
-                <Button x:Name="btnClearRows" Margin="0,0,5,0" Click="BtnClearRows_Click" ToolTip="Clears all rows below and asks you to created first comment row (alt-w)">
+                </Button>
+                <Button x:Name="btnDelRow" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">Delete Row</Button>
+                <Button x:Name="btnClearRows" Click="BtnClearRows_Click" ToolTip="Clears all rows below and asks you to created first comment row (alt-w)">
                     <AccessText>Clear or Ne_w Action</AccessText>
                 </Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
-                <Button x:Name="btnSavePreset" Margin="0,0,5,0" Click="BtnSavePreset_Click" ToolTip="Saves current actions below and checkboxes as a preset.">Save as Preset</Button>
-                <Button x:Name="btnExportPresets" Margin="0,0,5,0" ToolTip="This exports presets to a database file." Click="btnExportPresets_Click">Export Presets</Button>
-                <Button x:Name="btnLoadPreset" Margin="0,0,5,0" Click="BtnLoadPreset_Click" ToolTip="Loads Action Presets (alt L)">
+                <Button x:Name="btnSavePreset" Click="BtnSavePreset_Click" ToolTip="Saves current actions below and checkboxes as a preset.">Save as Preset</Button>
+                <Button x:Name="btnExportPresets" ToolTip="This exports presets to a database file." Click="btnExportPresets_Click">Export Presets</Button>
+                <Button x:Name="btnLoadPreset" Click="BtnLoadPreset_Click" ToolTip="Loads Action Presets (alt L)">
                     <AccessText>_Load Preset</AccessText>
                 </Button>
-                <Label Content="--" Margin="0,0,5,0"></Label>
-                <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" Margin="0,0,5,0" ToolTip="Load a grid actions from a previous history. (alt =)">
+                <Label Content="--"></Label>
+                <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous history. (alt =)">
                     <AccessText>_=&gt;</AccessText>
                 </Button>
                 <Button x:Name="btnHistAction" ToolTip="Shows list of previous actions you can load" Click="BtnHistAction_Click">
@@ -143,9 +156,10 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
                 <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below if they start with any Parameter2 in any row.">include if starting with Parameter2 +</CheckBox>
                 <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">not date +</CheckBox>
-                <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --  </CheckBox>
+                <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --</CheckBox>
                 <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines (alt-b)">
-                    <AccessText>no _blank lines (not just includes)</AccessText></CheckBox>
+                    <AccessText>no _blank lines (not just includes)</AccessText>
+                </CheckBox>
             </StackPanel>
             <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True" MaxHeight="180"/>
         </StackPanel>
@@ -166,13 +180,4 @@
             </RichTextBox.Resources>
         </RichTextBox>
     </Grid>
-    <Window.Resources>
-        <cm:BackgroundWorker x:Key="MyWorker"
-                             DoWork="MyWorker_DoWork"
-                             ProgressChanged="MyWorker_ProgressChanged"
-                             RunWorkerCompleted="MyWorker_Complete"
-                             WorkerReportsProgress="True"
-                             WorkerSupportsCancellation="True"
-                             ></cm:BackgroundWorker>
-    </Window.Resources>
 </Window>
