@@ -142,6 +142,14 @@ namespace FileAdjuster5
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
+            // Testing for Multiple Files and Comment checked and not Append Files Selected
+            if ((lbFileNames.Items.Count>1)&&(cbxComment.IsChecked == true) && (cbxCombineFiles.IsChecked == false))
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Program can't process, either uncheck Comment or check Combine Files, please.",
+                    "Multiple files with comments and no combine",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             // cblines stores the number of lines in format <num of lines>space some other text
             string strTemp = cbLines.SelectedValue.ToString();
             string[] words = strTemp.Split(' ');
@@ -168,6 +176,7 @@ namespace FileAdjuster5
             myStartTime = DateTime.Now;
             rtbStatus.AppendText($"Started work at {myStartTime.TimeOfDay}\r\n");
             int iCountListbox = lbFileNames.Items.Count;
+
             if (iCountListbox > 0)
             {
                 // Load up passing private variable for thread
@@ -362,14 +371,16 @@ namespace FileAdjuster5
             List<string> lsTemp = FileAdjSQLite.ReadHistory(lLastHistory);
             lbFileNames.Items.Clear();
             rtbStatus.Document.Blocks.Clear();
-            
+            string sReport = "Error Reading File History: no files.";  // outputs error if not replaced
             foreach(string s in lsTemp)
             {
                 string[] sTemp = s.Split('|');
                 tbExt.Text = sTemp[1];
-                rtbStatus.AppendText("Read History: "+sTemp[0]+" created on "+sTemp[2]+"\r\n\r\n");
+                sReport="Read File History: "+sTemp[0]+" created on "+sTemp[2];
                 lbFileNames.Items.Add(sTemp[0]);
             }
+            log.Debug(sReport);
+            rtbStatus.AppendText(sReport + "\r\n");
         }
 
         private void BtnActionHistory_Click(object sender, RoutedEventArgs e)
@@ -994,8 +1005,17 @@ namespace FileAdjuster5
             Int64 iGroupNum = myHwin.GetOutGroup();
             if (iGroupNum >= 0)
             {
-                MyDtable = GetTable(iGroupNum);
-                dgActions.DataContext = MyDtable.DefaultView;
+               
+                List<string> lsTemp = FileAdjSQLite.ReadHistory(iGroupNum);
+                lbFileNames.Items.Clear();
+                rtbStatus.Document.Blocks.Clear();
+
+                foreach (string s in lsTemp)
+                {
+                    string[] strTmp = s.Split('|');
+                    tbExt.Text = strTmp[1];
+                    lbFileNames.Items.Add(strTmp[0]);
+                }
                 string sTemp = $"Files list to restore file(s) in group {iGroupNum}";
                 log.Debug(sTemp);
                 rtbStatus.AppendText(sTemp + "\r\n");
@@ -1030,6 +1050,26 @@ namespace FileAdjuster5
                 ClearFiles();
                 // The other drop event will add the files
             }
+        }
+
+        private void BtnQuickAddIn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Clipboard.ContainsText(TextDataFormat.Text))
+            {
+                string clipboardText = Clipboard.GetText(TextDataFormat.Text);
+                MyDtable.Rows.Clear();
+                Int64 i = FileAdjSQLite.GetActionint();
+                MyDtable.Rows.Add(1, ++i, "Comment", clipboardText, "");
+                ClearStatusAndShow($"Created new action starting with {clipboardText}", true);
+                QuickAddRow("Include", clipboardText);
+            }
+            else
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Can't read clipboard",
+                    "Can't Add Action and Include Row from clipboard text",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+
         }
 
         private void BtnDelRow_Click(object sender, RoutedEventArgs e)

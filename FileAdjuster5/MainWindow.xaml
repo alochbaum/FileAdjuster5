@@ -69,7 +69,7 @@
                     <AccessText FontWeight="Bold" ToolTip="Click here when you are ready to process files&#x0a;on the right with actions below.">_Start</AccessText>
                 </Button>
                 <Button x:Name="btnCancel" Click="BtnCancel_Click" IsEnabled="False" ToolTip="If processing, this will cancel on next 4K block.">
-                    <AccessText>Ca_ncel</AccessText>
+                    <AccessText>Cancel_!</AccessText>
                 </Button>
                 <Label Content="ext:"></Label>
                 <TextBox x:Name="tbExt" VerticalAlignment="Center">.txt</TextBox>
@@ -80,7 +80,9 @@
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="cbxCombineFiles" Margin="5,0,0,0" IsChecked="True" VerticalAlignment="Center" ToolTip="Checking this doesn't make individual outputs for each input file (unless lines are exceeded).">Combine Files</CheckBox>
                 <CheckBox x:Name="cbxFileHeaders" Margin="5,0,0,0" IsChecked="True" VerticalAlignment="Center" ToolTip="If &quot;Combine Files&quot; is checked this added a header with each file name.">Headers</CheckBox>
-                <Button x:Name="btnOut2In" Margin="5,0,0,0" ToolTip="Clears Input files and puts current output file to be new input" Click="BtnOut2In_Click">Out2In</Button>
+                <Button x:Name="btnOut2In" Margin="5,0,0,0" ToolTip="Clears Input files and puts current output file to be new input" Click="BtnOut2In_Click">
+                    <AccessText>Out_2In</AccessText>
+                </Button>
                 <Button x:Name="btnLog" Margin="5,0,0,0" Click="BtnLog_Click" ToolTip="Loads program log file in Notepad ++ program">Log</Button>
                 <Button x:Name="btnInc" ToolTip="Increments (alt-n) output file if that file exits (automatic on comment mode or new input files)" Margin="5,0,0,0" Click="BtnInc_Click">
                     <AccessText>I_nc</AccessText>
@@ -105,7 +107,7 @@
                     <AccessText>Notepad_++</AccessText>
                 </Button>
                 <Button x:Name="btnOpenDir" Margin="5,0,0,0" ToolTip="Open Output File's directory (alt d)" Click="BtnOpenDir_Click" >
-                    <AccessText>dir</AccessText>
+                    <AccessText>di_r</AccessText>
                 </Button>
             </StackPanel>
             <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" ToolTip="Selects the size of the output file." />
@@ -122,7 +124,10 @@
         </Rectangle>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <Button x:Name="btnQuickInsert" ToolTip="Quickly insert row with Include from clipboard (alt q)" Click="BtnQuickInsert_Click">
+                <Button x:Name="btnQuickAddIn" ToolTip="Quickly insert Action and Include with Include from clipboard (alt q)" Click="BtnQuickAddIn_Click">
+                    <AccessText>_qAI</AccessText>
+                </Button>
+                <Button x:Name="btnQuickInsert" ToolTip="Quickly insert row with Include from clipboard (alt I)" Click="BtnQuickInsert_Click">
                     <AccessText>Q-_I</AccessText>
                 </Button>
                 <Button x:Name="btnQuickExclude" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
@@ -135,7 +140,9 @@
                 <Button x:Name="btnEditParams" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditParams_Click">
                     <AccessText>_Edit Params</AccessText>
                 </Button>
-                <Button x:Name="btnDelRow" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">Delete Row</Button>
+                <Button x:Name="btnDelRow" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">
+                    <AccessText>_Delete Row</AccessText>
+                </Button>
                 <Button x:Name="btnClearRows" Click="BtnClearRows_Click" ToolTip="Clears all rows below and asks you to created first comment row (alt-w)">
                     <AccessText>Clear or Ne_w Action</AccessText>
                 </Button>
@@ -150,7 +157,7 @@
                     <AccessText>_=&gt;</AccessText>
                 </Button>
                 <Button x:Name="btnHistAction" ToolTip="Shows list of previous actions you can load" Click="BtnHistAction_Click">
-                    <AccessText>_h=»</AccessText>
+                    <AccessText>_oh=»</AccessText>
                 </Button>
             </StackPanel>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
