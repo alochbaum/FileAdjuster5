@@ -30,7 +30,17 @@
             <Button x:Name="btnNext" Click="BtnNext_Click">Next</Button>
             <Label>Before this Date:</Label>
             <wpfTool:DateTimePicker x:Name="dtpDate" Margin="5,0,10,0" MinWidth="220" TimePickerVisibility="Hidden" ValueChanged="DtpDate_ValueChanged" Format="LongDate" AutoCloseCalendar="True"/>
-            <Button x:Name="btnDelete" IsEnabled="False">Delete before date</Button>
+            <Button x:Name="btnDelete" IsEnabled="False" ToolTipService.ShowOnDisabled="True">Delete before date
+                <Button.ToolTip>
+                    <TextBlock>
+                    To enable this button, set date to at least 2 months
+                    <LineBreak />
+                    before current date and click down button. 
+                    <LineBreak />
+                    This will not delete actions which are saved as presets.
+                    </TextBlock>
+                </Button.ToolTip>
+            </Button>
             <Button x:Name="btnLoad" Click="BtnLoad_Click">(OK) Load</Button>
             <Button x:Name="btnExit" IsCancel="True">Cancel</Button>
         </StackPanel>
