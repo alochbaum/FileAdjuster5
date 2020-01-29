@@ -50,6 +50,10 @@ namespace FileAdjuster5
         private void DtpDate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             DateTime dt = (DateTime)dtpDate.Value;
+            if (dt < (DateTime.Now.AddDays(-60)))
+            {
+                btnDelete.IsEnabled = true;
+            } else { btnDelete.IsEnabled = false; }
             LoadByDate(dt);
         }
         /// <summary>
@@ -116,5 +120,6 @@ namespace FileAdjuster5
             DGchange.DataContext = m_DataTable.DefaultView;
             //MessageBox.Show($"Date Added {dtDateJump.ToShortDateString()}");
         }
+
     }
 }

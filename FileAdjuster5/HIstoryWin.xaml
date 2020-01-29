@@ -26,8 +26,8 @@
             <ColumnDefinition Width="30*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
-            <Button x:Name="btnPrev" Click="BtnPrev_Click">Previous</Button>
-            <Button x:Name="btnNext" Click="BtnNext_Click">Next</Button>
+            <Button x:Name="btnPrev" Click="BtnPrev_Click" ToolTip="Shows preceeding set of older values">Previous</Button>
+            <Button x:Name="btnNext" Click="BtnNext_Click" ToolTip="Shows succeeding set of newer values">Next</Button>
             <Label>Before this Date:</Label>
             <wpfTool:DateTimePicker x:Name="dtpDate" Margin="5,0,10,0" MinWidth="220" TimePickerVisibility="Hidden" ValueChanged="DtpDate_ValueChanged" Format="LongDate" AutoCloseCalendar="True"/>
             <Button x:Name="btnDelete" IsEnabled="False" ToolTipService.ShowOnDisabled="True">Delete before date
@@ -41,8 +41,24 @@
                     </TextBlock>
                 </Button.ToolTip>
             </Button>
-            <Button x:Name="btnLoad" Click="BtnLoad_Click">(OK) Load</Button>
-            <Button x:Name="btnExit" IsCancel="True">Cancel</Button>
+            <Button x:Name="btnLoad" Click="BtnLoad_Click">(OK) Load
+                <Button.ToolTip>
+                    <TextBlock>
+                    If a row is selected, clicking this button closes
+                    <LineBreak />
+                    this window and loads value(s) in to main window.
+                    </TextBlock>
+                </Button.ToolTip>
+            </Button>
+            <Button x:Name="btnExit" IsCancel="True">Cancel
+                <Button.ToolTip>
+                    <TextBlock>
+                    This closes the window without any changes
+                    <LineBreak />
+                    to main window, even if you selected a row.
+                    </TextBlock>
+                </Button.ToolTip>
+            </Button>
         </StackPanel>
         <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center">You need to click up/down after clicking on date in calendar, (I used a free control).</Label>
         <DataGrid x:Name="DGchange" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding}" CanUserAddRows="False"></DataGrid>
