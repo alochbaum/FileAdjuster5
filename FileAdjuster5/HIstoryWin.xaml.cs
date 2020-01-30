@@ -101,25 +101,48 @@ namespace FileAdjuster5
 
                // throw;
             }
-
-
-            //m_DataTable = new DataTable();
-            //m_DataTable = FileAdjSQLite.GetHistRows((Int64)iOrderNew, true, bIsActions);
-            //DGchange.DataContext = m_DataTable.DefaultView;
         }
 
         private void BtnNext_Click(object sender, RoutedEventArgs e)
         {
-            if (m_DataTable.Rows.Count < 2) return;
-            DataRow row = m_DataTable.Rows[0];
-            DataRow newRow = m_DataTable.NewRow();
-            newRow.ItemArray = row.ItemArray;
-            string strGroup = newRow[0].ToString();
+            string strGroup = GetGroupFromTable();
+            if (strGroup.Length < 1) return;
             m_DataTable = new DataTable();
             m_DataTable = FileAdjSQLite.GetNextDate(strGroup, bIsActions);
             DGchange.DataContext = m_DataTable.DefaultView;
-            //MessageBox.Show($"Date Added {dtDateJump.ToShortDateString()}");
         }
-
+        /// <summary>
+        /// Reads top group from table
+        /// </summary>
+        /// <returns>group as string</returns>
+        private string GetGroupFromTable()
+        {
+            string strReturn = "";
+            if (m_DataTable.Rows.Count < 2) return strReturn;
+            DataRow row = m_DataTable.Rows[0];
+            DataRow newRow = m_DataTable.NewRow();
+            newRow.ItemArray = row.ItemArray;
+            strReturn = newRow[0].ToString();
+            return strReturn;
+        }
+        /// <summary>
+        /// This function gets group_id for Files or groupid for actions, and
+        /// sends that, and type to sql actions to delete values smaller,
+        /// then it gets next group from table
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            string strGroup = GetGroupFromTable();
+            if (strGroup.Length < 1) return;
+            strGroup = FileAdjSQLite.DeletePriorGroup(strGroup, bIsActions);
+            if(strGroup.Length > 0)
+            {
+                m_DataTable = new DataTable();
+                m_DataTable = FileAdjSQLite.GetNextDate(strGroup, bIsActions);
+                DGchange.DataContext = m_DataTable.DefaultView;
+            }
+        }
     }
 }

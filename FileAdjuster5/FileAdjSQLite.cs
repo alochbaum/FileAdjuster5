@@ -281,7 +281,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         {
             DataTable tableReturn = new DataTable();
             tableReturn.Columns.Add("Order", typeof(Int64));
-            tableReturn.Columns.Add("Group", typeof(Int64));
+            tableReturn.Columns.Add("Group ID", typeof(Int64));
             tableReturn.Columns.Add("Action", typeof(string));
             tableReturn.Columns.Add("Parameter1", typeof(string));
             tableReturn.Columns.Add("Parameter2", typeof(string));
@@ -348,7 +348,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         static public DataTable ReadPresets()
         {
             DataTable tableReturn = new DataTable();
-            tableReturn.Columns.Add("Group_ID", typeof(Int64));
+            tableReturn.Columns.Add("Group ID", typeof(Int64));
             tableReturn.Columns.Add("Preset Group", typeof(string));
             tableReturn.Columns.Add("Preset Title", typeof(string));
             tableReturn.Columns.Add("Date Added", typeof(string));
@@ -380,7 +380,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         static public DataTable GetHistRows(Int64 iInGroupID, bool IsPrevious, bool IsActionRows)
         {
             DataTable tableReturn = new DataTable();
-            tableReturn.Columns.Add("Group_ID", typeof(Int64));
+            tableReturn.Columns.Add("Group ID", typeof(Int64));
             tableReturn.Columns.Add("Date Added", typeof(string));
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             string strDBFile = DBFile();
@@ -442,7 +442,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         {
             DataTable tableReturn = new DataTable();
             Int64 iGroup=0;
-            tableReturn.Columns.Add("Group_ID", typeof(Int64));
+            tableReturn.Columns.Add("Group ID", typeof(Int64));
             tableReturn.Columns.Add("Date Added", typeof(string));
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             m_dbConnection.ConnectionString = "Data Source=" + DBFile() + ";Version=3;";
@@ -479,8 +479,8 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         static public DataTable GetHistRows(DateTime inDateTime, bool IsActionRows)
         {
             DataTable tableReturn = new DataTable();
-            tableReturn.Columns.Add("Group_ID", typeof(Int64));
-            tableReturn.Columns.Add("Date_Added", typeof(string));
+            tableReturn.Columns.Add("Group ID", typeof(Int64));
+            tableReturn.Columns.Add("Date Added", typeof(string));
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             string strDBFile = DBFile();
             string strDateTime = inDateTime.ToString("yyyy-MM-dd 00:00:00");
@@ -558,6 +558,11 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 command.ExecuteNonQuery();
 
             }
+        }
+        static public string DeletePriorGroup(string StrGroup,bool blIsActions)
+        {
+            string strReturn = "";
+            return strReturn;
         }
     }
     
