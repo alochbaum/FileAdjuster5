@@ -39,7 +39,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
             DataRowView drv = (DataRowView)dgPresets.SelectedItem;
-            String result = (drv["Group_ID"]).ToString();
+            String result = (drv["Group"]).ToString();
             if (Int64.TryParse(result, out long iTemp)) iGroup = iTemp;
             log.Debug($"Clicked OK with {iGroup.ToString()}");
             this.DialogResult = true;

@@ -17,7 +17,7 @@
     </NuGetPackageImportStamp>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>C:\Users\andy\Desktop\FileAdjuster5v5.9.68\</PublishUrl>
+    <PublishUrl>C:\Users\andy\Desktop\FileAdjuster5v5.9.70\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -29,7 +29,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <PublisherName>Andrew Lochbaum</PublisherName>
     <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>5.9.68.%2a</ApplicationVersion>
+    <ApplicationVersion>5.9.70.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>

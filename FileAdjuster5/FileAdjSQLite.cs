@@ -281,7 +281,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         {
             DataTable tableReturn = new DataTable();
             tableReturn.Columns.Add("Order", typeof(Int64));
-            tableReturn.Columns.Add("Group ID", typeof(Int64));
+            tableReturn.Columns.Add("Group", typeof(Int64));
             tableReturn.Columns.Add("Action", typeof(string));
             tableReturn.Columns.Add("Parameter1", typeof(string));
             tableReturn.Columns.Add("Parameter2", typeof(string));
@@ -348,7 +348,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         static public DataTable ReadPresets()
         {
             DataTable tableReturn = new DataTable();
-            tableReturn.Columns.Add("Group ID", typeof(Int64));
+            tableReturn.Columns.Add("Group", typeof(Int64));
             tableReturn.Columns.Add("Preset Group", typeof(string));
             tableReturn.Columns.Add("Preset Title", typeof(string));
             tableReturn.Columns.Add("Date Added", typeof(string));

@@ -407,8 +407,7 @@ namespace FileAdjuster5
                     lTemp, myRow.Field<string>("Action"),
                     myRow.Field<string>("Parameter1"),
                     myRow.Field<string>("Parameter2"));
-                // updating on screen numbers
-                myRow["Group ID"] = lTemp;
+                    myRow["Group"] = lTemp;
             }
             blUsingActionsHistory = false;
         }

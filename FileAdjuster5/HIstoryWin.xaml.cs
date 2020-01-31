@@ -83,7 +83,8 @@ namespace FileAdjuster5
                 DataRow row = m_DataTable.Rows[iSelected];
                 DataRow newRow = m_DataTable.NewRow();
                 newRow.ItemArray = row.ItemArray;
-                iOutGroup = int.Parse(newRow["Group_ID"].ToString());
+                // 0 is both Group_ID and GroupID for action or file table
+                iOutGroup = int.Parse(newRow[0].ToString());
             }
             //if() add if for no selection maybe return false
             this.DialogResult = true;
