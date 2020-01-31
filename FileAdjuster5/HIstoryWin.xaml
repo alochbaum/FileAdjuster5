@@ -21,9 +21,9 @@
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*"/>
-            <ColumnDefinition Width="660*"/>
-            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="688*"/>
+            <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
             <Button x:Name="btnPrev" Click="BtnPrev_Click" ToolTip="Shows preceeding set of older values">Previous</Button>
@@ -41,12 +41,15 @@
                     </TextBlock>
                 </Button.ToolTip>
             </Button>
-            <Button x:Name="btnLoad" Click="BtnLoad_Click">(OK) Load
+            <Button x:Name="btnDir" Click="BtnDir_Click" IsEnabled="False" ToolTipService.ShowOnDisabled="True" >
+                <AccessText>
+                    _dir
+                </AccessText>
                 <Button.ToolTip>
-                    <TextBlock>
-                    If a row is selected, clicking this button closes
+                    <TextBlock >
+                    If listing files, and a file is selected
                     <LineBreak />
-                    this window and loads value(s) in to main window.
+                    clicking this opens that files directory
                     </TextBlock>
                 </Button.ToolTip>
             </Button>
@@ -56,6 +59,15 @@
                     This closes the window without any changes
                     <LineBreak />
                     to main window, even if you selected a row.
+                    </TextBlock>
+                </Button.ToolTip>
+            </Button>
+            <Button x:Name="btnLoad" Click="BtnLoad_Click">(OK) Load
+                <Button.ToolTip>
+                    <TextBlock>
+                    If a row is selected, clicking this button closes
+                    <LineBreak />
+                    this window and loads value(s) in to main window.
                     </TextBlock>
                 </Button.ToolTip>
             </Button>

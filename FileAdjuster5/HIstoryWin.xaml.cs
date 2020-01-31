@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,11 @@ namespace FileAdjuster5
             dtpDate.Value = m_DateTime;
             //LoadByDate(m_DateTime);
             if (IsActions) HistWin.Title = "Action Histories (Select one and OK to load)";
-            else HistWin.Title = "File Histories (Select one and OK to load)";
+            else
+            {
+                HistWin.Title = "File Histories (Select one and OK to load)";
+                btnDir.IsEnabled = true;
+            }
         }
 
         /// <summary>
@@ -143,6 +148,27 @@ namespace FileAdjuster5
                 m_DataTable = FileAdjSQLite.GetNextDate(strGroup, bIsActions);
                 DGchange.DataContext = m_DataTable.DefaultView;
             }
+        }
+
+        private void BtnDir_Click(object sender, RoutedEventArgs e)
+        {
+            int iTemp = DGchange.SelectedIndex;
+            if (iTemp > -1 && iTemp < m_DataTable.Rows.Count)
+            {
+                string strFile = m_DataTable.Rows[iTemp].Field<string>("FileName");
+                if (strFile.Length > 1)
+                {
+                    string strDir = System.IO.Path.GetDirectoryName(strFile);
+                    if (Directory.Exists(strDir))
+                    {
+                        System.Diagnostics.Process.Start(strDir);
+                    } else Xceed.Wpf.Toolkit.MessageBox.Show($"{strDir} no longer exists",
+                        "Can't open directory.", MessageBoxButton.OK,MessageBoxImage.Hand);
+                }
+            }
+            else Xceed.Wpf.Toolkit.MessageBox.Show("You have to select a row with a file to open a directory.",
+                "Operational Hint-Left click on row", MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
         }
     }
 }
