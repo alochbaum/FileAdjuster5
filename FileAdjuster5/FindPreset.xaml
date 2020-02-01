@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="Select a preset row and click OK or Cancel" Height="450" Width="800">
+        Title="Select a row to load a preset actions or click Cancel button" Height="450" Width="800">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <DataGrid x:Name="dgPresets" ItemsSource="{Binding}" CanUserReorderColumns="False" IsReadOnly="True" SelectedCellsChanged="DgPresets_SelectedCellsChanged"/>
         <StackPanel Grid.Row="1"  Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="btnOK" IsDefault="True"  Width="60" Click="BtnOK_Click">
+            <Button x:Name="btnOK" IsDefault="True"  Width="60" Click="BtnOK_Click" IsEnabled="False" Visibility="Hidden">
                 <AccessText>_OK</AccessText>
             </Button>
             <Button  x:Name="btnCancel" IsCancel="True" Width="60" Margin="5,0,0,0">

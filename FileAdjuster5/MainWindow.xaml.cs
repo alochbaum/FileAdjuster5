@@ -757,6 +757,7 @@ namespace FileAdjuster5
                 string strCommet1Param = myGet.GetAnswer();
                 MyDtable.Rows.Add(1, ++i, "Comment", strCommet1Param, "");
                 ClearStatusAndShow($"Created new action starting with {strCommet1Param}", true);
+                SetOutFile();
             }
         }
 
@@ -1061,6 +1062,7 @@ namespace FileAdjuster5
                 MyDtable.Rows.Add(1, ++i, "Comment", clipboardText, "");
                 ClearStatusAndShow($"Created new action starting with {clipboardText}", true);
                 QuickAddRow("Include", clipboardText);
+                SetOutFile();
             }
             else
             {

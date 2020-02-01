@@ -22,7 +22,6 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             // For the next line not to error you need to add System.Deployment reference
             if (ApplicationDeployment.IsNetworkDeployed)
             {
-                log.Debug("SQLite class is detecting that is Network Deployed");
                 return ApplicationDeployment.CurrentDeployment.DataDirectory + @"\FileAdj.sqlite";
             }
             return @"C:\Users\andy\Source\Repos\FileAdjuster5\FileAdjuster5\FileAdj.sqlite";
@@ -45,6 +44,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 reader.Close();
                 m_dbConnection.Close();
             }
+            else log.Error($"Get sizes can't open db file {strDBFile}");
             return mList;
         }
         static public List<string> GetActionTypes()
@@ -86,76 +86,62 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 reader.Close();
                 m_dbConnection.Close();
             }
+            else log.Error($"Get preset tupes can't open db file {strDBFile}");
             return mList;
         }
         static public Int64 GetHistoryint()
         {
             Int64 iReturn = 0;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
-            string strDBFile = DBFile();
-            if (File.Exists(strDBFile))
+            m_dbConnection.ConnectionString = "Data Source=" + DBFile() + ";Version=3;";
+            m_dbConnection.Open();
+            string sql = "Select group_id from FileHistory order by group_id desc limit 1;";
+            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
             {
-                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
-                m_dbConnection.Open();
-                string sql = "Select group_id from FileHistory order by group_id desc limit 1;";
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                        iReturn = reader.GetInt64(0);
-                }
-              
-                reader.Close();
-                m_dbConnection.Close();
+                while (reader.Read())
+                    iReturn = reader.GetInt64(0);
             }
+            reader.Close();
+            m_dbConnection.Close();
             return iReturn;
         }
         static public Int64 GetActionint()
         {
             Int64 iReturn = 0;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
-            string strDBFile = DBFile();
-            if (File.Exists(strDBFile))
+            m_dbConnection.ConnectionString = "Data Source=" + DBFile() + ";Version=3;";
+            m_dbConnection.Open();
+            string sql = "Select GroupID from ActionTable order by GroupID desc limit 1;";
+            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
             {
-                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
-                m_dbConnection.Open();
-                string sql = "Select GroupID from ActionTable order by GroupID desc limit 1;";
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                        iReturn = reader.GetInt64(0);
-                }
-
-                reader.Close();
-                m_dbConnection.Close();
+                while (reader.Read())
+                    iReturn = reader.GetInt64(0);
             }
+            reader.Close();
+            m_dbConnection.Close();
             return iReturn;
         }
         static public String GetActionDate(Int64 iGroup)
         {
             string strReturn = "";
             SQLiteConnection m_dbConnection = new SQLiteConnection();
-            string strDBFile = DBFile();
-            if (File.Exists(strDBFile))
+            m_dbConnection.ConnectionString = "Data Source=" + DBFile() + ";Version=3;";
+            m_dbConnection.Open();
+            string sql = "Select DateAdded from ActionTable where GroupID = "
+                + iGroup.ToString() + " order by TableID desc limit 1;";
+            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
             {
-                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
-                m_dbConnection.Open();
-                string sql = "Select DateAdded from ActionTable where GroupID = " 
-                    + iGroup.ToString() + " order by TableID desc limit 1;";
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                        strReturn = reader.GetString(0);
-                }
-
-                reader.Close();
-                m_dbConnection.Close();
+                while (reader.Read())
+                    strReturn = reader.GetString(0);
             }
+            reader.Close();
+            m_dbConnection.Close();
             return strReturn;
         }
 
@@ -556,12 +542,30 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 sql = "insert into ActionTable select at.* from md.ActionTable at join md.ActionPreset ap where at.GroupID = ap.GroupID;";
                 command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
+                m_dbConnection.Close();
 
             }
         }
         static public string DeletePriorGroup(string StrGroup,bool blIsActions)
         {
             string strReturn = "";
+                SQLiteConnection m_dbConnection = new SQLiteConnection();
+                string strDBFile = DBFile();
+                if (File.Exists(strDBFile))
+                {
+                //m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                //m_dbConnection.Open();
+                //string sqlcmd = "insert into ActionPreset (PTypeId,PresetName,GroupID,Flags) " +
+                //    " select PTypeID,@strTitle,'" + iGroup.ToString() + "','" + iFlag.ToString() +
+                //    "' from ActionPresetType where PresetType = @strGroup;";
+                //SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                //     protected from single quotes in the passed strings
+                //    command.Parameters.Add(new SQLiteParameter("strGroup", strGroup));
+                //    command.Parameters.Add(new SQLiteParameter("strTitle", strTitle));
+                //    int rows = command.ExecuteNonQuery();
+                //    if (rows == 1) blreturn = true;
+                //    m_dbConnection.Close();
+            }
             return strReturn;
         }
     }

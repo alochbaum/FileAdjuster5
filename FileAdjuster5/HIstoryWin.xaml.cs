@@ -150,7 +150,11 @@ namespace FileAdjuster5
                 DGchange.DataContext = m_DataTable.DefaultView;
             }
         }
-
+        /// <summary>
+        /// This opens directory of files in the history buffer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnDir_Click(object sender, RoutedEventArgs e)
         {
             int iTemp = DGchange.SelectedIndex;
