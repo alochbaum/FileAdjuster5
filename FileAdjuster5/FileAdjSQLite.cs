@@ -553,18 +553,23 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 string strDBFile = DBFile();
                 if (File.Exists(strDBFile))
                 {
-                //m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
-                //m_dbConnection.Open();
-                //string sqlcmd = "insert into ActionPreset (PTypeId,PresetName,GroupID,Flags) " +
-                //    " select PTypeID,@strTitle,'" + iGroup.ToString() + "','" + iFlag.ToString() +
-                //    "' from ActionPresetType where PresetType = @strGroup;";
-                //SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
-                //     protected from single quotes in the passed strings
-                //    command.Parameters.Add(new SQLiteParameter("strGroup", strGroup));
-                //    command.Parameters.Add(new SQLiteParameter("strTitle", strTitle));
-                //    int rows = command.ExecuteNonQuery();
-                //    if (rows == 1) blreturn = true;
-                //    m_dbConnection.Close();
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sqlcmd = "";
+                if (blIsActions)
+                {
+                    sqlcmd = "delete from ActionTable where GroupID in (select act.GroupID"+
+                        " From ActionTable as act left outer join ActionPreset as ap on"+
+                        " act.GroupID = ap.GroupID where ap.GroupID is null and act.GroupID < @strGroup)";
+                } else {
+                    sqlcmd = $"DELETE FROM FileHistory WHERE group_id < @strGroup;";
+                }
+                SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                    // protected from single quotes in the passed strings
+                    command.Parameters.Add(new SQLiteParameter("strGroup", StrGroup));
+                    int rows = command.ExecuteNonQuery();
+                    if (rows > 1) strReturn = StrGroup;
+                    m_dbConnection.Close();
             }
             return strReturn;
         }

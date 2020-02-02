@@ -23,10 +23,12 @@ namespace FileAdjuster5
     /// </summary>
     public partial class HIstoryWin : Window
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private DateTime m_DateTime = new DateTime();
         private bool bIsActions = false;
         private DataTable m_DataTable;
         private Int64 iOutGroup = -1;
+        private bool bDontMoveTable = false;
 
         public Int64 GetOutGroup() { return iOutGroup; }
 
@@ -59,6 +61,11 @@ namespace FileAdjuster5
             {
                 btnDelete.IsEnabled = true;
             } else { btnDelete.IsEnabled = false; }
+            if (bDontMoveTable) // checking if next button was hit and that is done by Group ID.
+            {
+                bDontMoveTable = false;
+                return;
+            }
             LoadByDate(dt);
         }
         /// <summary>
@@ -92,8 +99,20 @@ namespace FileAdjuster5
 
         private void BtnPrev_Click(object sender, RoutedEventArgs e)
         {
-            if (m_DataTable.Rows.Count < 12) return;
-            DataRow row = m_DataTable.Rows[12];
+            log.Debug("Preview history buttong hit with date calcuation");
+            setTimeFromTable(12);
+        }
+        /// <summary>
+        /// The function sets the date selector from the dates in the table
+        /// used by the previous and next buttongs, if greater than 0, like 12
+        /// for the previous button function it moves the table
+        /// </summary>
+        /// <param name="iRowNum">0-12 is the number of row to read date from</param>
+        private void setTimeFromTable(int iRowNum)
+        {
+            if (m_DataTable.Rows.Count < iRowNum) return; // return if at the end of the table
+            if (iRowNum < 1) bDontMoveTable = true;  // set to not reload table on button next
+            DataRow row = m_DataTable.Rows[iRowNum];
             DataRow newRow = m_DataTable.NewRow();
             newRow.ItemArray = row.ItemArray;
             string strDateAdded = newRow[1].ToString();
@@ -104,18 +123,19 @@ namespace FileAdjuster5
             }
             catch (Exception)
             {
-
-               // throw;
+                log.Error($"In Prev_Click can't parse {strDateAdded}");
+                // throw;
             }
         }
-
         private void BtnNext_Click(object sender, RoutedEventArgs e)
         {
             string strGroup = GetGroupFromTable();
+            log.Debug($"Get Group from table got {strGroup}");
             if (strGroup.Length < 1) return;
             m_DataTable = new DataTable();
             m_DataTable = FileAdjSQLite.GetNextDate(strGroup, bIsActions);
             DGchange.DataContext = m_DataTable.DefaultView;
+            setTimeFromTable(0);
         }
         /// <summary>
         /// Reads top group from table
@@ -124,7 +144,7 @@ namespace FileAdjuster5
         private string GetGroupFromTable()
         {
             string strReturn = "";
-            if (m_DataTable.Rows.Count < 2) return strReturn;
+            if (m_DataTable.Rows.Count < 1) return strReturn;
             DataRow row = m_DataTable.Rows[0];
             DataRow newRow = m_DataTable.NewRow();
             newRow.ItemArray = row.ItemArray;
