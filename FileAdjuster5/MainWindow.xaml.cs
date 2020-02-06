@@ -150,6 +150,14 @@ namespace FileAdjuster5
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            // Issue 54 testing for no files and issuing warning
+            if (lbFileNames.Items.Count < 1) 
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("You haven't selected any files to process in upper left section.",
+                    "Can't start processing files",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             // cblines stores the number of lines in format <num of lines>space some other text
             string strTemp = cbLines.SelectedValue.ToString();
             string[] words = strTemp.Split(' ');
@@ -792,8 +800,8 @@ namespace FileAdjuster5
         {
             if(dgActions.SelectedIndex<1)
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show("Operational Hint-Left click on row",
-                    "You have to select a row below top row",
+                Xceed.Wpf.Toolkit.MessageBox.Show("You have to select a row below top row.\r\n(You should left click on row to select.)",
+                    "Can't swap rows",
                     MessageBoxButton.OK,MessageBoxImage.Exclamation);
             }
             else
