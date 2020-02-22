@@ -124,8 +124,17 @@
         </Rectangle>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <Button x:Name="btnQuickAddIn" ToolTip="Quickly insert Action and Include with Include from clipboard (alt q)" Click="BtnQuickAddIn_Click">
+                <Button x:Name="btnQuickAddIn" Click="BtnQuickAddIn_Click">
                     <AccessText>_qAI</AccessText>
+                    <Button.ToolTip>
+                        <TextBlock>
+                    Clicking this button takes text from the windows clipboard and trims leading and trailing spaces,
+                    <LineBreak />
+                    and after clearing action, creates a comment with trimmed text,
+                    <LineBreak />
+                    and an insert action with the same trimmed action. (alt-q).
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
                 <Button x:Name="btnQuickInsert" ToolTip="Quickly insert row with Include from clipboard (alt I)" Click="BtnQuickInsert_Click">
                     <AccessText>Q-_I</AccessText>

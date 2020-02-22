@@ -1065,10 +1065,11 @@ namespace FileAdjuster5
             if (Clipboard.ContainsText(TextDataFormat.Text))
             {
                 string clipboardText = Clipboard.GetText(TextDataFormat.Text);
+                clipboardText = clipboardText.Trim(' ');
                 MyDtable.Rows.Clear();
                 Int64 i = FileAdjSQLite.GetActionint();
                 MyDtable.Rows.Add(1, ++i, "Comment", clipboardText, "");
-                ClearStatusAndShow($"Created new action starting with {clipboardText}", true);
+                ClearStatusAndShow($"Created new action starting with {clipboardText} trimmed", true);
                 QuickAddRow("Include", clipboardText);
                 SetOutFile();
             }
