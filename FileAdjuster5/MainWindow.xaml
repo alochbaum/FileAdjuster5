@@ -142,11 +142,13 @@
                 <Button x:Name="btnQuickExclude" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
                     <AccessText>Q-_X</AccessText>
                 </Button>
-                <Button x:Name="btnAddRow" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">Add Row</Button>
+                <Button x:Name="btnAddRow" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">
+                    <AccessText>Add Row _&amp;</AccessText>
+                </Button>
                 <Button x:Name="btnSwapAbove" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">
                     <AccessText>Swa_p with Row Above</AccessText>
                 </Button>
-                <Button x:Name="btnEditParams" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditParams_Click">
+                <Button x:Name="btnEditParams" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditRow_Click">
                     <AccessText>_Edit Action</AccessText>
                 </Button>
                 <Button x:Name="btnDelRow" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">

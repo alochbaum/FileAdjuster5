@@ -10,9 +10,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="2" />
-            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="6*"/>
             <ColumnDefinition Width="2" />
-            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

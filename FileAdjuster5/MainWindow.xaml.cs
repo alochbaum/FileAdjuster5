@@ -60,7 +60,8 @@ namespace FileAdjuster5
         private DateTime myStartTime;
         private DataTable MyDtable = new DataTable();
         private List<jobReport> myRport = new List<jobReport>();
-
+        // Holds last action for repeated use of add rows button
+        private string strLastActionType = "Any_Case_Include";
         public MainWindow()
         {
             InitializeComponent();
@@ -739,19 +740,26 @@ namespace FileAdjuster5
 
         private void BtnAddRow_Click(object sender, RoutedEventArgs e)
         {
-            // need to have clear set group, so there has to be first comment line
-            AddRow myAddRow = new AddRow();
-            if(myAddRow.ShowDialog()==true)
+            ActionRowData arowdata = new ActionRowData();
+            arowdata.ActionType = strLastActionType;
+            arowdata.Param1 = "";
+            arowdata.Param2 = "";
+
+            arowdata = WinEditParams.GetEdit(arowdata, "Please enter values for new row or cancel to exit");
+            if (arowdata != null)
             {
+                strLastActionType = arowdata.ActionType;
+                
                 blUsingActionsHistory = false;
-                List<string> inString = myAddRow.GetSettings();
+
+                // adding new row to bottom of the table
                 int i = MyDtable.Rows.Count;
                 DataRow drow = MyDtable.Rows[--i];
                 Int64 iOrder = drow.Field<Int64>("Order");
                 // need to get last order number to increase by one
-                MyDtable.Rows.Add(++iOrder, drow.Field<Int64>("Group"), inString[0], inString[1], inString[2]);
+                MyDtable.Rows.Add(++iOrder, drow.Field<Int64>("Group"),
+                    strLastActionType, arowdata.Param1, arowdata.Param2);
             }
-            myAddRow.Close();
         }
 
         private void BtnClearRows_Click(object sender, RoutedEventArgs e)
@@ -963,7 +971,7 @@ namespace FileAdjuster5
             ClearStatusAndShow($"Deleted {iCount} files in {strTempDir} matching pattern {strTempFile}-*{strTempExt}", true);
         }
 
-        private void BtnEditParams_Click(object sender, RoutedEventArgs e)
+        private void BtnEditRow_Click(object sender, RoutedEventArgs e)
         {
             int iTemp = dgActions.SelectedIndex;
             if (iTemp > -1 && iTemp < MyDtable.Rows.Count)
@@ -979,7 +987,7 @@ namespace FileAdjuster5
                     MyDtable.Rows[iTemp][2] = arowdata.ActionType;
                     MyDtable.Rows[iTemp][3] = arowdata.Param1;
                     MyDtable.Rows[iTemp][4] = arowdata.Param2;
-                 }
+                }
             }
             else Xceed.Wpf.Toolkit.MessageBox.Show("You have to select a valid Action Group row to edit.", 
                 "Operational Hint-Left click on row",MessageBoxButton.OK,
