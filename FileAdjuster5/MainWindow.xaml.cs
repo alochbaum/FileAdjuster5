@@ -968,15 +968,17 @@ namespace FileAdjuster5
             int iTemp = dgActions.SelectedIndex;
             if (iTemp > -1 && iTemp < MyDtable.Rows.Count)
             {
-                TwoParams send2 = new TwoParams();
-                send2.Param1 = MyDtable.Rows[iTemp].Field<string>("Parameter1");
-                send2.Param2 = MyDtable.Rows[iTemp].Field<string>("Parameter2");
-                string strType = MyDtable.Rows[iTemp].Field<string>("Action");
-                send2 = WinEditParams.GetEdit(strType, send2);
-                if (send2 != null)
+                ActionRowData arowdata = new ActionRowData();
+                arowdata.ActionType = MyDtable.Rows[iTemp].Field<string>("Action");
+                arowdata.Param1 = MyDtable.Rows[iTemp].Field<string>("Parameter1");
+                arowdata.Param2 = MyDtable.Rows[iTemp].Field<string>("Parameter2");
+
+                arowdata = WinEditParams.GetEdit(arowdata, "Please Edit Parameters or cancel this dialog");
+                if (arowdata != null)
                 {
-                    MyDtable.Rows[iTemp][3] = send2.Param1;
-                    MyDtable.Rows[iTemp][4] = send2.Param2;
+                    MyDtable.Rows[iTemp][2] = arowdata.ActionType;
+                    MyDtable.Rows[iTemp][3] = arowdata.Param1;
+                    MyDtable.Rows[iTemp][4] = arowdata.Param2;
                  }
             }
             else Xceed.Wpf.Toolkit.MessageBox.Show("You have to select a valid Action Group row to edit.", 

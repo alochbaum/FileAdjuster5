@@ -147,7 +147,7 @@
                     <AccessText>Swa_p with Row Above</AccessText>
                 </Button>
                 <Button x:Name="btnEditParams" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditParams_Click">
-                    <AccessText>_Edit Params</AccessText>
+                    <AccessText>_Edit Action</AccessText>
                 </Button>
                 <Button x:Name="btnDelRow" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">
                     <AccessText>_Delete Row</AccessText>
