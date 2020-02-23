@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
         x:Name="MainFrame"
@@ -106,8 +107,8 @@
                 <Button x:Name="btnOpenNotePad" Margin="5,0,0,0" IsEnabled="False" Click="BtnOpenNotePad_Click" ToolTip="Open Output File in Notepad++ program (alt +)" >
                     <AccessText>Notepad_++</AccessText>
                 </Button>
-                <Button x:Name="btnOpenDir" Margin="5,0,0,0" ToolTip="Open Output File's directory (alt d)" Click="BtnOpenDir_Click" >
-                    <AccessText>di_r</AccessText>
+                <Button x:Name="btnOpenDir" Margin="5,0,0,0" ToolTip="Open Output File's directory (alt-d)" Click="BtnOpenDir_Click" >
+                    <AccessText>_dir</AccessText>
                 </Button>
             </StackPanel>
             <ComboBox x:Name="cbLines" Loaded="CbLines_Loaded" ToolTip="Selects the size of the output file." />
@@ -128,7 +129,7 @@
                     <AccessText>_qAI</AccessText>
                     <Button.ToolTip>
                         <TextBlock>
-                    Clicking this button takes text from the windows clipboard and trims leading and trailing spaces,
+                    Takes clipboard takes and trims leading and trailing spaces,
                     <LineBreak />
                     and after clearing action, creates a comment with trimmed text,
                     <LineBreak />
@@ -136,23 +137,23 @@
                         </TextBlock>
                     </Button.ToolTip>
                 </Button>
-                <Button x:Name="btnQuickInsert" ToolTip="Quickly insert row with Include from clipboard (alt I)" Click="BtnQuickInsert_Click">
+                <Button x:Name="btnQuickInsert" ToolTip="Quickly insert row with Include from clipboard (alt-i)" Click="BtnQuickInsert_Click">
                     <AccessText>Q-_I</AccessText>
                 </Button>
-                <Button x:Name="btnQuickExclude" ToolTip="Quickly insert row with Exclude from clipboard (alt x)" Click="BtnQuickExclude_Click" >
+                <Button x:Name="btnQuickExclude" ToolTip="Quickly insert row with Exclude from clipboard (alt-x)" Click="BtnQuickExclude_Click" >
                     <AccessText>Q-_X</AccessText>
                 </Button>
-                <Button x:Name="btnAddRow" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows.">
+                <Button x:Name="btnAddRow" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows (alt-&amp;)">
                     <AccessText>Add Row _&amp;</AccessText>
                 </Button>
-                <Button x:Name="btnSwapAbove" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order.">
+                <Button x:Name="btnSwapAbove" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order (al-p)">
                     <AccessText>Swa_p with Row Above</AccessText>
                 </Button>
                 <Button x:Name="btnEditParams" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditRow_Click">
                     <AccessText>_Edit Action</AccessText>
                 </Button>
-                <Button x:Name="btnDelRow" Click="BtnDelRow_Click" ToolTip="Deletes selected action row.">
-                    <AccessText>_Delete Row</AccessText>
+                <Button x:Name="btnDelRow" Click="BtnDelRow_Click" ToolTip="Deletes selected action row (alt-r)">
+                    <AccessText>Delete _Row</AccessText>
                 </Button>
                 <Button x:Name="btnClearRows" Click="BtnClearRows_Click" ToolTip="Clears all rows below and asks you to created first comment row (alt-w)">
                     <AccessText>Clear or Ne_w Action</AccessText>
@@ -178,6 +179,9 @@
                 <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines (alt-b)">
                     <AccessText>no _blank lines (not just includes)</AccessText>
                 </CheckBox>
+                <CheckBox x:Name="cbxNumber" Margin="5,0" ToolTip="Include number left">nunber</CheckBox>
+                <xctk:DoubleUpDown FormatString="00" Minimum="0" Maximum="99"></xctk:DoubleUpDown>
+
             </StackPanel>
             <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True" MaxHeight="180"/>
         </StackPanel>

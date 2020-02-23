@@ -62,6 +62,8 @@ namespace FileAdjuster5
         private List<jobReport> myRport = new List<jobReport>();
         // Holds last action for repeated use of add rows button
         private string strLastActionType = "Any_Case_Include";
+        // String separating file names when processing many files
+        const string csBound = "========\r\n";
         public MainWindow()
         {
             InitializeComponent();
@@ -458,7 +460,7 @@ namespace FileAdjuster5
                                     // writing header
                     if ((I64_eChecked & (Int64)_eChecked.Headers) != 0)
                     {
-                        const string csBound = "========\r\n";
+
                         byte[] baBound = Encoding.ASCII.GetBytes(csBound);
                         output.Write(baBound, 0, 10);
                         byte[] baFile = Encoding.ASCII.GetBytes(sInFile + "\r\n");
