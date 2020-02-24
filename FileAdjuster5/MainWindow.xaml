@@ -153,7 +153,7 @@
                     <AccessText>Swa_p with Row Above</AccessText>
                 </Button>
                 <Button x:Name="btnEditParams" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditRow_Click">
-                    <AccessText>_Edit Action</AccessText>
+                    <AccessText>_Edit Row</AccessText>
                 </Button>
                 <Button x:Name="btnDelRow" Click="BtnDelRow_Click" ToolTip="Deletes selected action row (alt-r)">
                     <AccessText>Delete _Row</AccessText>
@@ -179,9 +179,13 @@
                 <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below if they start with any Parameter2 in any row.">include if starting with Parameter2 +</CheckBox>
                 <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">not date +</CheckBox>
                 <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --</CheckBox>
-                <CheckBox x:Name="cbxNumber" Margin="5,0" ToolTip="Include number left">lines after include</CheckBox>
-                <Slider x:Name="sldRows" Maximum="50" LargeChange="4" SmallChange="1" Width="102" OverridesDefaultStyle="True" VerticalAlignment="Center" Margin="5,0"></Slider>
-                <Label x:Name="lbNumRows" Content="0"></Label>
+                <CheckBox x:Name="cbxNumber" Margin="5,0" ToolTip="Include number left">
+                    <AccessText>
+                        lines af_ter include
+                    </AccessText>
+                </CheckBox>
+                <Slider x:Name="sldRows" Maximum="50" LargeChange="4" SmallChange="1" Width="102" VerticalAlignment="Center" Margin="5,0" IsSnapToTickEnabled="True" ValueChanged="SldRows_ValueChanged"></Slider>
+                <Label x:Name="lbNumRows" Content="00"></Label>
                 <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines (alt-b)">
                     <AccessText>no _blank lines (not just includes)</AccessText>
                 </CheckBox>

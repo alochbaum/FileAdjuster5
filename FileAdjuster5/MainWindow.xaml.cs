@@ -29,7 +29,8 @@ namespace FileAdjuster5
         NoDate      = 1 << 2,
         NoBracket   = 1 << 3,
         NoSecond    = 1 << 4,
-        NoBlank     = 1 << 5
+        NoBlank     = 1 << 5,
+        UseNum      = 1 << 6
     }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -64,6 +65,8 @@ namespace FileAdjuster5
         private string strLastActionType = "Any_Case_Include";
         // String separating file names when processing many files
         const string csBound = "========\r\n";
+        // This stores limit of numbers and current value of Number
+        private int iNumLimit = 0, iNumValue = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -215,6 +218,7 @@ namespace FileAdjuster5
             if (cbxNoDate.IsChecked == true) Ireturn |= _eChecked.NoDate;
             if (cbxNoSecond.IsChecked == true) Ireturn |= _eChecked.NoSecond;
             if (cbxNoBlankLines.IsChecked == true) Ireturn |= _eChecked.NoBlank;
+            if (cbxNumber.IsChecked == true) Ireturn |= _eChecked.UseNum;
             return (Int64)Ireturn;
         }
 
@@ -232,6 +236,8 @@ namespace FileAdjuster5
             else cbxNoSecond.IsChecked = false;
             if ((InCheck & _eChecked.NoBlank) != 0) cbxNoBlankLines.IsChecked = true;
             else cbxNoBlankLines.IsChecked = false;
+            if ((InCheck & _eChecked.UseNum) != 0) cbxNumber.IsChecked = true;
+            else cbxNumber.IsChecked = false;
         }
 
         private void StackPanel_Drop(object sender, DragEventArgs e)
@@ -784,7 +790,7 @@ namespace FileAdjuster5
             if (!blUsingActionsHistory) SaveHistory();
             I64_eChecked = CollectChecks();
             Int64 iGroup = MyDtable.Rows[0].Field<Int64>(1);
-            SavePreset mySavePreset = new SavePreset(iGroup,I64_eChecked);
+            SavePreset mySavePreset = new SavePreset(iGroup,I64_eChecked,iNumLimit);
             if (mySavePreset.ShowDialog() == true)
             {
                 string sTemp = $"Saved preset for group {iGroup}";
@@ -1092,6 +1098,16 @@ namespace FileAdjuster5
                     MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
 
+        }
+        private void SldRows_Load()
+        {
+            lbNumRows.Content = iNumLimit.ToString("00");
+            sldRows.Value = iNumLimit;
+        }
+        private void SldRows_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            iNumLimit = (int)sldRows.Value;
+            SldRows_Load();
         }
 
         private void BtnDelRow_Click(object sender, RoutedEventArgs e)

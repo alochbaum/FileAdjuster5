@@ -21,10 +21,12 @@ namespace FileAdjuster5
     {
         private Int64 iGroupID = 0;
         private Int64 iFlags = 0;
-        public SavePreset(Int64 inGroup, Int64 iFlagsInt)
+        private int iNumLimit = 0;
+        public SavePreset(Int64 inGroup, Int64 iFlagsInt,int iLimitNumber)
         {
             iGroupID = inGroup;
             iFlags = iFlagsInt;
+            iNumLimit = iLimitNumber;
             InitializeComponent();
         }
 
@@ -42,7 +44,7 @@ namespace FileAdjuster5
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
-            FileAdjSQLite.WritePreset(cbGroups.Text, tbTitle.Text, iGroupID, iFlags);
+            FileAdjSQLite.WritePreset(cbGroups.Text, tbTitle.Text, iGroupID, iFlags, iNumLimit);
             this.DialogResult = true;
         }
 
