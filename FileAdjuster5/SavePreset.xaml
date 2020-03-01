@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="SavePreset" Height="117.891" Width="493.77">
+        Title="Save Preset Action Rows and Modifiers (or jsut modifiers) under a group" Height="117.891" Width="493.77">
     <Grid Margin="10,5,10,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
@@ -14,16 +14,18 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="4"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Content="Select Prest Group" />
         <Label Grid.Row="0" Grid.Column="1" Content="Name Preset" />
         <ComboBox x:Name="cbGroups" Grid.Row="1" Grid.Column="0" Loaded="cbGroups_Loaded"></ComboBox>
         <TextBox x:Name="tbTitle" Grid.Row="1" Grid.Column="1" />
-        <Button x:Name="BtnAddGroup" Grid.Row="2" Grid.Column="0" Width="100" HorizontalAlignment="Right" Click="BtnAddGroup_Click">
+        <Button x:Name="BtnAddGroup" Grid.Row="3" Grid.Column="0" Width="100" HorizontalAlignment="Right" Click="BtnAddGroup_Click">
             <AccessText>_Add Group</AccessText>
         </Button>
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <CheckBox x:Name="cbxJustMod" Margin="0,0,10,0" VerticalAlignment="Center">Just Modifiers</CheckBox>
             <Button x:Name="btnOK" IsDefault="True" Width="60" Click="BtnOK_Click">
                 <AccessText>_OK</AccessText>
             </Button>

@@ -89,7 +89,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             else log.Error($"Get preset tupes can't open db file {strDBFile}");
             return mList;
         }
-        static public Int64 GetHistoryint()
+        static public Int64 GetFileHistoryInt()
         {
             Int64 iReturn = 0;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -175,7 +175,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return iReturn;
         }
-        static public bool WriteHistory(Int64 iGroup,string strFileName,string strExt)
+        static public bool WriteFileHistory(Int64 iGroup,string strFileName,string strExt)
         {
             bool blreturn = false;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -309,6 +309,15 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return blreturn;
         }
+        /// <summary>
+        /// This saves preset to database which points to a group of already saved action rows
+        /// However the the flags are not saved rows, and if group is negative it is only flags
+        /// </summary>
+        /// <param name="strGroup"></param>
+        /// <param name="strTitle"></param>
+        /// <param name="iGroup"></param>
+        /// <param name="iFlag"> This also include 0 to 50 in the high bits</param>
+        /// <returns></returns>
         static public bool WritePreset(string strGroup, string strTitle, Int64 iGroup, Int64 iFlag, int iRowsAfter)
         {
             bool blreturn = false;
@@ -513,7 +522,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         /// This is function to export presets to a new database
         /// </summary>
         /// <param name="StrFile">The file name to use for saved database</param>
-        static public void SavePresets(string StrFile)
+        static public void ExportPresets(string StrFile)
         {
             SQLiteConnection.CreateFile(StrFile);
             string strDBFile = DBFile();

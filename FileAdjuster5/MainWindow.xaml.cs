@@ -50,7 +50,7 @@ namespace FileAdjuster5
         // This is set for thread if working an include to allow next line to be check
         private bool blIncludeCheckNextLine = false;
         // If using File History this is set, so history isn't saved twice
-        private bool blUsingHistory = true;
+        // private bool blUsingFileHist = true;
         // Same for Action History
         private bool blUsingActionsHistory = false;
         // Passes Combine Files to thread
@@ -106,7 +106,7 @@ namespace FileAdjuster5
 
         private void BtnAddFile_Click(object sender, RoutedEventArgs e)
         {
-            blUsingHistory = false;
+            //blUsingFileHist = false;
 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
             {
@@ -176,16 +176,17 @@ namespace FileAdjuster5
             btnCancel.IsEnabled = true;
             btnOpenNotePad.IsEnabled = false;
             btnStart.IsEnabled = false;
-            if (!blUsingHistory)
-            {
-                Int64 iTemp = FileAdjSQLite.GetHistoryint();
+            // removing this logic and saving files every time
+            //if (!blUsingFileHist)
+            //{
+                Int64 iTemp = FileAdjSQLite.GetFileHistoryInt();
                 iTemp++;
                 rtbStatus.AppendText($"Saving File History #{iTemp}\r\n");
                 for (int i = 0; i < lbFileNames.Items.Count; i++)
                 {
-                    FileAdjSQLite.WriteHistory(iTemp, lbFileNames.Items[i].ToString(),tbExt.Text);
+                    FileAdjSQLite.WriteFileHistory(iTemp, lbFileNames.Items[i].ToString(),tbExt.Text);
                 }
-            }
+            //}
             if (!blUsingActionsHistory)SaveHistory();
             myStartTime = DateTime.Now;
             rtbStatus.AppendText($"Started work at {myStartTime.TimeOfDay}\r\n");
@@ -374,7 +375,7 @@ namespace FileAdjuster5
 
         private void ClearFiles()
         {
-            blUsingHistory = false;
+            //blUsingFileHist = false;
             tbExt.Text = ".txt";
             lLastHistory = 0;
             lbFileNames.Items.Clear();
@@ -382,8 +383,8 @@ namespace FileAdjuster5
 
         private void BtnHistory_Click(object sender, RoutedEventArgs e)
         {
-            blUsingHistory = true;
-            if (lLastHistory < 2) lLastHistory = FileAdjSQLite.GetHistoryint();
+            //blUsingFileHist = true;
+            if (lLastHistory < 2) lLastHistory = FileAdjSQLite.GetFileHistoryInt();
             else lLastHistory--;
             List<string> lsTemp = FileAdjSQLite.ReadHistory(lLastHistory);
             lbFileNames.Items.Clear();
@@ -918,7 +919,7 @@ namespace FileAdjuster5
             if (dlg.ShowDialog() == true)
             {
                 if (File.Exists(dlg.FileName)) File.Delete(dlg.FileName);
-                FileAdjSQLite.SavePresets(dlg.FileName);               
+                FileAdjSQLite.ExportPresets(dlg.FileName);               
             }
         }
 

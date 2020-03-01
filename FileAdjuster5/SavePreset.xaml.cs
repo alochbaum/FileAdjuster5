@@ -44,6 +44,10 @@ namespace FileAdjuster5
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
+            if (cbxJustMod.IsChecked == true)
+            {
+                iGroupID = -1;
+            }
             FileAdjSQLite.WritePreset(cbGroups.Text, tbTitle.Text, iGroupID, iFlags, iNumLimit);
             this.DialogResult = true;
         }
