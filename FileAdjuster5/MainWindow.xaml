@@ -128,6 +128,21 @@
         </Rectangle>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
+                <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below if they start with any Parameter2 in any row.">include if starting with Parameter2 +</CheckBox>
+                <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">not date +</CheckBox>
+                <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --</CheckBox>
+                <CheckBox x:Name="cbxNumber" Margin="5,0" ToolTip="Include number left">
+                    <AccessText>
+                        lines af_ter include
+                    </AccessText>
+                </CheckBox>
+                <Slider x:Name="sldRows" Maximum="50" LargeChange="4" SmallChange="1" Width="102" VerticalAlignment="Center" Margin="5,0" IsSnapToTickEnabled="True" ValueChanged="SldRows_ValueChanged"></Slider>
+                <Label x:Name="lbNumRows" Content="00"></Label>
+                <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines (alt-b)">
+                    <AccessText>no _blank lines (not just includes)</AccessText>
+                </CheckBox>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
                 <Button x:Name="btnQuickAddIn" Click="BtnQuickAddIn_Click">
                     <AccessText>_qAI</AccessText>
                     <Button.ToolTip>
@@ -174,22 +189,6 @@
                 <Button x:Name="btnHistAction" ToolTip="Shows list of previous actions you can load" Click="BtnHistAction_Click">
                     <AccessText>_oh=»</AccessText>
                 </Button>
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0">
-                <CheckBox x:Name="cbxNoSecond" ToolTip="If using include add rows below if they start with any Parameter2 in any row.">include if starting with Parameter2 +</CheckBox>
-                <CheckBox x:Name="cbxNoDate" ToolTip="If using include add rows below which don't start with a date">not date +</CheckBox>
-                <CheckBox x:Name="cbxNoBracket" Margin="5,0" ToolTip="If using include add rows below which don't start with [">not [   --</CheckBox>
-                <CheckBox x:Name="cbxNumber" Margin="5,0" ToolTip="Include number left">
-                    <AccessText>
-                        lines af_ter include
-                    </AccessText>
-                </CheckBox>
-                <Slider x:Name="sldRows" Maximum="50" LargeChange="4" SmallChange="1" Width="102" VerticalAlignment="Center" Margin="5,0" IsSnapToTickEnabled="True" ValueChanged="SldRows_ValueChanged"></Slider>
-                <Label x:Name="lbNumRows" Content="00"></Label>
-                <CheckBox x:Name="cbxNoBlankLines" Margin="5,0" ToolTip="Not related to include options to the left, this will not copy blank lines (alt-b)">
-                    <AccessText>no _blank lines (not just includes)</AccessText>
-                </CheckBox>
-
             </StackPanel>
             <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True" MaxHeight="180"/>
         </StackPanel>

@@ -806,10 +806,16 @@ namespace FileAdjuster5
             if (MyFindPreset.ShowDialog() == true)
             {
                 Int64 iTemp = MyFindPreset.GetGroup();
-                MyDtable = GetTable(iTemp);
-                dgActions.DataContext = MyDtable.DefaultView;
+                if (iTemp >= 0)
+                {
+                    MyDtable = GetTable(iTemp);
+                    dgActions.DataContext = MyDtable.DefaultView;
+                }
                 Int64 iTemp2 = FileAdjSQLite.GetPresetFlags(iTemp);
                 SetChecks((_eChecked)iTemp2);
+                iNumLimit = (int)( iTemp2 >> 7);
+                if (!(iNumLimit > 0 && iNumLimit < 51)) iNumLimit = 0;
+                    SldRows_Load();
             }
         }
 

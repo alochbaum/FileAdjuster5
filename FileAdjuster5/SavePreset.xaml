@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="Save Preset Action Rows and Modifiers (or jsut modifiers) under a group" Height="117.891" Width="493.77">
+        Title="Save Preset Action Rows and Modifiers (or jsut modifiers) under a group" Height="117.891" Width="493.77" >
     <Grid Margin="10,5,10,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />

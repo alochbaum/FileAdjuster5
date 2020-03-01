@@ -24,7 +24,14 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 return ApplicationDeployment.CurrentDeployment.DataDirectory + @"\FileAdj.sqlite";
             }
+            // this would be debug mode, check for user files
+            else
+            {
+                if(File.Exists(@"C:\Users\Andre\Source\Repos\alochbaum\FileAdjuster5\FileAdjuster5\FileAdj.sqlite")) 
+                    return @"C:\Users\Andre\Source\Repos\alochbaum\FileAdjuster5\FileAdjuster5\FileAdj.sqlite";
+            }
             return @"C:\Users\andy\Source\Repos\FileAdjuster5\FileAdjuster5\FileAdj.sqlite";
+            
         }
         static public List<string> GetSizes()
         {
@@ -147,14 +154,14 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
 
         static public Int64 GetPresetFlags(Int64 iGroup)
         {
-            Int64 iReturn = 3;
+            Int64 iReturn = 3,iRowsAfter=0;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             string strDBFile = DBFile();
             if (File.Exists(strDBFile))
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "select Flags from ActionPreset where GroupID = "
+                string sql = "select Flags,RowsAfter from ActionPreset where GroupID = "
                     + iGroup.ToString() + ";";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
@@ -162,17 +169,24 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 if (reader.HasRows)
                 {
                     while (reader.Read())
+                    {
                         if (reader[0].GetType() != typeof(DBNull))
                         {
                             iReturn = reader.GetInt64(0);
-                        } else {
-                            iReturn = 3;
                         }
+                        if(reader[1].GetType() != typeof(DBNull))
+                        {
+                            iRowsAfter = reader.GetInt64(1);
+                        }
+
+                    }
                 }
 
                 reader.Close();
                 m_dbConnection.Close();
             }
+            //if (iRowsAfter > 0)
+            iReturn += (iRowsAfter << 7);
             return iReturn;
         }
         static public bool WriteFileHistory(Int64 iGroup,string strFileName,string strExt)
