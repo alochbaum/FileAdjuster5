@@ -66,7 +66,7 @@ namespace FileAdjuster5
         // String separating file names when processing many files
         const string csBound = "========\r\n";
         // This stores limit of numbers and current value of Number
-        private int iNumLimit = 0, iNumValue = 0;
+        private int iNumLimit = 0, iNumAdditionLinesAfterInclude = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -593,6 +593,14 @@ namespace FileAdjuster5
                     // if doing include check for the flags
                     if (blIncludeCheckNextLine)
                     {
+                        if((I64_eChecked & (Int64)_eChecked.UseNum) != 0)
+                        {
+                            if (iNumAdditionLinesAfterInclude > 0)
+                            {
+                                iNumAdditionLinesAfterInclude--;
+                                return true;
+                            }
+                        }
                         // No bracket check
                         if((I64_eChecked & (Int64)_eChecked.NoBracket) != 0)
                         {
@@ -642,6 +650,7 @@ namespace FileAdjuster5
                             }
                             if (strIn.IndexOf(dRow[3].ToString()) >= 0)
                             {
+                                iNumAdditionLinesAfterInclude = iNumLimit;
                                 blIncludeCheckNextLine = true;
                                 return true;
                             }
@@ -663,6 +672,7 @@ namespace FileAdjuster5
                             }
                             if (strIn.ToUpper().IndexOf(dRow[3].ToString().ToUpper()) >= 0)
                             {
+                                iNumAdditionLinesAfterInclude = iNumLimit;
                                 blIncludeCheckNextLine = true;
                                 return true;
                             }
@@ -705,6 +715,7 @@ namespace FileAdjuster5
                                     if (DateTime.Compare(dtReadtime, dtStartWin) < 0) return false;
                                     // Time has to equal (0) or less (negative) than end of window time to be in window
                                     if (DateTime.Compare(dtReadtime, dtEndWin) > 0) return false;
+                                    iNumAdditionLinesAfterInclude = iNumLimit;
                                     blReturn = blInsideTW = true;
                                 }
                                 catch (Exception errorCode)

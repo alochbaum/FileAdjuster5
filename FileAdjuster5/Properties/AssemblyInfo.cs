@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Andrew Lochbaum")]
 [assembly: AssemblyProduct("Andrew Lochbaum")]
-[assembly: AssemblyCopyright("Copyright ©  2018 by Andrew Lochbaum")]
+[assembly: AssemblyCopyright("Copyright ©  2020 by Andrew Lochbaum")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,8 +51,8 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.10.3.154")]
-[assembly: AssemblyFileVersion("5.10.3.154")]
+[assembly: AssemblyVersion("5.10.5.160")]
+[assembly: AssemblyFileVersion("5.10.5.160")]
 
 // Added for logging
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
