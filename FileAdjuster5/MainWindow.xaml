@@ -36,6 +36,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MaxHeight="280"/>
             <RowDefinition Height="2"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" MaxHeight="220"/>
             <RowDefinition Height="2"/>
             <RowDefinition Height="*" />
@@ -190,9 +191,13 @@
                     <AccessText>_oh=»</AccessText>
                 </Button>
             </StackPanel>
-            <DataGrid x:Name="dgActions" ItemsSource="{Binding}" ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True" MaxHeight="180"/>
         </StackPanel>
-        <Rectangle Grid.Row="3" Grid.ColumnSpan="5">
+        <DataGrid x:Name="dgActions" ItemsSource="{Binding}" Grid.Row="3" Grid.ColumnSpan="5" 
+                  ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" 
+                  CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True" 
+                  MaxHeight="219" VerticalScrollBarVisibility="Visible"/>
+
+        <Rectangle Grid.Row="4" Grid.ColumnSpan="5">
             <Rectangle.Fill>
                 <RadialGradientBrush>
                     <GradientStop Color="#FF2F10E4" Offset="0"/>
@@ -200,7 +205,7 @@
                 </RadialGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <RichTextBox x:Name="rtbStatus" Grid.Row="4" Grid.ColumnSpan="5" Margin="0,5,0,0" AllowDrop="False" 
+        <RichTextBox x:Name="rtbStatus" Grid.Row="5" Grid.ColumnSpan="5" Margin="0,5,0,0" AllowDrop="False" 
                      IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Visible" TextChanged="RtbStatus_TextChanged">
             <RichTextBox.Resources>
                 <Style TargetType="{x:Type Paragraph}">
