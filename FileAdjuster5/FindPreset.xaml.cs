@@ -48,10 +48,21 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         {
             return iGroup;
         }
+        /// <summary>
+        /// This finds selected preset group and changes its priority with the group above
+        /// </summary>
+        private void ShiftGroups()
+        {
+            DataRowView drv = (DataRowView)dgPresets.SelectedItem;
+            String result = (drv["Preset Group"]).ToString();
+            log.Debug($"Set to move up {result}");
+        }
 
         private void DgPresets_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
-            BtnOK_Click(this,new System.Windows.RoutedEventArgs());
+            if (Keyboard.Modifiers != ModifierKeys.Control)
+                BtnOK_Click(this, new System.Windows.RoutedEventArgs());
+            else ShiftGroups();
         }
     }
 }
