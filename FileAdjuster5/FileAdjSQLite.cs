@@ -74,7 +74,33 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return mList;
         }
-
+        static public bool ShiftPresetUp(string strValuePreset)
+        {
+            Int64 iCurrent = -1, iPreceding = -1;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+            m_dbConnection.Open();
+            string sql = "select PTypeID from ActionPresetType where PresetType = '"+strValuePreset+"';";
+            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+                iCurrent = reader.GetInt64(0);
+            reader.Close();
+            if (iCurrent < 2)
+            {
+                m_dbConnection.Close();
+                return false; // lowest number is 1, return if on lowest number
+            }
+            sql = "select PTypeID from ActionPresetType where PtypeID <"+iCurrent.ToString()+" order by PTypeID desc limit 1";
+            command = new SQLiteCommand(sql, m_dbConnection);
+            reader = command.ExecuteReader();
+            while (reader.Read())
+                iPreceding = reader.GetInt64(0);
+            reader.Close();
+            m_dbConnection.Close();
+            return true;
+        }
         static public List<string> GetPresetTypes()
         {
             List<string> mList = new List<string>();

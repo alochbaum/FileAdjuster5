@@ -56,6 +56,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             DataRowView drv = (DataRowView)dgPresets.SelectedItem;
             String result = (drv["Preset Group"]).ToString();
             log.Debug($"Set to move up {result}");
+            FileAdjSQLite.ShiftPresetUp(result);
         }
 
         private void DgPresets_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
