@@ -92,12 +92,39 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.Close();
                 return false; // lowest number is 1, return if on lowest number
             }
-            sql = "select PTypeID from ActionPresetType where PtypeID <"+iCurrent.ToString()+" order by PTypeID desc limit 1";
+            // Note: there might be some non-used numbers in the ActionPresetType table
+            sql = "select distinct PTypeID from ActionPreset where PTypeID < "
+                + iCurrent.ToString()+ " order by PTypeID desc limit 1";
             command = new SQLiteCommand(sql, m_dbConnection);
             reader = command.ExecuteReader();
             while (reader.Read())
                 iPreceding = reader.GetInt64(0);
             reader.Close();
+            if(iPreceding <1)
+            {
+                m_dbConnection.Close();
+                return false;
+            }
+            // First change the Preset Type Table numbers
+            sql = "UPDATE ActionPresetType SET PTypeID = 0 WHERE PTypeID = " + iCurrent.ToString();
+            command = new SQLiteCommand(sql, m_dbConnection);
+            command.ExecuteNonQuery();
+            sql = "UPDATE ActionPresetType SET PTypeID = " + iCurrent.ToString() + " WHERE PTypeID = " + iPreceding.ToString();
+            command = new SQLiteCommand(sql, m_dbConnection);
+            command.ExecuteNonQuery();
+            sql = "UPDATE ActionPresetType SET PTypeID = " + iPreceding.ToString() + " WHERE PTypeID = 0;";
+            command = new SQLiteCommand(sql, m_dbConnection);
+            command.ExecuteNonQuery();
+            // Second change the action presets
+            sql = "UPDATE ActionPreset SET PTypeID = 0 WHERE PTypeID = " + iCurrent.ToString();
+            command = new SQLiteCommand(sql, m_dbConnection);
+            command.ExecuteNonQuery();
+            sql = "UPDATE ActionPreset SET PTypeID = "+iCurrent.ToString()+" WHERE PTypeID = " + iPreceding.ToString();
+            command = new SQLiteCommand(sql, m_dbConnection);
+            command.ExecuteNonQuery();
+            sql = "UPDATE ActionPreset SET PTypeID = " + iPreceding.ToString() + " WHERE PTypeID = 0;";
+            command = new SQLiteCommand(sql, m_dbConnection);
+            command.ExecuteNonQuery();
             m_dbConnection.Close();
             return true;
         }

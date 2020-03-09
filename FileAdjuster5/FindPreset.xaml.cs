@@ -25,15 +25,30 @@ namespace FileAdjuster5
         private DataTable MyDTPresets = new DataTable();
         private Int64 iGroup = -1;
         private Int64 iFlag = 3;
+        private bool blSelecting = true;
         private static readonly log4net.ILog log =
 log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public FindPreset()
+        public FindPreset(bool isSelecting)
         {
             InitializeComponent();
+            LoadPresetTable();
+            if (!isSelecting)
+            {
+                blSelecting = false;
+                PresetWin.Title = "Select preset(s). Note: all presets with same name get deleted if you select just one.";
+                lbinfo.Content="<- Click button to delete or other button to exit ->";
+                btnDelete.Visibility = System.Windows.Visibility.Visible;
+                btnDelete.IsEnabled = true;
+            }
+        }
+
+        private void LoadPresetTable()
+        {
             MyDTPresets = FileAdjSQLite.ReadPresets();
             log.Debug($"Read Preset Row 1 Column 1 is {MyDTPresets.Rows[0].Field<string>(1)}");
             dgPresets.DataContext = MyDTPresets.DefaultView;
+            dgPresets.UnselectAll();
         }
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
@@ -54,9 +69,13 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
         private void ShiftGroups()
         {
             DataRowView drv = (DataRowView)dgPresets.SelectedItem;
-            String result = (drv["Preset Group"]).ToString();
-            log.Debug($"Set to move up {result}");
-            FileAdjSQLite.ShiftPresetUp(result);
+            if (drv != null)
+            {
+                String result = (drv["Preset Group"]).ToString();
+                log.Debug($"Set to move up {result}");
+                FileAdjSQLite.ShiftPresetUp(result);
+                LoadPresetTable();
+            }
         }
 
         private void DgPresets_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)

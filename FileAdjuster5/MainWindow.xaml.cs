@@ -813,7 +813,7 @@ namespace FileAdjuster5
 
         private void BtnLoadPreset_Click(object sender, RoutedEventArgs e)
         {
-            FindPreset MyFindPreset = new FindPreset();
+            FindPreset MyFindPreset = new FindPreset(true);
             if (MyFindPreset.ShowDialog() == true)
             {
                 Int64 iTemp = MyFindPreset.GetGroup();
