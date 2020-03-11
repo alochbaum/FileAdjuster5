@@ -598,7 +598,8 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 SQLiteConnection m_dbConnection = new SQLiteConnection();
                 m_dbConnection.ConnectionString = "Data Source=" +StrFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "CREATE TABLE 'ActionPreset' ( 'PresetID' INTEGER PRIMARY KEY AUTOINCREMENT, 'PTypeID' INTEGER, 'PresetName' TEXT, 'GroupID' INTEGER, 'Flags' INTEGER, 'DateAdded' TEXT );";
+                string sql = "CREATE TABLE 'ActionPreset' ( 'PresetID' INTEGER PRIMARY KEY AUTOINCREMENT, 'PTypeID' INTEGER, 'PresetName' TEXT, 'GroupID' INTEGER," +
+                    " 'Flags' INTEGER, 'RowsAfter' INTEGER, 'DateAdded' TEXT );";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
                 sql = "CREATE TABLE 'ActionPresetType' ( 'PTypeID' INTEGER PRIMARY KEY AUTOINCREMENT, 'PresetType' TEXT );";

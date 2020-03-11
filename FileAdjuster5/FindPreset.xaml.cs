@@ -28,7 +28,7 @@ namespace FileAdjuster5
         private static readonly log4net.ILog log =
 log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public FindPreset(bool isSelecting)
+        public FindPreset(bool isSelecting = true)
         {
             InitializeComponent();
             LoadPresetTable();
@@ -76,12 +76,12 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 LoadPresetTable();
             }
         }
-
+      
         private void DgPresets_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             if (Keyboard.Modifiers != ModifierKeys.Control)
                 BtnOK_Click(this, new System.Windows.RoutedEventArgs());
-            else ShiftGroups();
+            else if (blSelecting) ShiftGroups();
         }
     }
 }

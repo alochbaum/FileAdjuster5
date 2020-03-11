@@ -41,6 +41,20 @@ namespace FileAdjuster5
                 strResult = $"Exported presets to {dlg.FileName}";
             }
             else strResult = "Cancelled export of presets";
+            DialogResult = true;
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            FindPreset myFind = new FindPreset(false);
+            if(myFind.ShowDialog() == true)
+            {
+                strResult = "Deleted some presets";
+            } else
+            {
+                strResult = "Cancelled deleting some presets";
+            }
+            DialogResult = true;
         }
     }
 }
