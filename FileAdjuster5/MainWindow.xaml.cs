@@ -926,18 +926,16 @@ namespace FileAdjuster5
             AddFile(strFileOut);
         }
 
-        private void btnExportPresets_Click(object sender, RoutedEventArgs e)
+        private void btnModifyPresets_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog()
+            ModifyPreset myMod = new ModifyPreset();
+            if (myMod.ShowDialog() == true)
             {
-                Title = "Enter database file to save presets to",
-                Filter = "sqlite|*.sqlite"
-            };
-            if (dlg.ShowDialog() == true)
-            {
-                if (File.Exists(dlg.FileName)) File.Delete(dlg.FileName);
-                FileAdjSQLite.ExportPresets(dlg.FileName);               
+                string strDone = myMod.strResult;
+                log.Info(strDone);
+                rtbStatus.AppendText($"{strDone}\r\n");
             }
+            
         }
 
         private void CbxComment_Checked(object sender, RoutedEventArgs e)

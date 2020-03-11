@@ -13,6 +13,7 @@
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Padding" Value="2,0"/>
         </Style>
         <Style TargetType="CheckBox">
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
@@ -79,7 +80,9 @@
                 <Label Content="ext:"></Label>
                 <TextBox x:Name="tbExt" VerticalAlignment="Center">.txt</TextBox>
                 <CheckBox x:Name="cbxComment" VerticalAlignment="Center" Margin="5,0,0,0" 
-                          ToolTip="Clicking this uses the first word in the first comment for the output file name." Checked="CbxComment_Checked" Unchecked="CbxComment_Unchecked">Comment</CheckBox>
+                          ToolTip="Clicking this uses the first word in the first comment for the output file name." Checked="CbxComment_Checked" Unchecked="CbxComment_Unchecked">
+                    <AccessText>Comment _v</AccessText>
+                </CheckBox>
             </StackPanel>
             <TextBox x:Name="tbOutFile" FlowDirection="RightToLeft"/>
             <StackPanel Orientation="Horizontal">
@@ -179,7 +182,7 @@
                 </Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnSavePreset" Click="BtnSavePreset_Click" ToolTip="Saves current actions below and checkboxes as a preset.">Save as Preset</Button>
-                <Button x:Name="btnExportPresets" ToolTip="This exports presets to a database file." Click="btnExportPresets_Click">Export Presets</Button>
+                <Button x:Name="btnModifyPresets" ToolTip="This exports presets to a database file." Click="btnModifyPresets_Click">Modify Presets</Button>
                 <Button x:Name="btnLoadPreset" Click="BtnLoadPreset_Click" ToolTip="Loads Action Presets (alt L)">
                     <AccessText>_Load Preset</AccessText>
                 </Button>

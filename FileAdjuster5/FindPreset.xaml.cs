@@ -24,7 +24,6 @@ namespace FileAdjuster5
     {
         private DataTable MyDTPresets = new DataTable();
         private Int64 iGroup = -1;
-        private Int64 iFlag = 3;
         private bool blSelecting = true;
         private static readonly log4net.ILog log =
 log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

@@ -1,0 +1,33 @@
+﻿<Window x:Class="FileAdjuster5.ModifyPreset"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileAdjuster5"
+        mc:Ignorable="d"
+        Title="Modify Presets or select cancel in lower left" Height="120" Width="500">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5,5,5,0"/>
+            <Setter Property="Padding" Value="10,2"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="6"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="lbAnswer" Content=""/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="btnExport" Click="BtnExport_Click">Export All Presets</Button>
+            <Button x:Name="btnImport">Import Selected Preset(s)</Button>
+            <Button x:Name="btnDelete">Delete Selected Preset(s)</Button>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button  x:Name="btnCancel" IsCancel="True" >
+                <AccessText>_Cancel</AccessText>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

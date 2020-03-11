@@ -143,6 +143,9 @@
       <DependentUpon>HIstoryWin.xaml</DependentUpon>
     </Compile>
     <Compile Include="jobReport.cs" />
+    <Compile Include="ModifyPreset.xaml.cs">
+      <DependentUpon>ModifyPreset.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ReadLastFromLog.cs" />
     <Compile Include="SavePreset.xaml.cs">
       <DependentUpon>SavePreset.xaml</DependentUpon>
@@ -182,6 +185,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ModifyPreset.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SavePreset.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
