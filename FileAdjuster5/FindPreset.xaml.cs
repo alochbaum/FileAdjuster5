@@ -79,9 +79,33 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
       
         private void DgPresets_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
-            if (Keyboard.Modifiers != ModifierKeys.Control)
-                BtnOK_Click(this, new System.Windows.RoutedEventArgs());
-            else if (blSelecting) ShiftGroups();
+            if (blSelecting)  // int the delete mode, we just need to highlight row
+            {
+                if (Keyboard.Modifiers != ModifierKeys.Control)
+                    BtnOK_Click(this, new System.Windows.RoutedEventArgs());
+                else ShiftGroups();
+            }
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            bool blNotWelcome = true;
+            List<string> lsSelectedPresets = new List<string>();
+            foreach (DataRowView rowView in dgPresets.SelectedItems)
+            {
+                if (rowView != null)
+                {
+                    DataRow row = rowView.Row;
+                    if (int.Parse( row.ItemArray[0].ToString()) != 0)
+                        lsSelectedPresets.Add(row.ItemArray[2].ToString());
+                    else blNotWelcome = false;
+                }
+
+            }
+            if(!blNotWelcome) Xceed.Wpf.Toolkit.MessageBox.Show(
+                "The Welcome Preset is used on program startup, and it will not be deleted",
+                "Welcome Preset is Undeletable",
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

@@ -18,7 +18,7 @@
                 <AccessText>_OK</AccessText>
             </Button>
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="btnDelete" IsEnabled="False" Visibility="Hidden">Delete Selected Presets</Button>
+                <Button x:Name="btnDelete" IsEnabled="False" Visibility="Hidden" Click="BtnDelete_Click">Delete Selected Presets</Button>
                 <Label x:Name="lbinfo" Content="When you click the preset will load to leave click ->"/>
                 <Button  x:Name="btnCancel" IsCancel="True" Width="60" Margin="5,0,0,0">
                 <AccessText>_Cancel</AccessText>

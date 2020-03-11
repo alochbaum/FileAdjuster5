@@ -605,10 +605,16 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 sql = "CREATE TABLE 'ActionPresetType' ( 'PTypeID' INTEGER PRIMARY KEY AUTOINCREMENT, 'PresetType' TEXT );";
                 command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
+                sql = "CREATE TABLE 'Version' ( 'Version_id' INTEGER PRIMARY KEY AUTOINCREMENT, 'Number' TEXT, 'Title' TEXT, 'Notes' TEXT );";
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
                 sql = "CREATE TABLE 'ActionTable' ( 'TableID' INTEGER PRIMARY KEY AUTOINCREMENT, 'DisplayOrder' INTEGER, 'GroupID' INTEGER, 'ActionTypeID' INTEGER, 'Parameter1' TEXT, 'Parameter2' TEXT, 'DateAdded' TEXT );";
                 command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
                 sql = "ATTACH '"+strDBFile+"' AS md;";
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+                sql = "insert into Version select * from md.Version;";
                 command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
                 sql = "insert into ActionPreset select * from md.ActionPreset;";
