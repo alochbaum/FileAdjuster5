@@ -106,6 +106,17 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 "The Welcome Preset is used on program startup, and it will not be deleted",
                 "Welcome Preset is Undeletable",
                 MessageBoxButton.OK, MessageBoxImage.Error);
+            if (lsSelectedPresets.Count > 0)
+            {
+                string strError = FileAdjSQLite.DeletePreset(lsSelectedPresets);
+                if (strError.Length > 2)
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show(strError, "Error Deleting",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    log.Error(strError);
+                }
+                this.DialogResult = true;
+            }
         }
     }
 }

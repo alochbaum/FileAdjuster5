@@ -630,6 +630,30 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
 
             }
         }
+        static public string DeletePreset(List<string> lsIn)
+        {
+            string strReturn = "",sql="";
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.Open();
+                foreach (string strPreset in lsIn)
+                {
+                    sql = "delete from ActionPreset where PresetName = '" + strPreset + "';";
+                    SQLiteCommand lcommand = new SQLiteCommand(sql, m_dbConnection);
+                    int rows = lcommand.ExecuteNonQuery();
+                    if (rows < 1) strReturn += $"Error deleting: {strPreset}  ";
+                }
+                // now clean up presetypes that are empty
+                sql = "delete from ActionPresetType where PTypeID in (select at.PTypeID from ActionPresetType at left join ActionPreset ap on at.PTypeID = ap.PTypeID where ap.PTypeID is null);";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                m_dbConnection.Close();
+            }
+            return strReturn;
+        }
         static public string DeletePriorGroup(string StrGroup,bool blIsActions)
         {
             string strReturn = "";
