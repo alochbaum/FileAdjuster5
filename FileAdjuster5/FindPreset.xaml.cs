@@ -35,7 +35,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             if (!isSelecting)
             {
                 blSelecting = false;
-                PresetWin.Title = "Select preset(s). Note: all presets with same name get deleted if you select just one.";
+                PresetWin.Title = "Select preset(s). Note: all presets with same name get deleted if you select just one and empty groups are deleted";
                 lbinfo.Content="<- Click button to delete or other button to exit ->";
                 btnDelete.Visibility = System.Windows.Visibility.Visible;
                 btnDelete.IsEnabled = true;

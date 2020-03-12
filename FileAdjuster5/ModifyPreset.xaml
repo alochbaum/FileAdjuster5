@@ -21,7 +21,7 @@
         <Label x:Name="lbAnswer" Content=""/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnExport" Click="BtnExport_Click">Export All Presets</Button>
-            <Button x:Name="btnImport">Import Selected Preset(s)</Button>
+            <Button x:Name="btnImport" Click="BtnImport_Click">Import Selected Preset(s)</Button>
             <Button x:Name="btnDelete" Click="BtnDelete_Click">Delete Selected Preset(s)</Button>
         </StackPanel>
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">

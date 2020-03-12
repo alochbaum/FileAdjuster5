@@ -56,5 +56,17 @@ namespace FileAdjuster5
             }
             DialogResult = true;
         }
+
+        private void BtnImport_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog()
+            {
+                Title = "Enter database file to save presets to",
+                Filter = "sqlite|*.sqlite"
+            };
+            if (dlg.ShowDialog() == true)
+            {
+            }
+        }
     }
 }
