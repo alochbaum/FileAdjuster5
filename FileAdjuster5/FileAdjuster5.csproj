@@ -142,6 +142,9 @@
     <Compile Include="HIstoryWin.xaml.cs">
       <DependentUpon>HIstoryWin.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ImportPreset.xaml.cs">
+      <DependentUpon>ImportPreset.xaml</DependentUpon>
+    </Compile>
     <Compile Include="jobReport.cs" />
     <Compile Include="ModifyPreset.xaml.cs">
       <DependentUpon>ModifyPreset.xaml</DependentUpon>
@@ -166,6 +169,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="HIstoryWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ImportPreset.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

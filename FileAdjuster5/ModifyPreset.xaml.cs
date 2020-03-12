@@ -50,6 +50,7 @@ namespace FileAdjuster5
             if(myFind.ShowDialog() == true)
             {
                 strResult = "Deleted some presets";
+                
             } else
             {
                 strResult = "Cancelled deleting some presets";
@@ -66,7 +67,11 @@ namespace FileAdjuster5
             };
             if (dlg.ShowDialog() == true)
             {
+                ImportPreset myIP = new ImportPreset(dlg.FileName);
+                if (myIP.ShowDialog() == true)strResult = "Imported some presets";
+                else strResult = "Cancelled importing presets";
             }
+            DialogResult = true;
         }
     }
 }

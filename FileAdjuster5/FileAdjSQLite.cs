@@ -408,7 +408,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return blreturn;
         }
-        static public DataTable ReadPresets()
+        static public DataTable ReadPresets(string strDBFile="")
         {
             DataTable tableReturn = new DataTable();
             tableReturn.Columns.Add("Group", typeof(Int64));
@@ -416,7 +416,8 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             tableReturn.Columns.Add("Preset Title", typeof(string));
             tableReturn.Columns.Add("Date Added", typeof(string));
             SQLiteConnection m_dbConnection = new SQLiteConnection();
-            string strDBFile = DBFile();
+            // check if this is outside DB file name, if it isn't use the default name
+            if(strDBFile.Length<3)strDBFile = DBFile();
             if (File.Exists(strDBFile))
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";

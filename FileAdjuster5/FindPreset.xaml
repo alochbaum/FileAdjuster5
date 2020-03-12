@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="Select a row to load a preset actions or click Cancel button" Height="450" Width="800">
+        Title="Select a row to instantly load a preset actions or Ctrl-click a row to swap group with above." Height="450" Width="800">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -19,7 +19,7 @@
             </Button>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="btnDelete" IsEnabled="False" Visibility="Hidden" Click="BtnDelete_Click">Delete Selected Presets</Button>
-                <Label x:Name="lbinfo" Content="When you click the preset will load to leave click ->"/>
+                <Label x:Name="lbinfo" Content="When you click the preset it will instantly load or to leave click ->"/>
                 <Button  x:Name="btnCancel" IsCancel="True" Width="60" Margin="5,0,0,0">
                 <AccessText>_Cancel</AccessText>
             </Button>
