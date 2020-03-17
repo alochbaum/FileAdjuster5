@@ -242,27 +242,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             iReturn += (iRowsAfter << 7);
             return iReturn;
         }
-        static public bool WriteFileHistory(Int64 iGroup,string strFileName,string strExt)
-        {
-            bool blreturn = false;
-            SQLiteConnection m_dbConnection = new SQLiteConnection();
-            string strDBFile = DBFile();
-            if (File.Exists(strDBFile))
-            {
-                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
-                m_dbConnection.Open();
-                string sqlcmd = "INSERT INTO FileHistory (group_id,file_name,ext" +
-                   ")VALUES (" +iGroup.ToString()+",@File,@Ext);";
-                SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
-                // protected from single quotes in the passed strings
-                command.Parameters.Add(new SQLiteParameter("File", strFileName));
-                command.Parameters.Add(new SQLiteParameter("Ext", strExt));
-                int rows = command.ExecuteNonQuery();
-                if (rows == 1) blreturn=true;
-                m_dbConnection.Close();
-            }
-            return blreturn;
-        }
+
         static public List<string> ReadHistory(Int64 lGroup)
         {
             List<string> mList = new List<string>();
@@ -357,6 +337,33 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return tableReturn;
         }
+        static public String ReadVersion(string strDBFile)
+        {
+            string strReturn = "";
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select name from sqlite_master where type='table' and name ='Version'";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                    strReturn = reader.GetString(0);
+                reader.Close();
+                if (strReturn.Length > 1)
+                {
+                    sql = "select Number from Version order by Version_ID desc limit 1";
+                    command = new SQLiteCommand(sql, m_dbConnection);
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                        strReturn = reader.GetString(0);
+                    reader.Close();
+                }
+                m_dbConnection.Close();
+            }
+            return strReturn;
+        }
         static public bool WriteGroup(string strGroup)
         {
             bool blreturn = false;
@@ -370,6 +377,27 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
                 // protected from single quotes in the passed strings
                 command.Parameters.Add(new SQLiteParameter("strGroup", strGroup));
+                int rows = command.ExecuteNonQuery();
+                if (rows == 1) blreturn = true;
+                m_dbConnection.Close();
+            }
+            return blreturn;
+        }
+        static public bool WriteFileHistory(Int64 iGroup, string strFileName, string strExt)
+        {
+            bool blreturn = false;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sqlcmd = "INSERT INTO FileHistory (group_id,file_name,ext" +
+                   ")VALUES (" + iGroup.ToString() + ",@File,@Ext);";
+                SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                // protected from single quotes in the passed strings
+                command.Parameters.Add(new SQLiteParameter("File", strFileName));
+                command.Parameters.Add(new SQLiteParameter("Ext", strExt));
                 int rows = command.ExecuteNonQuery();
                 if (rows == 1) blreturn = true;
                 m_dbConnection.Close();
@@ -407,6 +435,24 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.Close();
             }
             return blreturn;
+        }
+        static public Int64 GetPresetGroup(string strGroup)
+        {
+            Int64 i64Return = -1;
+            string strDBFile = DBFile();
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select PTypeID from ActionPresetType where PresetType = '" + strGroup + "';";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                    i64Return= reader.GetInt64(0);
+                m_dbConnection.Close();
+            }
+            return i64Return;
         }
         static public DataTable ReadPresets(string strDBFile="")
         {
