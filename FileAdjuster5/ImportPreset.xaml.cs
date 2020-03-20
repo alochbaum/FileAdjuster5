@@ -21,6 +21,7 @@ namespace FileAdjuster5
         public string GroupName { get; set; }
         public string PresetName { get; set; }
         public string Date { get; set; }
+        public Int64 PresetTypeID { get; set; }
     }
     /// <summary>
     /// Interaction logic for ImportPreset.xaml
@@ -54,13 +55,24 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     DP.GroupName = row.ItemArray[1].ToString();
                     DP.PresetName = row.ItemArray[2].ToString();
                     DP.Date = row.ItemArray[3].ToString();
-                    myLDP.Add(DP);
+
                     Int64 iGroup = FileAdjSQLite.GetPresetGroup(DP.GroupName);
-                    if (iGroup < 0) FileAdjSQLite.WriteGroup(DP.GroupName);
-                    string strVersion = FileAdjSQLite.ReadVersion(strDBFile);
+                    if (iGroup < 0) // didn't find a valid group ID
+                    {
+                        FileAdjSQLite.WriteGroup(DP.GroupName);
+                        iGroup = FileAdjSQLite.GetPresetGroup(DP.GroupName);
+                    }
+                    DP.PresetTypeID = iGroup;
+                    if (DP.GroupID > 0) // we don't want to input a welcome group
+                        myLDP.Add(DP);
+
                 }
 
             }
+            string strVersion = FileAdjSQLite.ReadVersion(strDBFile);
+            Int64 iActionGrp = FileAdjSQLite.GetActionint();
+            string strResult = FileAdjSQLite.ImportAssets(strDBFile, myLDP, strVersion, iActionGrp);
+            if(strResult.Length<1) DialogResult = true;
         }
     }
 }

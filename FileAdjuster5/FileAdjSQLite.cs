@@ -469,7 +469,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
                 string sql = "select ap.GroupID, at.PresetType, ap.PresetName, ap.DateAdded" +
-                    " from ActionPreset ap join ActionPresetType at on ap.PTypeID = at.PTypeID"+
+                    " from ActionPreset ap join ActionPresetType at on ap.PTypeID = at.PTypeID" +
                     " order by ap.PTypeID, ap.GroupID; ";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
@@ -676,6 +676,76 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.Close();
 
             }
+        }
+        static public string ImportAssets(string strFile, List<CDisplayPreset> my_ListPresets,string strVersion,Int64 iActGrp)
+        {
+            string strReturn = "",strSQLwrite="",strDate="";
+            string strDBFile = DBFile();
+            Int64 iRowsAfter = 0, iFlags=0;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+            m_dbConnection.Open();
+            string sql = "ATTACH '" + strFile + "' AS md;";
+            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            command.ExecuteNonQuery();
+            // need to set this up as parameter for final version
+            if (strVersion == "5.10")
+            {
+                // we have PTypeID, and GroupID should be gotten by next available group
+                sql = "select Flags,DateAdded,RowsAfter from md.ActionPreset where PresetName = @PresetName";
+
+            }
+            else
+            {
+                sql = "select Flags,DateAdded from md.ActionPreset where PresetName = @PresetName";
+
+            }
+            strSQLwrite = "INSERT INTO ActionPreset (PTypeID,PresetName,GroupID,Flags,RowsAfter,DateAdded) VALUES (" +
+                "@PTypeID,@PresetName,@GroupID,@Flags,@RowsAfter,@DateAdded)";
+            foreach (CDisplayPreset DP in my_ListPresets)
+            {
+                command = new SQLiteCommand(sql, m_dbConnection);
+                command.Parameters.Add(new SQLiteParameter("PresetName", DP.PresetName));
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    iFlags = reader.GetInt64(0);
+                    strDate = reader.GetString(1);
+                    if (strVersion == "5.10") iRowsAfter = reader.GetInt64(2);
+
+                }
+                reader.Close();
+                command = new SQLiteCommand(strSQLwrite, m_dbConnection);
+                // protected from single quotes in the passed strings
+                command.Parameters.Add(new SQLiteParameter("PTypeID", DP.PresetTypeID));
+                command.Parameters.Add(new SQLiteParameter("PresetName", DP.PresetName));
+                iActGrp++;
+                command.Parameters.Add(new SQLiteParameter("GroupID", iActGrp));
+                command.Parameters.Add(new SQLiteParameter("Flags", iFlags));
+                command.Parameters.Add(new SQLiteParameter("RowsAfter", iRowsAfter));
+                command.Parameters.Add(new SQLiteParameter("DateAdded", strDate));
+                command.ExecuteNonQuery();
+                string SQLTemp = "DROP TABLE IF EXISTS Actions_1";
+                command = new SQLiteCommand(SQLTemp, m_dbConnection);
+                command.ExecuteNonQuery();
+                SQLTemp = "CREATE TEMP TABLE Actions_1 ( 'TableID' INTEGER PRIMARY KEY AUTOINCREMENT, 'DisplayOrder' INTEGER, 'GroupID' INTEGER, 'ActionTypeID' INTEGER, 'Parameter1' TEXT, 'Parameter2' TEXT, 'DateAdded' TEXT )";
+                command = new SQLiteCommand(SQLTemp, m_dbConnection);
+                command.ExecuteNonQuery();
+                SQLTemp = "insert into Actions_1 select * from md.ActionTable where GroupID = " +
+                    DP.GroupID.ToString();
+                command = new SQLiteCommand(SQLTemp, m_dbConnection);
+                command.ExecuteNonQuery();
+                SQLTemp = "update Actions_1 set GroupID = "+iActGrp.ToString()+" where GroupID = " +
+                    DP.GroupID.ToString();
+                command = new SQLiteCommand(SQLTemp, m_dbConnection);
+                command.ExecuteNonQuery();
+                SQLTemp = "insert into ActionTable (DisplayOrder,GroupID,ActionTypeID,Parameter1,Parameter2) "+
+                    "select DisplayOrder,GroupID,ActionTypeID,Parameter1,Parameter2 from Actions_1";
+                command = new SQLiteCommand(SQLTemp, m_dbConnection);
+                command.ExecuteNonQuery();
+            }
+            m_dbConnection.Close();
+            return strReturn;
         }
         static public string DeletePreset(List<string> lsIn)
         {
