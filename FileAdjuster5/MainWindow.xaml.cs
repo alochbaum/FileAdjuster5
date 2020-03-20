@@ -905,17 +905,25 @@ namespace FileAdjuster5
                 string strDir = System.IO.Path.GetDirectoryName(tbOutFile.Text);
                 if(strDir.Length > 1)
                 {
-                    System.Diagnostics.Process.Start(strDir);
+                    if (Directory.Exists(strDir))
+                    {
+                        System.Diagnostics.Process.Start(strDir);
+                    } else
+                    {
+                        Xceed.Wpf.Toolkit.MessageBox.Show("Directory no longer exists",
+                            "Can't open directory",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
                 } else
                 {
-                    Xceed.Wpf.Toolkit.MessageBox.Show("Can't open directory",
-                        "Program didn't parse directory from output file.",
+                    Xceed.Wpf.Toolkit.MessageBox.Show("Program didn't parse directory from output file.",
+                        "Can't open directory",
                         MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             } else
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show("Can't open directory",
-                    "This button is linked to output file, and it is empty.",
+                Xceed.Wpf.Toolkit.MessageBox.Show(
+                    "This button is linked to output file, and it is empty.", "Can't open directory",
                     MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
