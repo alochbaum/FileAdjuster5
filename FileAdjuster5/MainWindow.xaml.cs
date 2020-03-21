@@ -254,6 +254,10 @@ namespace FileAdjuster5
                     log.Debug($"Dropped file {file}");
                 }
             }
+            else
+                Xceed.Wpf.Toolkit.MessageBox.Show(
+                    "If you think these are files and not text, they might be from zip archive windows is showing you. Check to see if you need to unzip.",
+                    "Can't read clipboard files",MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void LbFileNames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -1094,12 +1098,15 @@ namespace FileAdjuster5
 
         private void BtbClear_Drop(object sender, DragEventArgs e)
         {
+            //String[] myList = (String[])e.Data.GetData("FileDrop");
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Clearing Files First
                 ClearFiles();
                 // The other drop event will add the files
             }
+
         }
 
         private void BtnQuickAddIn_Click(object sender, RoutedEventArgs e)
