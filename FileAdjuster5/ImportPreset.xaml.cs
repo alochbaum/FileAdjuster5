@@ -62,8 +62,8 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                         FileAdjSQLite.WriteGroup(DP.GroupName);
                         iGroup = FileAdjSQLite.GetPresetGroup(DP.GroupName);
                     }
-                    DP.PresetTypeID = iGroup;
-                    if (DP.GroupID > 0) // we don't want to input a welcome group
+                    DP.PresetTypeID = iGroup; 
+                    if (DP.GroupID != 0) // we don't want to input a welcome group
                         myLDP.Add(DP);
 
                 }

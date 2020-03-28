@@ -836,26 +836,30 @@ namespace FileAdjuster5
 
         private void BtnSwapAbove_Click(object sender, RoutedEventArgs e)
         {
-            if(dgActions.SelectedIndex<1)
+            SwapRow(dgActions.SelectedIndex);
+        }
+
+        private void SwapRow(int iSelectedRow)
+        {
+            if (iSelectedRow < 1)
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show("You have to select a row below top row.\r\n(You should left click on row to select.)",
+                Xceed.Wpf.Toolkit.MessageBox.Show("You have to select a row below top row.\r\n(You should ctrl-click on row to swap.)",
                     "Can't swap rows",
-                    MessageBoxButton.OK,MessageBoxImage.Exclamation);
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
                 DataTable dtParent = MyDtable;
-                int iOldRowIndex = dgActions.SelectedIndex;
-                DataRow row = MyDtable.Rows[iOldRowIndex];
+                DataRow row = MyDtable.Rows[iSelectedRow];
                 DataRow newRow = dtParent.NewRow();
                 newRow.ItemArray = row.ItemArray;
-                int iOrderNew = int.Parse( newRow["Order"].ToString())-1;
+                int iOrderNew = int.Parse(newRow["Order"].ToString()) - 1;
                 newRow["Order"] = iOrderNew;
-                if (iOldRowIndex >0 && iOldRowIndex <= dtParent.Rows.Count)
+                if (iSelectedRow > 0 && iSelectedRow <= dtParent.Rows.Count)
                 {
                     dtParent.Rows.Remove(row);
-                    dtParent.Rows.InsertAt(newRow, iOldRowIndex - 1);
-                    MyDtable.Rows[iOldRowIndex]["Order"] = iOrderNew +1;
+                    dtParent.Rows.InsertAt(newRow, iSelectedRow - 1);
+                    MyDtable.Rows[iSelectedRow]["Order"] = iOrderNew + 1;
                 }
                 dgActions.DataContext = MyDtable.DefaultView;
             }
@@ -1135,6 +1139,18 @@ namespace FileAdjuster5
             lbNumRows.Content = iNumLimit.ToString("00");
             sldRows.Value = iNumLimit;
         }
+
+        private void DgActions_CurrentCellChanged_1(object sender, EventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                // it seems that with the CurrentCellChanged event, the value of SelectedIndex always displays the previously selected index
+                //DgReport_Selection();
+                rtbStatus.AppendText($"Control {dgActions.Items.IndexOf(dgActions.CurrentItem)}");
+                SwapRow((int)dgActions.Items.IndexOf(dgActions.CurrentItem));
+            }
+        }
+
         private void SldRows_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             iNumLimit = (int)sldRows.Value;

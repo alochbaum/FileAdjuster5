@@ -719,8 +719,11 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 // protected from single quotes in the passed strings
                 command.Parameters.Add(new SQLiteParameter("PTypeID", DP.PresetTypeID));
                 command.Parameters.Add(new SQLiteParameter("PresetName", DP.PresetName));
-                iActGrp++;
-                command.Parameters.Add(new SQLiteParameter("GroupID", iActGrp));
+                if (DP.GroupID != -1)  // This special modifiers group
+                {
+                    iActGrp++;
+                    command.Parameters.Add(new SQLiteParameter("GroupID", iActGrp));
+                } else command.Parameters.Add(new SQLiteParameter("GroupID", -1));
                 command.Parameters.Add(new SQLiteParameter("Flags", iFlags));
                 command.Parameters.Add(new SQLiteParameter("RowsAfter", iRowsAfter));
                 command.Parameters.Add(new SQLiteParameter("DateAdded", strDate));

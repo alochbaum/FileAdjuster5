@@ -80,7 +80,7 @@
                 <Label Content="ext:"></Label>
                 <TextBox x:Name="tbExt" VerticalAlignment="Center">.txt</TextBox>
                 <CheckBox x:Name="cbxComment" VerticalAlignment="Center" Margin="5,0,0,0" 
-                          ToolTip="Clicking this uses the first word in the first comment for the output file name." Checked="CbxComment_Checked" Unchecked="CbxComment_Unchecked">
+                          ToolTip="Clicking this uses the first word in the first comment for the output file name. (alt-v)" Checked="CbxComment_Checked" Unchecked="CbxComment_Unchecked">
                     <AccessText>Comment _v</AccessText>
                 </CheckBox>
             </StackPanel>
@@ -168,8 +168,15 @@
                 <Button x:Name="btnAddRow" Click="BtnAddRow_Click" ToolTip="Adds a row to the bottom of the action rows (alt-&amp;)">
                     <AccessText>Add Row _&amp;</AccessText>
                 </Button>
-                <Button x:Name="btnSwapAbove" Click="BtnSwapAbove_Click" ToolTip="If an action row is selected it swaps the order (al-p)">
+                <Button x:Name="btnSwapAbove" Click="BtnSwapAbove_Click">
                     <AccessText>Swa_p with Row Above</AccessText>
+                    <Button.ToolTip>
+                        <TextBlock>
+                            If an action row is selected this button swaps it upward in list (al-p)
+                        <LineBreak/>
+                            or you can ctrl-click on a row to swap it upward.
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
                 <Button x:Name="btnEditParams" ToolTip="Edit Parameters of the row. (alt-e)" Click="BtnEditRow_Click">
                     <AccessText>_Edit Row</AccessText>
@@ -198,7 +205,7 @@
         <DataGrid x:Name="dgActions" ItemsSource="{Binding}" Grid.Row="3" Grid.ColumnSpan="5" 
                   ClipToBounds="True" CanUserSortColumns="False" CanUserResizeColumns="False" 
                   CanUserReorderColumns="False" CanUserResizeRows="False" IsReadOnly="True" 
-                  MaxHeight="219" VerticalScrollBarVisibility="Visible"/>
+                  MaxHeight="219" VerticalScrollBarVisibility="Visible" CurrentCellChanged="DgActions_CurrentCellChanged_1" SelectionMode="Single"/>
 
         <Rectangle Grid.Row="4" Grid.ColumnSpan="5">
             <Rectangle.Fill>
