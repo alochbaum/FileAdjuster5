@@ -2,12 +2,8 @@
 using System.Data;
 using System.Deployment.Application;
 using System.Collections.Generic;
-using System.Linq;
 using System.Data.SQLite;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Globalization;
 
 namespace FileAdjuster5
 {

@@ -4,19 +4,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Diagnostics;
 
 namespace FileAdjuster5
@@ -1145,8 +1137,6 @@ namespace FileAdjuster5
             if (Keyboard.Modifiers == ModifierKeys.Control)
             {
                 // it seems that with the CurrentCellChanged event, the value of SelectedIndex always displays the previously selected index
-                //DgReport_Selection();
-                rtbStatus.AppendText($"Control {dgActions.Items.IndexOf(dgActions.CurrentItem)}");
                 SwapRow((int)dgActions.Items.IndexOf(dgActions.CurrentItem));
             }
         }
