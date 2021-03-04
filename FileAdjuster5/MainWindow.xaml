@@ -185,13 +185,16 @@
                     <AccessText>Delete _Row</AccessText>
                 </Button>
                 <Button x:Name="btnClearRows" Click="BtnClearRows_Click" ToolTip="Clears all rows below and asks you to created first comment row (alt-w)">
-                    <AccessText>Clear or Ne_w Action</AccessText>
+                    <AccessText>Ne_w Action</AccessText>
                 </Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnSavePreset" Click="BtnSavePreset_Click" ToolTip="Saves current actions below and checkboxes as a preset.">Save as Preset</Button>
                 <Button x:Name="btnModifyPresets" ToolTip="This exports presets to a database file." Click="btnModifyPresets_Click">Modify Presets</Button>
                 <Button x:Name="btnLoadPreset" Click="BtnLoadPreset_Click" ToolTip="Loads Action Presets (alt L)">
                     <AccessText>_Load Preset</AccessText>
+                </Button>
+                <Button x:Name="btnOnAir" ToolTip="Loads Action Presets (alt L)" Click="BtnOnAir_Click">
+                        <AccessText>_*On Air*</AccessText>
                 </Button>
                 <Label Content="--"></Label>
                 <Button x:Name="btnActionHistory" Click="BtnActionHistory_Click" ToolTip="Load a grid actions from a previous history. (alt =)">

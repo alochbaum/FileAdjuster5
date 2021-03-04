@@ -1141,6 +1141,18 @@ namespace FileAdjuster5
             }
         }
 
+        private void BtnOnAir_Click(object sender, RoutedEventArgs e)
+        {
+            // Testing for no files and issuing warning
+            if (lbFileNames.Items.Count < 1)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("You haven't selected any files to process in upper left section.",
+                    "Can't start processing files",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
         private void SldRows_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             iNumLimit = (int)sldRows.Value;
