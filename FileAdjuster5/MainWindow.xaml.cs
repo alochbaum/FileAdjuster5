@@ -1159,6 +1159,8 @@ namespace FileAdjuster5
             tbOutFile.Text = strTemp;
             Int64 iTemp = FileAdjSQLite.GetOnAirAction();
             log.Debug($"Found {iTemp} preset group");
+            MyDtable = GetTable(iTemp);
+            dgActions.DataContext = MyDtable.DefaultView;
         }
 
         private void SldRows_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
