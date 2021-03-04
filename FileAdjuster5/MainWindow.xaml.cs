@@ -1151,6 +1151,14 @@ namespace FileAdjuster5
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            // Set out file name, delete file if exists
+            string strTemp = lbFileNames.Items[0].ToString();
+            string strTempDir = System.IO.Path.GetDirectoryName(strTemp);
+            strTemp = strTempDir + @"\on_air_temp.txr";
+            if (File.Exists(strTemp)) File.Delete(strTemp);
+            tbOutFile.Text = strTemp;
+            Int64 iTemp = FileAdjSQLite.GetOnAirAction();
+            log.Debug($"Found {iTemp} preset group");
         }
 
         private void SldRows_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
