@@ -1156,11 +1156,23 @@ namespace FileAdjuster5
             string strTempDir = System.IO.Path.GetDirectoryName(strTemp);
             strTemp = strTempDir + @"\on_air_temp.txr";
             if (File.Exists(strTemp)) File.Delete(strTemp);
-            tbOutFile.Text = strTemp;
+            strFileOut = strTemp;
             Int64 iTemp = FileAdjSQLite.GetOnAirAction();
             log.Debug($"Found {iTemp} preset group");
             MyDtable = GetTable(iTemp);
             dgActions.DataContext = MyDtable.DefaultView;
+            // limited start
+            lLinesPerFile = 1000000;
+            btnCancel.IsEnabled = true;
+            btnOpenNotePad.IsEnabled = false;
+            btnStart.IsEnabled = false;
+            cbxFileHeaders.IsChecked = false;
+            strTemp = $"Starting As Run breakout on top file in list to {strFileOut}\r\n";
+            log.Debug(strTemp);
+            rtbStatus.AppendText(strTemp);
+            List<string> lFileList = new List<string>();
+            lFileList.Add(lbFileNames.Items[0].ToString());
+            MyWorker.RunWorkerAsync(lFileList);
         }
 
         private void SldRows_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
