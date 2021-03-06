@@ -45,6 +45,8 @@ namespace FileAdjuster5
         // private bool blUsingFileHist = true;
         // Same for Action History
         private bool blUsingActionsHistory = false;
+        // If set file is in the On Air Mode, we need to follow up thread
+        private bool blUsingOnAirMode = false;
         // Passes Combine Files to thread
         private Int64 I64_eChecked = 0;
         // Passes string extension to NextFile function when used in thread
@@ -1161,6 +1163,7 @@ namespace FileAdjuster5
             log.Debug($"Found {iTemp} preset group");
             MyDtable = GetTable(iTemp);
             dgActions.DataContext = MyDtable.DefaultView;
+            blUsingOnAirMode = true;
             // limited start
             lLinesPerFile = 1000000;
             btnCancel.IsEnabled = true;
@@ -1168,8 +1171,7 @@ namespace FileAdjuster5
             btnStart.IsEnabled = false;
             cbxFileHeaders.IsChecked = false;
             strTemp = $"Starting As Run breakout on top file in list to {strFileOut}\r\n";
-            log.Debug(strTemp);
-            rtbStatus.AppendText(strTemp);
+            LogAndAppend(strTemp);
             List<string> lFileList = new List<string>();
             lFileList.Add(lbFileNames.Items[0].ToString());
             MyWorker.RunWorkerAsync(lFileList);
@@ -1229,8 +1231,16 @@ namespace FileAdjuster5
                 if(jR.filename.Length>2)LogAndAppend($"  lines written: {jR.lines}\t{jR.filename}\t{jR.error}");
             }
             myRport.Clear();
-            TimeSpan mySpan = DateTime.Now - myStartTime;
-            LogAndAppend($"{DateTime.Now.TimeOfDay} Complete in {mySpan.Seconds} seconds, last {tbOutFile.Text}");
+            if (blUsingOnAirMode) OnAirLogSplitting();
+            else
+            {
+                TimeSpan mySpan = DateTime.Now - myStartTime;
+                LogAndAppend($"{DateTime.Now.TimeOfDay} Complete in {mySpan.Seconds} seconds, last {tbOutFile.Text}");
+            }
+        }
+        private void OnAirLogSplitting()
+        {
+            LogAndAppend("GotOnAir splitting");
         }
         private void LogAndAppend(string strIn)
         {
