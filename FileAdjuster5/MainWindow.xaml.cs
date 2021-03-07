@@ -1156,7 +1156,7 @@ namespace FileAdjuster5
             // Set out file name, delete file if exists
             string strTemp = lbFileNames.Items[0].ToString();
             string strTempDir = System.IO.Path.GetDirectoryName(strTemp);
-            strTemp = strTempDir + @"\on_air_temp.txr";
+            strTemp = strTempDir + @"\on_air_temp.txt";
             if (File.Exists(strTemp)) File.Delete(strTemp);
             strFileOut = strTemp;
             Int64 iTemp = FileAdjSQLite.GetOnAirAction();
@@ -1240,7 +1240,49 @@ namespace FileAdjuster5
         }
         private void OnAirLogSplitting()
         {
-            LogAndAppend("GotOnAir splitting");
+            string strDirPath = Path.GetDirectoryName(strFileOut)+@"\OnAir";
+            if (Directory.Exists(strDirPath))
+            { Directory.Delete(strDirPath, true); }
+            Directory.CreateDirectory(strDirPath);
+            string strline="", strEnd="";
+            List<string> lChannels = new List<string>();
+            Int64 icount=0;
+            int ipos = 0,ipos2=0;
+            // Read the file and display it line by line.  
+            System.IO.StreamReader file =
+                new System.IO.StreamReader(strFileOut);
+            while ((strline = file.ReadLine()) != null)
+            {
+                ipos = strline.IndexOf('|');
+                if (ipos > 1) {
+                    ipos2 = strline.IndexOf(':', ipos);
+                    strEnd = strline.Substring(ipos+1,ipos2-ipos-1);
+                    ipos2 = strEnd.LastIndexOf('-');
+                    if (ipos2 > 0)
+                    {
+                        strEnd = strEnd.Substring(0, ipos2);
+                        if (!lChannels.Contains(strEnd))
+                        {
+                            lChannels.Add(strEnd);
+                            rtbStatus.AppendText($"Found new channel {strEnd}\r\n");
+
+                        }
+                        using (FileStream fs = new FileStream(strDirPath + @"\" + strEnd,
+                            FileMode.Append, FileAccess.Write))
+                        {
+                            using (StreamWriter sw = new StreamWriter(fs))
+                            {
+                                sw.WriteLine(strline);
+                            }
+                        }
+                    }
+                }
+                
+                icount++;
+            }
+            file.Close();
+            LogAndAppend($"Onair processed lines {icount}");
+            blUsingOnAirMode = false;
         }
         private void LogAndAppend(string strIn)
         {
