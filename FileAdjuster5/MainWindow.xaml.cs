@@ -80,6 +80,8 @@ namespace FileAdjuster5
             dgActions.DataContext = MyDtable.DefaultView;
             // Setting checkboxes on for 2 items
             SetChecks(_eChecked.CombineFile|_eChecked.Headers);
+            // Check size of Log file
+            
         }
         static DataTable GetTable(Int64 iGroup)
         {
@@ -1170,7 +1172,7 @@ namespace FileAdjuster5
             btnOpenNotePad.IsEnabled = false;
             btnStart.IsEnabled = false;
             cbxFileHeaders.IsChecked = false;
-            strTemp = $"Starting As Run breakout on top file in list to {strFileOut}\r\n";
+            strTemp = $"\r\nStarting As Run breakout on top file in list to {strFileOut}\r\n";
             LogAndAppend(strTemp);
             List<string> lFileList = new List<string>();
             lFileList.Add(lbFileNames.Items[0].ToString());
@@ -1244,15 +1246,17 @@ namespace FileAdjuster5
             if (Directory.Exists(strDirPath))
             { Directory.Delete(strDirPath, true); }
             Directory.CreateDirectory(strDirPath);
-            string strline="", strEnd="";
+            string strEnd="";
             List<string> lChannels = new List<string>();
             Int64 icount=0;
-            int ipos = 0,ipos2=0;
+            int ipos = 0,ipos2=0,iTotal=0;
             // Read the file and display it line by line.  
-            System.IO.StreamReader file =
-                new System.IO.StreamReader(strFileOut);
-            while ((strline = file.ReadLine()) != null)
+            var file = File.ReadAllLines(strFileOut);
+            var strlines = new List<string>(file);
+            iTotal = strlines.Count;
+            foreach(string strline in strlines)
             {
+                // report progress on background thread
                 ipos = strline.IndexOf('|');
                 if (ipos > 1) {
                     ipos2 = strline.IndexOf(':', ipos);
@@ -1280,7 +1284,6 @@ namespace FileAdjuster5
                 
                 icount++;
             }
-            file.Close();
             LogAndAppend($"Onair processed lines {icount}");
             blUsingOnAirMode = false;
         }
