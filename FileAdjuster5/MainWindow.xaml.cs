@@ -37,6 +37,7 @@ namespace FileAdjuster5
         // This holds current out file
         private string strFileOut="";
         private BackgroundWorker MyWorker;
+        private BackgroundWorker MyWorker2;
         // holds the count of null characters
         private Int64 iCountOfNulls = 0;
         // This is set for thread if working an include to allow next line to be check
@@ -71,6 +72,7 @@ namespace FileAdjuster5
             log.Info($"{MainFrame.Title} is starting up.");
             // Setting up a worker thread
             MyWorker = (BackgroundWorker)this.FindResource("MyWorker");
+            MyWorker2 = (BackgroundWorker)this.FindResource("OnAirLog");
             // displaying database and current working directory
             rtbStatus.AppendText($"Datafile directory:");
             rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
@@ -1287,6 +1289,9 @@ namespace FileAdjuster5
             LogAndAppend($"Onair processed lines {icount}");
             blUsingOnAirMode = false;
         }
+        private void OnAirLog_DoWork(object sender, DoWorkEventArgs e) { }
+        private void OnAirLog_ProgressChanged(object sender, ProgressChangedEventArgs e) { }
+        private void OnAirLog_Complete(object sender, RunWorkerCompletedEventArgs e) { }
         private void LogAndAppend(string strIn)
         {
             log.Info(strIn);
