@@ -1242,49 +1242,9 @@ namespace FileAdjuster5
         }
         private void OnAirLogSplitting()
         {
-            string strDirPath = Path.GetDirectoryName(strFileOut)+@"\OnAir";
-            if (Directory.Exists(strDirPath))
-            { Directory.Delete(strDirPath, true); }
-            Directory.CreateDirectory(strDirPath);
-            string strEnd="";
-            List<string> lChannels = new List<string>();
-            Int64 icount=0;
-            int ipos = 0,ipos2=0,iTotal=0;
-            // Read the file and display it line by line.  
-            var file = File.ReadAllLines(strFileOut);
-            var strlines = new List<string>(file);
-            iTotal = strlines.Count;
-            foreach(string strline in strlines)
-            {
-                // report progress on background thread
-                ipos = strline.IndexOf('|');
-                if (ipos > 1) {
-                    ipos2 = strline.IndexOf(':', ipos);
-                    strEnd = strline.Substring(ipos+1,ipos2-ipos-1);
-                    ipos2 = strEnd.LastIndexOf('-');
-                    if (ipos2 > 0)
-                    {
-                        strEnd = strEnd.Substring(0, ipos2);
-                        if (!lChannels.Contains(strEnd))
-                        {
-                            lChannels.Add(strEnd);
-                            rtbStatus.AppendText($"Found new channel {strEnd}\r\n");
-
-                        }
-                        using (FileStream fs = new FileStream(strDirPath + @"\" + strEnd,
-                            FileMode.Append, FileAccess.Write))
-                        {
-                            using (StreamWriter sw = new StreamWriter(fs))
-                            {
-                                sw.WriteLine(strline);
-                            }
-                        }
-                    }
-                }
-                
-                icount++;
-            }
-            LogAndAppend($"Onair processed lines {icount}");
+            ParseOnAir myOnAir = new ParseOnAir(strFileOut);
+            myOnAir.Show();
+            string strDirPath = myOnAir.getDir();
             blUsingOnAirMode = false;
         }
 
