@@ -1,0 +1,24 @@
+﻿<Window x:Name="Parse_On_Air" x:Class="FileAdjuster5.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
+        xmlns:local="clr-namespace:FileAdjuster5"
+        mc:Ignorable="d"
+        Title="Parsing On Air Channels" Height="100" Width="400">
+    <Window.Resources>
+    <cm:BackgroundWorker x:Key="MyWorker2"
+                             DoWork="MyWorker_DoWork"
+                             ProgressChanged="MyWorker_ProgressChanged"
+                             RunWorkerCompleted="MyWorker_Complete"
+                             WorkerReportsProgress="True"
+                             WorkerSupportsCancellation="True"
+                             ></cm:BackgroundWorker>
+    </Window.Resources>
+    <Grid>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <ProgressBar HorizontalAlignment="Left" Height="10" Margin="20,40,0,0" VerticalAlignment="Top" Width="350"/>
+
+    </Grid>
+</Window>

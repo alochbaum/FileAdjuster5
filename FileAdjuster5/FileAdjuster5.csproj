@@ -153,6 +153,9 @@
     <Compile Include="SavePreset.xaml.cs">
       <DependentUpon>SavePreset.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ParseOnAir.xaml.cs">
+      <DependentUpon>ParseOnAir.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinEditParams.xaml.cs">
       <DependentUpon>WinEditParams.xaml</DependentUpon>
     </Compile>
@@ -197,6 +200,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SavePreset.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParseOnAir.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
