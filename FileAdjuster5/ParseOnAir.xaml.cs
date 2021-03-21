@@ -1,12 +1,17 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Shapes;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System;
 
 namespace FileAdjuster5
 {
+    public class COnAirLine
+    {
+        public string DFilesName { get; set; }
+        public string line { get; set; }
+    }
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
@@ -40,6 +45,7 @@ namespace FileAdjuster5
             // Read the file and display it line by line.  
             var file = File.ReadAllLines(strFileOut);
             var strlines = new List<string>(file);
+            List<COnAirLine> myOnAir = new List<COnAirLine>();
             iTotal = strlines.Count;
             foreach (string strline in strlines)
             {
@@ -57,27 +63,53 @@ namespace FileAdjuster5
                         {
                             lChannels.Add(strEnd);
                         }
-                        using (FileStream fs = new FileStream(strDirPath + @"\" + strEnd + ".txt",
-                            FileMode.Append, FileAccess.Write))
+                        myOnAir.Add(new COnAirLine() { DFilesName = strEnd, line = strline });
+                    }
+                }
+                icount++;
+                MyWorker2.ReportProgress(1);
+            }
+            if (lChannels.Count > 0)
+            {
+                icount = 0;
+                foreach(string channel in lChannels)
+                {
+                    using (FileStream fs = new FileStream(strDirPath + @"\" + strEnd + ".txt",
+                        FileMode.Append, FileAccess.Write))
+                    {
+                        using (StreamWriter sw = new StreamWriter(fs))
                         {
-                            using (StreamWriter sw = new StreamWriter(fs))
+                            foreach (var oaline in from COnAirLine in myOnAir
+                                                   where COnAirLine.DFilesName.CompareTo(channel) >= 0
+                                                   select new { COnAirLine.line })
                             {
-                                sw.WriteLine(strline);
+                                sw.WriteLine(oaline);
                             }
                         }
                     }
                 }
-
                 icount++;
-                MyWorker2.ReportProgress(1);
+                MyWorker2.ReportProgress(2);
             }
+
+
+
 
         }
         private void OnAirLog_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            int i = e.ProgressPercentage;
+            if (i < 2)
+            {
+                lblStatus.Content = $"Log Line: {icount} Channel: {strEnd}";
+            }
+            else
+            {
+                lblStatus.Content = $"Saving Line: {icount} to file";
+            }
             float fTemp = ((float)icount / (float)iTotal)*100;
-            lblStatus.Content = $"Log Line: {icount} Channel: {strEnd}";
             pbAmount.Value = (int)fTemp;
+
         }
         private void OnAirLog_Complete(object sender, RunWorkerCompletedEventArgs e) { }
     }
