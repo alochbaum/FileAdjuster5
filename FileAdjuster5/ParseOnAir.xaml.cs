@@ -74,22 +74,22 @@ namespace FileAdjuster5
                 icount = 0;
                 foreach(string channel in lChannels)
                 {
-                    using (FileStream fs = new FileStream(strDirPath + @"\" + strEnd + ".txt",
+                    using (FileStream fs = new FileStream(strDirPath + @"\" + channel + ".txt",
                         FileMode.Append, FileAccess.Write))
                     {
                         using (StreamWriter sw = new StreamWriter(fs))
                         {
                             foreach (var oaline in from COnAirLine in myOnAir
-                                                   where COnAirLine.DFilesName.CompareTo(channel) >= 0
-                                                   select new { COnAirLine.line })
+                                                   where COnAirLine.DFilesName.CompareTo(channel) == 0
+                                                   select COnAirLine)
                             {
-                                sw.WriteLine(oaline);
+                                sw.WriteLine(oaline.line);
                             }
                         }
                     }
                 }
                 icount++;
-                MyWorker2.ReportProgress(2);
+                MyWorker2.ReportProgress(1);
             }
 
 
@@ -99,18 +99,22 @@ namespace FileAdjuster5
         private void OnAirLog_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int i = e.ProgressPercentage;
-            if (i < 2)
-            {
-                lblStatus.Content = $"Log Line: {icount} Channel: {strEnd}";
-            }
-            else
-            {
-                lblStatus.Content = $"Saving Line: {icount} to file";
-            }
+            //if (i < 2000)
+            //{
+                lblStatus.Content = $"Log Line: {icount} Channel: {strEnd} i= {i}";
+            //}
+            //else
+            //{
+            //    lblStatus.Content = $"Saving Line: {icount} to file";
+            //}
             float fTemp = ((float)icount / (float)iTotal)*100;
             pbAmount.Value = (int)fTemp;
 
         }
-        private void OnAirLog_Complete(object sender, RunWorkerCompletedEventArgs e) { }
+        private void OnAirLog_Complete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(strDirPath);
+            this.Hide();
+        }
     }
 }
