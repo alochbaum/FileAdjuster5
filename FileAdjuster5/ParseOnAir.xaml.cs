@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Windows.Input;
 
 namespace FileAdjuster5
 {
@@ -67,7 +68,7 @@ namespace FileAdjuster5
                     }
                 }
                 icount++;
-                MyWorker2.ReportProgress(1);
+                if((icount%25)==0)MyWorker2.ReportProgress(1);
             }
             if (lChannels.Count > 0)
             {
@@ -89,31 +90,28 @@ namespace FileAdjuster5
                     }
                 }
                 icount++;
-                MyWorker2.ReportProgress(1);
+                if ((icount % 25) == 0) MyWorker2.ReportProgress(1);
             }
-
-
-
-
         }
         private void OnAirLog_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int i = e.ProgressPercentage;
-            //if (i < 2000)
-            //{
-                lblStatus.Content = $"Log Line: {icount} Channel: {strEnd} i= {i}";
-            //}
-            //else
-            //{
-            //    lblStatus.Content = $"Saving Line: {icount} to file";
-            //}
+            lblStatus.Content = $"Log Line: {icount}";
             float fTemp = ((float)icount / (float)iTotal)*100;
             pbAmount.Value = (int)fTemp;
 
         }
         private void OnAirLog_Complete(object sender, RunWorkerCompletedEventArgs e)
         {
-            System.Diagnostics.Process.Start(strDirPath);
+            // Opening directory if channels were found
+            if (lChannels.Count > 0)
+            {
+                System.Diagnostics.Process.Start(strDirPath);
+            }
+            else
+            {
+                Directory.Delete(strDirPath, true);
+            }
             this.Hide();
         }
     }
