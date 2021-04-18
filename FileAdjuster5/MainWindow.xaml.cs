@@ -994,17 +994,28 @@ namespace FileAdjuster5
             string strTempDir, strTempFile, strTempExt;
             strTempDir = System.IO.Path.GetDirectoryName(strTemp);
             strTempFile = System.IO.Path.GetFileNameWithoutExtension(strTemp);
-            strTempFile = strTempFile.Substring(0, strTempFile.LastIndexOf('-'));
-            strTempExt = System.IO.Path.GetExtension(strTemp);
-            int iCount = 0;
-            var dir = new DirectoryInfo(strTempDir);
- 
-            foreach (var file in dir.EnumerateFiles(strTempFile+"-*"+strTempExt))
+            // This was crasshing without '-' as part of the name, like using asrun option
+            int iIndex = strTempFile.LastIndexOf('-');
+            if (iIndex > 0)
             {
-                iCount++;
-                file.Delete();
+                strTempFile = strTempFile.Substring(0,iIndex);
+                strTempExt = System.IO.Path.GetExtension(strTemp);
+                int iCount = 0;
+                var dir = new DirectoryInfo(strTempDir);
+
+                foreach (var file in dir.EnumerateFiles(strTempFile + "-*" + strTempExt))
+                {
+                    iCount++;
+                    file.Delete();
+                }
+                ClearStatusAndShow($"Deleted {iCount} files in {strTempDir} matching pattern {strTempFile}-*{strTempExt}", true);
+            } else // We might have found cleanup for asrun
+            {
+                if(strTempFile== "on_air_temp")
+                {
+                    ClearStatusAndShow("Hit on_air_temp.txt");
+                }
             }
-            ClearStatusAndShow($"Deleted {iCount} files in {strTempDir} matching pattern {strTempFile}-*{strTempExt}", true);
         }
 
         private void BtnEditRow_Click(object sender, RoutedEventArgs e)
