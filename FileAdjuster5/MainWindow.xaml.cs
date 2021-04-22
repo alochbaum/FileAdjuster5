@@ -1013,7 +1013,15 @@ namespace FileAdjuster5
             {
                 if(strTempFile== "on_air_temp")
                 {
-                    ClearStatusAndShow("Hit on_air_temp.txt");
+                    if (File.Exists(strTemp)) File.Delete(strTemp);
+                    rtbStatus.AppendText($"Deleted file {strTemp}\r\n");
+                    strTempDir = strTempDir + @"\OnAir";
+                    if (Directory.Exists(strTempDir))
+                    {
+                        Directory.Delete(strTempDir, true);
+                        rtbStatus.AppendText($"Deleted directory {strTempDir}\r\n");
+                    } else
+                    ClearStatusAndShow($"Could not find to directory {strTempDir} to delete");
                 }
             }
         }
@@ -1176,8 +1184,9 @@ namespace FileAdjuster5
             log.Debug($"Found {iTemp} preset group");
             MyDtable = GetTable(iTemp);
             dgActions.DataContext = MyDtable.DefaultView;
-            blUsingOnAirMode = true;
-            // limited start
+            // special mode for on air work
+            blUsingOnAirMode = true; 
+            // increasing lines to hold everything in one file, and changing window statuses
             lLinesPerFile = 1000000;
             btnCancel.IsEnabled = true;
             btnOpenNotePad.IsEnabled = false;
@@ -1251,6 +1260,9 @@ namespace FileAdjuster5
                 LogAndAppend($"{DateTime.Now.TimeOfDay} Complete in {mySpan.Seconds} seconds, last {tbOutFile.Text}");
             }
         }
+        /// <summary>
+        /// On air file broken in to sub text files
+        /// </summary>
         private void OnAirLogSplitting()
         {
             ParseOnAir myOnAir = new ParseOnAir(strFileOut);
