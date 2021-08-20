@@ -8,7 +8,7 @@ using System;
 namespace FileAdjuster5
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Creating new ParseOnAir Window, so I can easily report progress of scan
     /// </summary>
     ///
     public partial class ParseOnAir : Window
@@ -17,6 +17,10 @@ namespace FileAdjuster5
         private string strDirPath = "",strFileOut, strEnd;
         private List<string> lChannels = new List<string>();
         private Int64 icount = 0,iTotal;
+        /// <summary>
+        /// Creation
+        /// </summary>
+        /// <param name="strFile2Parse">This is single file to please with search parameters</param>
         public ParseOnAir(string strFile2Parse)
         {
             InitializeComponent();
@@ -40,10 +44,10 @@ namespace FileAdjuster5
             // Read the file and display it line by line.  
             var file = File.ReadAllLines(strFileOut);
             var strlines = new List<string>(file);
+            // report progress on background thread
             iTotal = strlines.Count;
             foreach (string strline in strlines)
             {
-                // report progress on background thread
                 ipos = strline.IndexOf('|');
                 if (ipos > 1)
                 {
