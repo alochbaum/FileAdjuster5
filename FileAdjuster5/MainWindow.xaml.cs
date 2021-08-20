@@ -994,17 +994,36 @@ namespace FileAdjuster5
             string strTempDir, strTempFile, strTempExt;
             strTempDir = System.IO.Path.GetDirectoryName(strTemp);
             strTempFile = System.IO.Path.GetFileNameWithoutExtension(strTemp);
-            strTempFile = strTempFile.Substring(0, strTempFile.LastIndexOf('-'));
-            strTempExt = System.IO.Path.GetExtension(strTemp);
-            int iCount = 0;
-            var dir = new DirectoryInfo(strTempDir);
- 
-            foreach (var file in dir.EnumerateFiles(strTempFile+"-*"+strTempExt))
+            // This was crasshing without '-' as part of the name, like using asrun option
+            int iIndex = strTempFile.LastIndexOf('-');
+            if (iIndex > 0)
             {
-                iCount++;
-                file.Delete();
+                strTempFile = strTempFile.Substring(0,iIndex);
+                strTempExt = System.IO.Path.GetExtension(strTemp);
+                int iCount = 0;
+                var dir = new DirectoryInfo(strTempDir);
+
+                foreach (var file in dir.EnumerateFiles(strTempFile + "-*" + strTempExt))
+                {
+                    iCount++;
+                    file.Delete();
+                }
+                ClearStatusAndShow($"Deleted {iCount} files in {strTempDir} matching pattern {strTempFile}-*{strTempExt}", true);
+            } else // We might have found cleanup for asrun
+            {
+                if(strTempFile== "on_air_temp")
+                {
+                    if (File.Exists(strTemp)) File.Delete(strTemp);
+                    rtbStatus.AppendText($"Deleted file {strTemp}\r\n");
+                    strTempDir = strTempDir + @"\OnAir";
+                    if (Directory.Exists(strTempDir))
+                    {
+                        Directory.Delete(strTempDir, true);
+                        rtbStatus.AppendText($"Deleted directory {strTempDir}\r\n");
+                    } else
+                    ClearStatusAndShow($"Could not find to directory {strTempDir} to delete");
+                }
             }
-            ClearStatusAndShow($"Deleted {iCount} files in {strTempDir} matching pattern {strTempFile}-*{strTempExt}", true);
         }
 
         private void BtnEditRow_Click(object sender, RoutedEventArgs e)
@@ -1165,8 +1184,9 @@ namespace FileAdjuster5
             log.Debug($"Found {iTemp} preset group");
             MyDtable = GetTable(iTemp);
             dgActions.DataContext = MyDtable.DefaultView;
-            blUsingOnAirMode = true;
-            // limited start
+            // special mode for on air work
+            blUsingOnAirMode = true; 
+            // increasing lines to hold everything in one file, and changing window statuses
             lLinesPerFile = 1000000;
             btnCancel.IsEnabled = true;
             btnOpenNotePad.IsEnabled = false;
@@ -1240,6 +1260,9 @@ namespace FileAdjuster5
                 LogAndAppend($"{DateTime.Now.TimeOfDay} Complete in {mySpan.Seconds} seconds, last {tbOutFile.Text}");
             }
         }
+        /// <summary>
+        /// On air file broken in to sub text files
+        /// </summary>
         private void OnAirLogSplitting()
         {
             ParseOnAir myOnAir = new ParseOnAir(strFileOut);

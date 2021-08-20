@@ -1,4 +1,4 @@
-﻿<Window x:Class="FileAdjuster5.ParseOnAir"
+﻿<Window x:Name="OnAirWindow" x:Class="FileAdjuster5.ParseOnAir"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,7 @@
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="Parsing On Air Channels" Height="100" Width="400">
+        Title="Parsing On Air Channels" Height="100" Width="400" WindowStartupLocation="CenterOwner">
     <Window.Resources>
     <cm:BackgroundWorker x:Key="MyWorker2"
                              DoWork="OnAirLog_DoWork"

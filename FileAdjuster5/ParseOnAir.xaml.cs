@@ -1,12 +1,18 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Shapes;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Windows.Input;
 
 namespace FileAdjuster5
 {
+    public class COnAirLine
+    {
+        public string DFilesName { get; set; }
+        public string line { get; set; }
+    }
     /// <summary>
     /// Creating new ParseOnAir Window, so I can easily report progress of scan
     /// </summary>
@@ -44,10 +50,11 @@ namespace FileAdjuster5
             // Read the file and display it line by line.  
             var file = File.ReadAllLines(strFileOut);
             var strlines = new List<string>(file);
-            // report progress on background thread
+            List<COnAirLine> myOnAir = new List<COnAirLine>();
             iTotal = strlines.Count;
             foreach (string strline in strlines)
             {
+                // report progress on background thread
                 ipos = strline.IndexOf('|');
                 if (ipos > 1)
                 {
@@ -61,28 +68,55 @@ namespace FileAdjuster5
                         {
                             lChannels.Add(strEnd);
                         }
-                        using (FileStream fs = new FileStream(strDirPath + @"\" + strEnd + ".txt",
-                            FileMode.Append, FileAccess.Write))
+                        myOnAir.Add(new COnAirLine() { DFilesName = strEnd, line = strline });
+                    }
+                }
+                icount++;
+                if((icount%25)==0)MyWorker2.ReportProgress(1);
+            }
+            if (lChannels.Count > 0)
+            {
+                icount = 0;
+                foreach(string channel in lChannels)
+                {
+                    using (FileStream fs = new FileStream(strDirPath + @"\" + channel + ".txt",
+                        FileMode.Append, FileAccess.Write))
+                    {
+                        using (StreamWriter sw = new StreamWriter(fs))
                         {
-                            using (StreamWriter sw = new StreamWriter(fs))
+                            foreach (var oaline in from COnAirLine in myOnAir
+                                                   where COnAirLine.DFilesName.CompareTo(channel) == 0
+                                                   select COnAirLine)
                             {
-                                sw.WriteLine(strline);
+                                sw.WriteLine(oaline.line);
                             }
                         }
                     }
                 }
-
                 icount++;
-                MyWorker2.ReportProgress(1);
+                if ((icount % 25) == 0) MyWorker2.ReportProgress(1);
             }
-
         }
         private void OnAirLog_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            int i = e.ProgressPercentage;
+            lblStatus.Content = $"Log Line: {icount}";
             float fTemp = ((float)icount / (float)iTotal)*100;
-            lblStatus.Content = $"Log Line: {icount} Channel: {strEnd}";
             pbAmount.Value = (int)fTemp;
+
         }
-        private void OnAirLog_Complete(object sender, RunWorkerCompletedEventArgs e) { }
+        private void OnAirLog_Complete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // Opening directory if channels were found
+            if (lChannels.Count > 0)
+            {
+                System.Diagnostics.Process.Start(strDirPath);
+            }
+            else
+            {
+                Directory.Delete(strDirPath, true);
+            }
+            this.Hide();
+        }
     }
 }
