@@ -11,7 +11,7 @@ namespace FileAdjuster5
     public class COnAirLine
     {
         public string DFilesName { get; set; }
-        public string line { get; set; }
+        public string Line { get; set; }
     }
     /// <summary>
     /// Creating new ParseOnAir Window, so I can easily report progress of scan
@@ -26,7 +26,7 @@ namespace FileAdjuster5
         /// <summary>
         /// Creation
         /// </summary>
-        /// <param name="strFile2Parse">This is single file to please with search parameters</param>
+        /// <param name="strFile2Parse">This is single file to parse with search parameters</param>
         public ParseOnAir(string strFile2Parse)
         {
             InitializeComponent();
@@ -68,7 +68,7 @@ namespace FileAdjuster5
                         {
                             lChannels.Add(strEnd);
                         }
-                        myOnAir.Add(new COnAirLine() { DFilesName = strEnd, line = strline });
+                        myOnAir.Add(new COnAirLine() { DFilesName = strEnd, Line = strline });
                     }
                 }
                 icount++;
@@ -88,7 +88,7 @@ namespace FileAdjuster5
                                                    where COnAirLine.DFilesName.CompareTo(channel) == 0
                                                    select COnAirLine)
                             {
-                                sw.WriteLine(oaline.line);
+                                sw.WriteLine(oaline.Line);
                             }
                         }
                     }
