@@ -24,6 +24,7 @@ namespace FileAdjuster5
         NoBlank     = 1 << 5,
         UseNum      = 1 << 6
     }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -66,38 +67,80 @@ namespace FileAdjuster5
             InitializeComponent();
             // Adding the version number to the title
             MainFrame.Title = "File Adjuster version: " + Assembly.GetExecutingAssembly().GetName().Version;
+
             // Adding section to catch event when items are added to listbox of files
             ((INotifyCollectionChanged)lbFileNames.Items).CollectionChanged +=LbFileNames_CollectionChanged;
             log.Info($"{MainFrame.Title} is starting up.");
+            
             // Setting up a worker thread
             MyWorker = (BackgroundWorker)this.FindResource("MyWorker");
+            
             // displaying database and current working directory
             rtbStatus.AppendText($"Datafile directory:");
             rtbStatus.AppendText(FileAdjSQLite.DBFile() + "\r\n");
             rtbStatus.AppendText($"Program location {AppDomain.CurrentDomain.BaseDirectory}\r\n");
+            
             // Get the Preset 0 in two parts first the actions then the checkboxes
             MyDtable = GetTable(0);
             dgActions.DataContext = MyDtable.DefaultView;
-            // Setting checkboxes on for 2 items
+
+            // Setting checkboxes on for 2 items, why is this not set in data with preset?
             SetChecks(_eChecked.CombineFile|_eChecked.Headers);
             // Check size of Log file
             
         }
+
+        /// <summary>
+        /// Read in Actions from the SQLite3 DB in to Action Table
+        /// </summary>
+        /// <param name="iGroup">Group number of Action Rows to retrive</param>
+        /// <returns></returns>
         static DataTable GetTable(Int64 iGroup)
         {
             DataTable table = FileAdjSQLite.ReadActions(iGroup);
             return table;
         }
-        private void CbLines_Loaded(object sender, RoutedEventArgs e)
+
+        #region Source File Section
+
+        /// <summary>
+        /// This is File section dropping action for user to drag from windows
+        /// 1 or more files to fill actions, these dropped files are logged
+        /// </summary>
+        private void StackPanel_Drop(object sender, DragEventArgs e)
         {
-            // ... A List.
-            List<string> data = FileAdjSQLite.GetSizes();
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Note that you can have more than one file.
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            // ... Assign the ItemsSource to the List.
-            cbLines.ItemsSource = data;
+                foreach (string file in files)
+                {
+                    lbFileNames.Items.Add(file);
+                    log.Debug($"Dropped file {file}");
+                }
+            }
+            else
+                Xceed.Wpf.Toolkit.MessageBox.Show(
+                    "If you think these are files and not text, they might be from zip archive windows is showing you. Check to see if you need to unzip.",
+                    "Can't read clipboard files", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
-            // ... Make the first item selected.
-            cbLines.SelectedIndex = 0;
+        /// <summary>
+        /// When files are dropped on clear button instead of whole area
+        /// the old list of files is first cleared then new files are added
+        /// </summary>
+        private void BtbClear_Drop(object sender, DragEventArgs e)
+        {
+            //String[] myList = (String[])e.Data.GetData("FileDrop");
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Clearing Files First
+                ClearFiles();
+                // The other drop event will add the files
+            }
+
         }
 
         private void BtnAddFile_Click(object sender, RoutedEventArgs e)
@@ -142,69 +185,72 @@ namespace FileAdjuster5
             }
         }
 
-        private void BtnStart_Click(object sender, RoutedEventArgs e)
+        private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
-            // Testing for Multiple Files and Comment checked and not Append Files Selected
-            if ((lbFileNames.Items.Count>1)&&(cbxComment.IsChecked == true) && (cbxCombineFiles.IsChecked == false))
-            {
-                Xceed.Wpf.Toolkit.MessageBox.Show("Program can't process, either uncheck Comment or check Combine Files, please.",
-                    "Multiple files with comments and no combine",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            // Issue 54 testing for no files and issuing warning
-            if (lbFileNames.Items.Count < 1) 
-            {
-                Xceed.Wpf.Toolkit.MessageBox.Show("You haven't selected any files to process in upper left section.",
-                    "Can't start processing files",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            // cblines stores the number of lines in format <num of lines>space some other text
-            string strTemp = cbLines.SelectedValue.ToString();
-            string[] words = strTemp.Split(' ');
-            if(!Int64.TryParse(words[0],out lLinesPerFile))
-            {
-                log.Error("Error: Using default lines couldn't parse number of lines.");
-                lLinesPerFile = 10000;
-            }
-            log.Debug($"Start button with line limit of {lLinesPerFile} ");
-            btnCancel.IsEnabled = true;
-            btnOpenNotePad.IsEnabled = false;
-            btnStart.IsEnabled = false;
-            // removing this logic and saving files every time
-            //if (!blUsingFileHist)
-            //{
-                Int64 iTemp = FileAdjSQLite.GetFileHistoryInt();
-                iTemp++;
-                rtbStatus.AppendText($"Saving File History #{iTemp}\r\n");
-                for (int i = 0; i < lbFileNames.Items.Count; i++)
-                {
-                    FileAdjSQLite.WriteFileHistory(iTemp, lbFileNames.Items[i].ToString(),tbExt.Text);
-                }
-            //}
-            if (!blUsingActionsHistory)SaveHistory();
-            myStartTime = DateTime.Now;
-            rtbStatus.AppendText($"Started work at {myStartTime.TimeOfDay}\r\n");
-            int iCountListbox = lbFileNames.Items.Count;
-
-            if (iCountListbox > 0)
-            {
-                // Load up passing private variable for thread
-                strFileOut = tbOutFile.Text;
-                strExt = tbExt.Text;
-                I64_eChecked = CollectChecks();
-                List<string> lFileList = new List<string>();
-                // Clear number of null characters found in file
-                iCountOfNulls = 0;
-                for (int i = 0; i < iCountListbox; i++)
-                {
-                    lFileList.Add(lbFileNames.Items[i].ToString());
-                      // passing extension because function below is also used in thread
-                }
-                MyWorker.RunWorkerAsync(lFileList);
-            }
+            ClearFiles();
         }
+
+        private void ClearFiles()
+        {
+            //blUsingFileHist = false;
+            tbExt.Text = ".txt";
+            lLastHistory = 0;
+            lbFileNames.Items.Clear();
+        }
+
+        private void BtnHistory_Click(object sender, RoutedEventArgs e)
+        {
+            //blUsingFileHist = true;
+            if (lLastHistory < 2) lLastHistory = FileAdjSQLite.GetFileHistoryInt();
+            else lLastHistory--;
+            List<string> lsTemp = FileAdjSQLite.ReadHistory(lLastHistory);
+            lbFileNames.Items.Clear();
+            rtbStatus.Document.Blocks.Clear();
+            string sReport = "Error Reading File History: no files.";  // outputs error if not replaced
+            foreach (string s in lsTemp)
+            {
+                string[] sTemp = s.Split('|');
+                tbExt.Text = sTemp[1];
+                sReport = "Read File History: " + sTemp[0] + " created on " + sTemp[2];
+                lbFileNames.Items.Add(sTemp[0]);
+            }
+            log.Debug(sReport);
+            rtbStatus.AppendText(sReport + "\r\n");
+        }
+
+        private void BtnFileHist_Click(object sender, RoutedEventArgs e)
+        {
+            HIstoryWin myHwin = new HIstoryWin(false);
+            myHwin.ShowDialog();
+            Int64 iGroupNum = myHwin.GetOutGroup();
+            if (iGroupNum >= 0)
+            {
+
+                List<string> lsTemp = FileAdjSQLite.ReadHistory(iGroupNum);
+                lbFileNames.Items.Clear();
+                rtbStatus.Document.Blocks.Clear();
+
+                foreach (string s in lsTemp)
+                {
+                    string[] strTmp = s.Split('|');
+                    tbExt.Text = strTmp[1];
+                    lbFileNames.Items.Add(strTmp[0]);
+                }
+                string sTemp = $"Files list to restore file(s) in group {iGroupNum}";
+                log.Debug(sTemp);
+                rtbStatus.AppendText(sTemp + "\r\n");
+            }
+            myHwin.Close();
+        }
+
+        private void LbFileNames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            SetOutFile();
+        }
+
+        #endregion
+
+        #region Output File and Naming Section
 
         private Int64 CollectChecks()
         {
@@ -235,30 +281,6 @@ namespace FileAdjuster5
             else cbxNoBlankLines.IsChecked = false;
             if ((InCheck & _eChecked.UseNum) != 0) cbxNumber.IsChecked = true;
             else cbxNumber.IsChecked = false;
-        }
-
-        private void StackPanel_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                // Note that you can have more than one file.
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-                foreach (string file in files)
-                {
-                    lbFileNames.Items.Add(file);
-                    log.Debug($"Dropped file {file}");
-                }
-            }
-            else
-                Xceed.Wpf.Toolkit.MessageBox.Show(
-                    "If you think these are files and not text, they might be from zip archive windows is showing you. Check to see if you need to unzip.",
-                    "Can't read clipboard files",MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void LbFileNames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            SetOutFile();
         }
 
         /// <summary>
@@ -368,39 +390,6 @@ namespace FileAdjuster5
             if (blLog) log.Info(inStr);
         }
 
-        private void BtnClear_Click(object sender, RoutedEventArgs e)
-        {
-            ClearFiles();
-        }
-
-        private void ClearFiles()
-        {
-            //blUsingFileHist = false;
-            tbExt.Text = ".txt";
-            lLastHistory = 0;
-            lbFileNames.Items.Clear();
-        }
-
-        private void BtnHistory_Click(object sender, RoutedEventArgs e)
-        {
-            //blUsingFileHist = true;
-            if (lLastHistory < 2) lLastHistory = FileAdjSQLite.GetFileHistoryInt();
-            else lLastHistory--;
-            List<string> lsTemp = FileAdjSQLite.ReadHistory(lLastHistory);
-            lbFileNames.Items.Clear();
-            rtbStatus.Document.Blocks.Clear();
-            string sReport = "Error Reading File History: no files.";  // outputs error if not replaced
-            foreach(string s in lsTemp)
-            {
-                string[] sTemp = s.Split('|');
-                tbExt.Text = sTemp[1];
-                sReport="Read File History: "+sTemp[0]+" created on "+sTemp[2];
-                lbFileNames.Items.Add(sTemp[0]);
-            }
-            log.Debug(sReport);
-            rtbStatus.AppendText(sReport + "\r\n");
-        }
-
         private void BtnActionHistory_Click(object sender, RoutedEventArgs e)
         {
             if (lLastAction < 2) lLastAction = FileAdjSQLite.GetActionint();
@@ -428,150 +417,6 @@ namespace FileAdjuster5
                     myRow["Group"] = lTemp;
             }
             blUsingActionsHistory = false;
-        }
-
-        private void MyWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            List<string> lInFiles = (List<string>)e.Argument;
-            long lNumOfLines = 0;
-            bool blWorkingInsideFileList = false;
-            long lNumFiles = lInFiles.Count;
-            long lCurNumFile = 0, lCurBytesRead = 0, lNullsInFile =0;
-            byte[] inbuffer = new byte[16 * 4096];
-            byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
-            byte[] strbuffer = new byte[2003];
-            int read, icount, iStrLen = 0;
-            int iOut = 0;
-            bool blHitLastLine = false;
-            bool blLineOverRun = false;
-            // First Entry in my Rport is for non-existing file errors
-            myRport.Add(new jobReport { filename = "", error = "", lines = 0 });
-
-
-            foreach (string sInFile in lInFiles)
-            {
-                if (File.Exists(sInFile))
-                {
-                    input = File.Open(sInFile, FileMode.Open);
-                    lCurNumFile++;
-                    myRport.Add(new jobReport { filename = sInFile, error = "", lines = 0 });
-                    lNullsInFile = 0;
-                    // skipping opening new file if blWorkingInsideFileList and Combine
-                    if (!(blWorkingInsideFileList && (!((I64_eChecked & (Int64)_eChecked.CombineFile) == 0))))
-                    {
-                        output = File.Open(strFileOut, FileMode.Create);
-                    }
-
-                    blWorkingInsideFileList = true;
-                    lPosition = 0;  // stores output file position
-                                    // writing header
-                    if ((I64_eChecked & (Int64)_eChecked.Headers) != 0)
-                    {
-
-                        byte[] baBound = Encoding.ASCII.GetBytes(csBound);
-                        output.Write(baBound, 0, 10);
-                        byte[] baFile = Encoding.ASCII.GetBytes(sInFile + "\r\n");
-                        output.Write(baFile, 0, baFile.Length);
-                        output.Write(baBound, 0, 10);
-                    }
-                    FileInfo f = new FileInfo(sInFile);
-                    lFileSize = f.Length;
-                    iOut = read = icount = iStrLen = 0;
-                    blHitLastLine = false;
-                    blLineOverRun = false;
-
-                    // looping the full file size
-                    while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
-                    {
-                        lCurBytesRead += 65376;
-                        iOut = 0;
-                        // looping the input buffer
-                        for (icount = 0; icount < read; icount++)
-                        {
-                            // Start checking for null bytes
-                            if (inbuffer[icount] != 0)
-                            {
-                                if (iStrLen > 1999)
-                                {
-                                    strbuffer[iStrLen++] = (byte)'\r';
-                                    strbuffer[iStrLen++] = (byte)'\n';
-                                    blLineOverRun = true;
-                                }
-                                else
-                                    strbuffer[iStrLen++] = inbuffer[icount];
-                                if (inbuffer[icount] == '\n' || blLineOverRun)
-                                {
-                                    blLineOverRun = false;
-                                    if (DoICopyStr(System.Text.Encoding.Default.GetString(strbuffer, 0, iStrLen)))
-                                    {
-                                        // Insert string testing section here
-                                        Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
-                                        iOut += iStrLen;
-                                        myRport[(int)lCurNumFile].lines++;
-                                        lNumOfLines++;
-                                        if (lNumOfLines >= lLinesPerFile)
-                                        {
-                                            blHitLastLine = true;
-                                        }
-                                    }
-                                    // reset string weither I copy it or not
-                                    iStrLen = 0;
-                                }
-                            }
-                            else // Found a null byte in file
-                            {
-                                iCountOfNulls++;
-                                lNullsInFile++;
-                            } // End check for null bytes
-                              // if you hit last line change the files
-                            if (blHitLastLine)
-                            {
-                                blHitLastLine = false;
-                                icount++;
-                                outbuffer[iOut] = inbuffer[icount];
-                                output.Write(outbuffer, 0, iOut);
-                                output.Close();
-                                strFileOut = NextFreeFilename(strFileOut);
-                                output = File.Open(strFileOut, FileMode.Create);
-                                lNumOfLines = 0;
-                                iOut = 0;
-                            }
-
-                        }  // end looping input buffer
-                           // writing to output buffer
-                        if (iOut > 0)
-                        {
-                            output.Write(outbuffer, 0, iOut);
-                            lPosition += read;
-                            // checking to see if user click cancel, if they did get out of loop
-                            if (MyWorker.CancellationPending) break;
-                            MyWorker.ReportProgress(
-                                 (int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
-                                 (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
-                        } // end looping output files
-                    } // finished reading last block
-                      // finish writing out block
-                    if (iOut > 0)
-                    {
-                        output.Write(outbuffer, 0, iOut);
-                    }
-                    if ((I64_eChecked & (Int64)_eChecked.CombineFile) == 0)
-                        output.Close();
-                    input.Close();
-                    // on closing input file write error
-                    myRport[(int)lCurNumFile].error = $"Nulls: {lNullsInFile}";
-                    if (MyWorker.CancellationPending) e.Cancel = true;
-                } 
-                else  //file didn't exist
-                {
-                    myRport[0].filename = "Error missing file(s):";
-                    myRport[0].error += " " + sInFile + " ";
-                    myRport[0].lines++;
-                }// end looping output files// end of input files
-                MyWorker.ReportProgress((int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
-    (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
-            }
-            if (output != null) output.Close();  // closing combined files or if missed check above
         }
 
         private bool DoICopyStr(string strIn)
@@ -742,22 +587,6 @@ namespace FileAdjuster5
             return blReturn;
         }
 
-        private void BtnOpenNotePad_Click(object sender, RoutedEventArgs e)
-        {
-            Process myProcess = new Process();
-            try
-            {
-                Process.Start("notepad++.exe",$"\"{strFileOut}\"");
-            }
-            catch
-            {
-                Xceed.Wpf.Toolkit.MessageBox.Show("Error",
-                    "Tried to open " + strFileOut + " in Notepad++.exe but failed",
-                    MessageBoxButton.OK,MessageBoxImage.Error);
-                log.Error($"Failed Notepad++ open of {strFileOut}");
-            }
-        }
-
         private void BtnAddRow_Click(object sender, RoutedEventArgs e)
         {
             ActionRowData arowdata = new ActionRowData();
@@ -902,42 +731,6 @@ namespace FileAdjuster5
 
         }
 
-        private void BtnOpenDir_Click(object sender, RoutedEventArgs e)
-        {
-            if(tbOutFile.Text.Length >1)
-            {
-                string strDir = System.IO.Path.GetDirectoryName(tbOutFile.Text);
-                if(strDir.Length > 1)
-                {
-                    if (Directory.Exists(strDir))
-                    {
-                        System.Diagnostics.Process.Start(strDir);
-                    } else
-                    {
-                        Xceed.Wpf.Toolkit.MessageBox.Show("Directory no longer exists",
-                            "Can't open directory",
-                            MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                } else
-                {
-                    Xceed.Wpf.Toolkit.MessageBox.Show("Program didn't parse directory from output file.",
-                        "Can't open directory",
-                        MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                }
-            } else
-            {
-                Xceed.Wpf.Toolkit.MessageBox.Show(
-                    "This button is linked to output file, and it is empty.", "Can't open directory",
-                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-        }
-
-        private void BtnOut2In_Click(object sender, RoutedEventArgs e)
-        {
-            ClearFiles();
-            AddFile(strFileOut);
-        }
-
         private void btnModifyPresets_Click(object sender, RoutedEventArgs e)
         {
             ModifyPreset myMod = new ModifyPreset();
@@ -947,7 +740,82 @@ namespace FileAdjuster5
                 log.Info(strDone);
                 rtbStatus.AppendText($"{strDone}\r\n");
             }
-            
+
+        }
+
+        private void BtnStart_Click(object sender, RoutedEventArgs e)
+        {
+            // Testing for Multiple Files and Comment checked and not Append Files Selected
+            if ((lbFileNames.Items.Count > 1) && (cbxComment.IsChecked == true) && (cbxCombineFiles.IsChecked == false))
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Program can't process, either uncheck Comment or check Combine Files, please.",
+                    "Multiple files with comments and no combine",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            // Issue 54 testing for no files and issuing warning
+            if (lbFileNames.Items.Count < 1)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("You haven't selected any files to process in upper left section.",
+                    "Can't start processing files",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            // cblines stores the number of lines in format <num of lines>space some other text
+            string strTemp = cbLines.SelectedValue.ToString();
+            string[] words = strTemp.Split(' ');
+            if (!Int64.TryParse(words[0], out lLinesPerFile))
+            {
+                log.Error("Error: Using default lines couldn't parse number of lines.");
+                lLinesPerFile = 10000;
+            }
+            log.Debug($"Start button with line limit of {lLinesPerFile} ");
+            btnCancel.IsEnabled = true;
+            btnOpenNotePad.IsEnabled = false;
+            btnStart.IsEnabled = false;
+            // removing this logic and saving files every time
+            //if (!blUsingFileHist)
+            //{
+            Int64 iTemp = FileAdjSQLite.GetFileHistoryInt();
+            iTemp++;
+            rtbStatus.AppendText($"Saving File History #{iTemp}\r\n");
+            for (int i = 0; i < lbFileNames.Items.Count; i++)
+            {
+                FileAdjSQLite.WriteFileHistory(iTemp, lbFileNames.Items[i].ToString(), tbExt.Text);
+            }
+            //}
+            if (!blUsingActionsHistory) SaveHistory();
+            myStartTime = DateTime.Now;
+            rtbStatus.AppendText($"Started work at {myStartTime.TimeOfDay}\r\n");
+            int iCountListbox = lbFileNames.Items.Count;
+
+            if (iCountListbox > 0)
+            {
+                // Load up passing private variable for thread
+                strFileOut = tbOutFile.Text;
+                strExt = tbExt.Text;
+                I64_eChecked = CollectChecks();
+                List<string> lFileList = new List<string>();
+                // Clear number of null characters found in file
+                iCountOfNulls = 0;
+                for (int i = 0; i < iCountListbox; i++)
+                {
+                    lFileList.Add(lbFileNames.Items[i].ToString());
+                    // passing extension because function below is also used in thread
+                }
+                MyWorker.RunWorkerAsync(lFileList);
+            }
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            MyWorker.CancelAsync();
+        }
+
+        private void BtnOut2In_Click(object sender, RoutedEventArgs e)
+        {
+            ClearFiles();
+            AddFile(strFileOut);
         }
 
         private void CbxComment_Checked(object sender, RoutedEventArgs e)
@@ -1026,6 +894,92 @@ namespace FileAdjuster5
             }
         }
 
+        private void BtnLog_Click(object sender, RoutedEventArgs e)
+        {
+            string strfilename = $"{ AppDomain.CurrentDomain.BaseDirectory }\\FileAdjuster5.log";
+            Process myProcess = new Process();
+            try
+            {
+
+                Process.Start("notepad++.exe", strfilename);
+            }
+            catch
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Error",
+                    "Tried to open " + strfilename + " in Notepad++.exe but failed",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #endregion
+
+        #region External, Lines and Status Bars Section
+
+        private void BtnOpenNotePad_Click(object sender, RoutedEventArgs e)
+        {
+            Process myProcess = new Process();
+            try
+            {
+                Process.Start("notepad++.exe", $"\"{strFileOut}\"");
+            }
+            catch
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Error",
+                    "Tried to open " + strFileOut + " in Notepad++.exe but failed",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                log.Error($"Failed Notepad++ open of {strFileOut}");
+            }
+        }
+
+        private void BtnOpenDir_Click(object sender, RoutedEventArgs e)
+        {
+            if (tbOutFile.Text.Length > 1)
+            {
+                string strDir = System.IO.Path.GetDirectoryName(tbOutFile.Text);
+                if (strDir.Length > 1)
+                {
+                    if (Directory.Exists(strDir))
+                    {
+                        System.Diagnostics.Process.Start(strDir);
+                    }
+                    else
+                    {
+                        Xceed.Wpf.Toolkit.MessageBox.Show("Directory no longer exists",
+                            "Can't open directory",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                else
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show("Program didn't parse directory from output file.",
+                        "Can't open directory",
+                        MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+            }
+            else
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show(
+                    "This button is linked to output file, and it is empty.", "Can't open directory",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        private void CbLines_Loaded(object sender, RoutedEventArgs e)
+        {
+            // ... A List.
+            List<string> data = FileAdjSQLite.GetSizes();
+
+            // ... Assign the ItemsSource to the List.
+            cbLines.ItemsSource = data;
+
+            // ... Make the first item selected.
+            cbLines.SelectedIndex = 0;
+        }
+
+        #endregion
+
+        #region Actions and Controls for Actions Section
+
         private void BtnEditRow_Click(object sender, RoutedEventArgs e)
         {
             int iTemp = dgActions.SelectedIndex;
@@ -1054,48 +1008,6 @@ namespace FileAdjuster5
             rtbStatus.ScrollToEnd();
         }
 
-        private void BtnLog_Click(object sender, RoutedEventArgs e)
-        {
-            string strfilename = $"{ AppDomain.CurrentDomain.BaseDirectory }\\FileAdjuster5.log";
-            Process myProcess = new Process();
-            try
-            {
-
-                Process.Start("notepad++.exe", strfilename);
-            }
-            catch
-            {
-                Xceed.Wpf.Toolkit.MessageBox.Show("Error",
-                    "Tried to open " + strfilename + " in Notepad++.exe but failed",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void BtnFileHist_Click(object sender, RoutedEventArgs e)
-        {
-            HIstoryWin myHwin = new HIstoryWin(false);
-            myHwin.ShowDialog();
-            Int64 iGroupNum = myHwin.GetOutGroup();
-            if (iGroupNum >= 0)
-            {
-               
-                List<string> lsTemp = FileAdjSQLite.ReadHistory(iGroupNum);
-                lbFileNames.Items.Clear();
-                rtbStatus.Document.Blocks.Clear();
-
-                foreach (string s in lsTemp)
-                {
-                    string[] strTmp = s.Split('|');
-                    tbExt.Text = strTmp[1];
-                    lbFileNames.Items.Add(strTmp[0]);
-                }
-                string sTemp = $"Files list to restore file(s) in group {iGroupNum}";
-                log.Debug(sTemp);
-                rtbStatus.AppendText(sTemp + "\r\n");
-            }
-            myHwin.Close();
-        }
-
         private void BtnHistAction_Click(object sender, RoutedEventArgs e)
         {
             HIstoryWin m_Hwin = new HIstoryWin(true);
@@ -1113,19 +1025,6 @@ namespace FileAdjuster5
                 }
             }
             m_Hwin.Close();
-        }
-
-        private void BtbClear_Drop(object sender, DragEventArgs e)
-        {
-            //String[] myList = (String[])e.Data.GetData("FileDrop");
-
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                // Clearing Files First
-                ClearFiles();
-                // The other drop event will add the files
-            }
-
         }
 
         private void BtnQuickAddIn_Click(object sender, RoutedEventArgs e)
@@ -1149,6 +1048,7 @@ namespace FileAdjuster5
             }
 
         }
+
         private void SldRows_Load()
         {
             lbNumRows.Content = iNumLimit.ToString("00");
@@ -1227,8 +1127,156 @@ namespace FileAdjuster5
                     MessageBoxImage.Exclamation);
             }
         }
-        
-        void MyWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+
+        #endregion
+
+        #region Worker Thread
+
+        private void MyWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<string> lInFiles = (List<string>)e.Argument;
+            long lNumOfLines = 0;
+            bool blWorkingInsideFileList = false;
+            long lNumFiles = lInFiles.Count;
+            long lCurNumFile = 0, lCurBytesRead = 0, lNullsInFile = 0;
+            byte[] inbuffer = new byte[16 * 4096];
+            byte[] outbuffer = new byte[17 * 4096]; // Allowing for extended string buffer
+            byte[] strbuffer = new byte[2003];
+            int read, icount, iStrLen = 0;
+            int iOut = 0;
+            bool blHitLastLine = false;
+            bool blLineOverRun = false;
+            // First Entry in my Rport is for non-existing file errors
+            myRport.Add(new jobReport { filename = "", error = "", lines = 0 });
+
+
+            foreach (string sInFile in lInFiles)
+            {
+                if (File.Exists(sInFile))
+                {
+                    input = File.Open(sInFile, FileMode.Open);
+                    lCurNumFile++;
+                    myRport.Add(new jobReport { filename = sInFile, error = "", lines = 0 });
+                    lNullsInFile = 0;
+                    // skipping opening new file if blWorkingInsideFileList and Combine
+                    if (!(blWorkingInsideFileList && (!((I64_eChecked & (Int64)_eChecked.CombineFile) == 0))))
+                    {
+                        output = File.Open(strFileOut, FileMode.Create);
+                    }
+
+                    blWorkingInsideFileList = true;
+                    lPosition = 0;  // stores output file position
+                                    // writing header
+                    if ((I64_eChecked & (Int64)_eChecked.Headers) != 0)
+                    {
+
+                        byte[] baBound = Encoding.ASCII.GetBytes(csBound);
+                        output.Write(baBound, 0, 10);
+                        byte[] baFile = Encoding.ASCII.GetBytes(sInFile + "\r\n");
+                        output.Write(baFile, 0, baFile.Length);
+                        output.Write(baBound, 0, 10);
+                    }
+                    FileInfo f = new FileInfo(sInFile);
+                    lFileSize = f.Length;
+                    iOut = read = icount = iStrLen = 0;
+                    blHitLastLine = false;
+                    blLineOverRun = false;
+
+                    // looping the full file size
+                    while ((read = input.Read(inbuffer, 0, inbuffer.Length)) > 0)
+                    {
+                        lCurBytesRead += 65376;
+                        iOut = 0;
+                        // looping the input buffer
+                        for (icount = 0; icount < read; icount++)
+                        {
+                            // Start checking for null bytes
+                            if (inbuffer[icount] != 0)
+                            {
+                                if (iStrLen > 1999)
+                                {
+                                    strbuffer[iStrLen++] = (byte)'\r';
+                                    strbuffer[iStrLen++] = (byte)'\n';
+                                    blLineOverRun = true;
+                                }
+                                else
+                                    strbuffer[iStrLen++] = inbuffer[icount];
+                                if (inbuffer[icount] == '\n' || blLineOverRun)
+                                {
+                                    blLineOverRun = false;
+                                    if (DoICopyStr(System.Text.Encoding.Default.GetString(strbuffer, 0, iStrLen)))
+                                    {
+                                        // Insert string testing section here
+                                        Array.Copy(strbuffer, 0, outbuffer, iOut, iStrLen);
+                                        iOut += iStrLen;
+                                        myRport[(int)lCurNumFile].lines++;
+                                        lNumOfLines++;
+                                        if (lNumOfLines >= lLinesPerFile)
+                                        {
+                                            blHitLastLine = true;
+                                        }
+                                    }
+                                    // reset string weither I copy it or not
+                                    iStrLen = 0;
+                                }
+                            }
+                            else // Found a null byte in file
+                            {
+                                iCountOfNulls++;
+                                lNullsInFile++;
+                            } // End check for null bytes
+                              // if you hit last line change the files
+                            if (blHitLastLine)
+                            {
+                                blHitLastLine = false;
+                                icount++;
+                                outbuffer[iOut] = inbuffer[icount];
+                                output.Write(outbuffer, 0, iOut);
+                                output.Close();
+                                strFileOut = NextFreeFilename(strFileOut);
+                                output = File.Open(strFileOut, FileMode.Create);
+                                lNumOfLines = 0;
+                                iOut = 0;
+                            }
+
+                        }  // end looping input buffer
+                           // writing to output buffer
+                        if (iOut > 0)
+                        {
+                            output.Write(outbuffer, 0, iOut);
+                            lPosition += read;
+                            // checking to see if user click cancel, if they did get out of loop
+                            if (MyWorker.CancellationPending) break;
+                            MyWorker.ReportProgress(
+                                 (int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
+                                 (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
+                        } // end looping output files
+                    } // finished reading last block
+                      // finish writing out block
+                    if (iOut > 0)
+                    {
+                        output.Write(outbuffer, 0, iOut);
+                    }
+                    if ((I64_eChecked & (Int64)_eChecked.CombineFile) == 0)
+                        output.Close();
+                    input.Close();
+                    // on closing input file write error
+                    myRport[(int)lCurNumFile].error = $"Nulls: {lNullsInFile}";
+                    if (MyWorker.CancellationPending) e.Cancel = true;
+                }
+                else  //file didn't exist
+                {
+                    myRport[0].filename = "Error missing file(s):";
+                    myRport[0].error += " " + sInFile + " ";
+                    myRport[0].lines++;
+                }// end looping output files// end of input files
+                MyWorker.ReportProgress((int)(((double)lCurBytesRead / (double)lFileSize) * 100.0) +
+    (int)(((double)lCurNumFile / (double)lNumFiles) * 100000.0));
+            }
+            if (output != null) output.Close();  // closing combined files or if missed check above
+        }
+
+        private void MyWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int i = e.ProgressPercentage;
             //log.Debug($"Progress of {i}");
@@ -1238,7 +1286,8 @@ namespace FileAdjuster5
                 pbFiles.Value = (i - ii) / 1000;
             else pbFiles.Value = 0;
         }
-        void MyWorker_Complete(object sender, RunWorkerCompletedEventArgs e)
+
+        private void MyWorker_Complete(object sender, RunWorkerCompletedEventArgs e)
         {
             pbProgress.Value = 0;
             pbFiles.Value = 0;
@@ -1260,6 +1309,11 @@ namespace FileAdjuster5
                 LogAndAppend($"{DateTime.Now.TimeOfDay} Complete in {mySpan.Seconds} seconds, last {tbOutFile.Text}");
             }
         }
+
+        #endregion
+
+        #region Logging and Rich Text Box Section
+
         /// <summary>
         /// On air file broken in to sub text files
         /// </summary>
@@ -1276,9 +1330,7 @@ namespace FileAdjuster5
             log.Info(strIn);
             rtbStatus.AppendText(strIn+"\r\n");
         }
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            MyWorker.CancelAsync();
-        }
+
+        #endregion
     }
 }

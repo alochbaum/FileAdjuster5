@@ -352,6 +352,32 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return tableReturn;
         }
+        static public OnAirData ReadOnAirData()
+        {
+            OnAirData dataReturn = new OnAirData();
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sql = "select * from OnAir limit 1 ";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    dataReturn.PreSetName = (string)reader[1];
+                    dataReturn.OutFileName = (string)reader[2];
+                    dataReturn.IntStartChar = (int)reader[3];
+                    dataReturn.IntGroupChar = (int)reader[4];
+                    dataReturn.IntGroupPos = (int)reader[5];
+                    dataReturn.IntOutChar = (int)reader[6];
+                }
+                reader.Close();
+                m_dbConnection.Close();
+            }
+            return dataReturn;
+        }
         static public String ReadVersion(string strDBFile)
         {
             string strReturn = "";

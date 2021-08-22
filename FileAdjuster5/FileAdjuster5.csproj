@@ -17,7 +17,7 @@
     </NuGetPackageImportStamp>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>C:\Users\andy\Desktop\FileAdjuster5v5.12.9\</PublishUrl>
+    <PublishUrl>C:\Users\andy\OneDrive\Desktop\FileAdjuster5v5.13.0\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -28,8 +28,8 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <PublisherName>Andrew Lochbaum</PublisherName>
-    <ApplicationRevision>202</ApplicationRevision>
-    <ApplicationVersion>5.12.9.%2a</ApplicationVersion>
+    <ApplicationRevision>203</ApplicationRevision>
+    <ApplicationVersion>5.13.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -149,6 +149,7 @@
     <Compile Include="ModifyPreset.xaml.cs">
       <DependentUpon>ModifyPreset.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OnAirData.cs" />
     <Compile Include="ReadLastFromLog.cs" />
     <Compile Include="SavePreset.xaml.cs">
       <DependentUpon>SavePreset.xaml</DependentUpon>
