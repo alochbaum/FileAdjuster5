@@ -181,13 +181,13 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             m_dbConnection.Close();
             return iReturn;
         }
-        static public Int64 GetOnAirAction()
+        static public Int64 GetActionIDByName(string strNamePreset)
         {
             Int64 iReturn = 0;
             SQLiteConnection m_dbConnection = new SQLiteConnection();
             m_dbConnection.ConnectionString = "Data Source=" + DBFile() + ";Version=3;";
             m_dbConnection.Open();
-            string sql = "Select GroupID from ActionPreset where PresetName ='On Air**' limit 1;";
+            string sql = $"Select GroupID from ActionPreset where PresetName ='{strNamePreset}' limit 1;";
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
             if (reader.HasRows)
@@ -352,7 +352,12 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return tableReturn;
         }
-        static public OnAirData ReadOnAirData()
+        /// <summary>
+        /// Reads one line in to OnAirData object
+        /// </summary>
+        /// <param name="useID">If used selects OnAir_ID row</param>
+        /// <returns></returns>
+        static public OnAirData ReadOnAirData(Int64 useID=0)
         {
             OnAirData dataReturn = new OnAirData();
             SQLiteConnection m_dbConnection = new SQLiteConnection();
@@ -361,7 +366,8 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             {
                 m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
                 m_dbConnection.Open();
-                string sql = "select * from OnAir limit 1 ";
+                string sql = "select * from OnAir order by OnAir_ID desc limit 1 ";
+                if (useID > 0) sql = $"select * from OnAir where OnAir_ID={useID}";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -372,11 +378,17 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                     dataReturn.IntGroupChar = (int)reader[4];
                     dataReturn.IntGroupPos = (int)reader[5];
                     dataReturn.IntOutChar = (int)reader[6];
+                    dataReturn.LongLinesPerFile = (long)reader[7];
                 }
                 reader.Close();
                 m_dbConnection.Close();
             }
             return dataReturn;
+        }
+        static public Int64 CountOfOnAir()
+        {
+            Int64 lgReturn=1;
+            return lgReturn;
         }
         static public String ReadVersion(string strDBFile)
         {

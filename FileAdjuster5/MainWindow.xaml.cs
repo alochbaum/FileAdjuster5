@@ -90,17 +90,6 @@ namespace FileAdjuster5
             
         }
 
-        /// <summary>
-        /// Read in Actions from the SQLite3 DB in to Action Table
-        /// </summary>
-        /// <param name="iGroup">Group number of Action Rows to retrive</param>
-        /// <returns></returns>
-        static DataTable GetTable(Int64 iGroup)
-        {
-            DataTable table = FileAdjSQLite.ReadActions(iGroup);
-            return table;
-        }
-
         #region Source File Section
 
         /// <summary>
@@ -980,6 +969,29 @@ namespace FileAdjuster5
 
         #region Actions and Controls for Actions Section
 
+        private void BtnDelRow_Click(object sender, RoutedEventArgs e)
+        {
+            if (MyDtable.Rows.Count < 2)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Sorry you can't delete last row.",
+                    "Operational Training",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                int iTemp = dgActions.SelectedIndex;
+                if (iTemp > 0 && iTemp < MyDtable.Rows.Count)
+                {
+                    MyDtable.Rows[iTemp].Delete();
+                }
+                else Xceed.Wpf.Toolkit.MessageBox.Show(
+                    "You have to select a valid row to delete and you can't delete the top row. ",
+                    "Operational Hint-Left click on row", MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
+            }
+        }
+
         private void BtnEditRow_Click(object sender, RoutedEventArgs e)
         {
             int iTemp = dgActions.SelectedIndex;
@@ -1049,6 +1061,17 @@ namespace FileAdjuster5
 
         }
 
+        /// <summary>
+        /// Read in Actions from the SQLite3 DB in to Action Table
+        /// </summary>
+        /// <param name="iGroup">Group number of Action Rows to retrive</param>
+        /// <returns></returns>
+        static DataTable GetTable(Int64 iGroup)
+        {
+            DataTable table = FileAdjSQLite.ReadActions(iGroup);
+            return table;
+        }
+
         private void SldRows_Load()
         {
             lbNumRows.Content = iNumLimit.ToString("00");
@@ -1074,20 +1097,37 @@ namespace FileAdjuster5
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            OnAirData my_OnAirData = new OnAirData();
+            my_OnAirData = FileAdjSQLite.ReadOnAirData();
+            if(string.IsNullOrEmpty(my_OnAirData.OutFileName))
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("Couldn't read out file stopping as run file.",
+                    "Database Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                LogAndAppend("Database Error, couldn't read out database out file");
+                return;
+            }
             // Set out file name, delete file if exists
             string strTemp = lbFileNames.Items[0].ToString();
             string strTempDir = System.IO.Path.GetDirectoryName(strTemp);
-            strTemp = strTempDir + @"\on_air_temp.txt";
+            // increasing lines to hold everything in one file, and changing window statuses
+            lLinesPerFile = my_OnAirData.LongLinesPerFile;
+            strTemp = strTempDir + my_OnAirData.OutFileName;
             if (File.Exists(strTemp)) File.Delete(strTemp);
             strFileOut = strTemp;
-            Int64 iTemp = FileAdjSQLite.GetOnAirAction();
-            log.Debug($"Found {iTemp} preset group");
+            Int64 iTemp = FileAdjSQLite.GetActionIDByName(my_OnAirData.PreSetName);
+            if(iTemp<1)
+            {
+                strTemp = $"Couldn't Find preset named {my_OnAirData.PreSetName}";
+                Xceed.Wpf.Toolkit.MessageBox.Show(strTemp,"Database Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                LogAndAppend(strTemp);
+                return;
+            }
             MyDtable = GetTable(iTemp);
             dgActions.DataContext = MyDtable.DefaultView;
             // special mode for on air work
             blUsingOnAirMode = true; 
-            // increasing lines to hold everything in one file, and changing window statuses
-            lLinesPerFile = 1000000;
             btnCancel.IsEnabled = true;
             btnOpenNotePad.IsEnabled = false;
             btnStart.IsEnabled = false;
@@ -1099,33 +1139,21 @@ namespace FileAdjuster5
             MyWorker.RunWorkerAsync(lFileList);
         }
 
+        /// <summary>
+        /// On air file broken in to sub text files, using new window with status bar
+        /// </summary>
+        private void OnAirLogSplitting()
+        {
+            ParseOnAir myOnAir = new ParseOnAir(strFileOut);
+            myOnAir.Show();
+            string strDirPath = myOnAir.getDir();
+            blUsingOnAirMode = false;
+        }
+
         private void SldRows_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             iNumLimit = (int)sldRows.Value;
             SldRows_Load();
-        }
-
-        private void BtnDelRow_Click(object sender, RoutedEventArgs e)
-        {
-            if (MyDtable.Rows.Count < 2)
-            {
-                Xceed.Wpf.Toolkit.MessageBox.Show("Sorry you can't delete last row.",
-                    "Operational Training",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Exclamation);
-            }
-            else
-            {
-                int iTemp = dgActions.SelectedIndex;
-                if (iTemp > 0 && iTemp < MyDtable.Rows.Count)
-                {
-                    MyDtable.Rows[iTemp].Delete();
-                }
-                else Xceed.Wpf.Toolkit.MessageBox.Show(
-                    "You have to select a valid row to delete and you can't delete the top row. ", 
-                    "Operational Hint-Left click on row", MessageBoxButton.OK,
-                    MessageBoxImage.Exclamation);
-            }
         }
 
         #endregion
@@ -1313,17 +1341,6 @@ namespace FileAdjuster5
         #endregion
 
         #region Logging and Rich Text Box Section
-
-        /// <summary>
-        /// On air file broken in to sub text files
-        /// </summary>
-        private void OnAirLogSplitting()
-        {
-            ParseOnAir myOnAir = new ParseOnAir(strFileOut);
-            myOnAir.Show();
-            string strDirPath = myOnAir.getDir();
-            blUsingOnAirMode = false;
-        }
 
         private void LogAndAppend(string strIn)
         {

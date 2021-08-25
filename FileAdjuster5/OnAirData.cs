@@ -14,6 +14,7 @@ namespace FileAdjuster5
         public int IntGroupChar { get; set; }
         public int IntGroupPos { get; set; }
         public int IntOutChar { get; set; }
+        public Int64 LongLinesPerFile { get; set; }
 
     }
 }
