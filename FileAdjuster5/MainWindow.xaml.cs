@@ -1126,7 +1126,8 @@ namespace FileAdjuster5
             }
             MyDtable = GetTable(iTemp);
             dgActions.DataContext = MyDtable.DefaultView;
-            // special mode for on air work
+            // special mode for on air work, checked in MyWorker_Complete, which throws to
+            // OnAirLogSplitting function then creating ParseOnAir window for status bar
             blUsingOnAirMode = true; 
             btnCancel.IsEnabled = true;
             btnOpenNotePad.IsEnabled = false;
