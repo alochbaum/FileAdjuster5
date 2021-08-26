@@ -1112,7 +1112,7 @@ namespace FileAdjuster5
             string strTempDir = System.IO.Path.GetDirectoryName(strTemp);
             // increasing lines to hold everything in one file, and changing window statuses
             lLinesPerFile = my_OnAirData.LongLinesPerFile;
-            strTemp = strTempDir + my_OnAirData.OutFileName;
+            strTemp = strTempDir + "\\" + my_OnAirData.OutFileName;
             if (File.Exists(strTemp)) File.Delete(strTemp);
             strFileOut = strTemp;
             Int64 iTemp = FileAdjSQLite.GetActionIDByName(my_OnAirData.PreSetName);

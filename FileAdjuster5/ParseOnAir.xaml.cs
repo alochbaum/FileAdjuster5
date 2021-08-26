@@ -22,7 +22,9 @@ namespace FileAdjuster5
         private BackgroundWorker MyWorker2;
         private string strDirPath = "",strFileOut, strEnd;
         private List<string> lChannels = new List<string>();
-        private Int64 icount = 0,iTotal;
+        private OnAirData my_OnAirData = new OnAirData();
+        private char chStart, chInGroup, chOutGroup;
+        private Int64 icount = 0,iTotal,iOffsetInGroup;
         /// <summary>
         /// Creation
         /// </summary>
@@ -39,6 +41,11 @@ namespace FileAdjuster5
         public string getDir() { return strDirPath; } 
         private void beforeDoWork(string strFile)
         {
+            my_OnAirData = FileAdjSQLite.ReadOnAirData();
+            chStart = (char)my_OnAirData.IntStartChar;
+            chInGroup = (char)my_OnAirData.IntGroupChar;
+            chOutGroup = (char)my_OnAirData.IntOutChar;
+            iOffsetInGroup = my_OnAirData.IntGroupPos;
             strDirPath = System.IO.Path.GetDirectoryName(strFile) + @"\OnAir";
             if (Directory.Exists(strDirPath))
             { Directory.Delete(strDirPath, true); }
@@ -55,12 +62,12 @@ namespace FileAdjuster5
             foreach (string strline in strlines)
             {
                 // report progress on background thread
-                ipos = strline.IndexOf('|');
+                ipos = strline.IndexOf(chStart);
                 if (ipos > 1)
                 {
-                    ipos2 = strline.IndexOf(':', ipos);
+                    ipos2 = strline.IndexOf(chInGroup, ipos+(int)iOffsetInGroup);
                     strEnd = strline.Substring(ipos + 1, ipos2 - ipos - 1);
-                    ipos2 = strEnd.LastIndexOf('-');
+                    ipos2 = strEnd.LastIndexOf(chOutGroup);
                     if (ipos2 > 0)
                     {
                         strEnd = strEnd.Substring(0, ipos2);
@@ -94,7 +101,8 @@ namespace FileAdjuster5
                     }
                 }
                 icount++;
-                if ((icount % 25) == 0) MyWorker2.ReportProgress(1);
+                // I reduced this from 25 out files can be pretty small
+                if ((icount % 5) == 0) MyWorker2.ReportProgress(1);
             }
         }
         private void OnAirLog_ProgressChanged(object sender, ProgressChangedEventArgs e)

@@ -374,11 +374,11 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 {
                     dataReturn.PreSetName = (string)reader[1];
                     dataReturn.OutFileName = (string)reader[2];
-                    dataReturn.IntStartChar = (int)reader[3];
-                    dataReturn.IntGroupChar = (int)reader[4];
-                    dataReturn.IntGroupPos = (int)reader[5];
-                    dataReturn.IntOutChar = (int)reader[6];
-                    dataReturn.LongLinesPerFile = (long)reader[7];
+                    dataReturn.IntStartChar = (int)reader.GetInt64(3);
+                    dataReturn.IntGroupChar = (int)reader.GetInt64(4);
+                    dataReturn.IntGroupPos = (int)reader.GetInt64(5);
+                    dataReturn.IntOutChar = (int)reader.GetInt64(6);
+                    dataReturn.LongLinesPerFile = (long)reader.GetInt64(7);
                 }
                 reader.Close();
                 m_dbConnection.Close();
