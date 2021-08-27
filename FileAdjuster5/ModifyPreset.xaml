@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileAdjuster5"
         mc:Ignorable="d"
-        Title="Modify Presets or select cancel in lower left" Height="120" Width="500">
+        Title="Modify Presets or select cancel in lower left" Height="160" Width="500">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5,5,5,0"/>
@@ -15,15 +15,16 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="6"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label x:Name="lbAnswer" Content=""/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnExport" Click="BtnExport_Click">Export All Presets</Button>
             <Button x:Name="btnImport" Click="BtnImport_Click">Import Selected Preset(s)</Button>
             <Button x:Name="btnDelete" Click="BtnDelete_Click">Delete Selected Preset(s)</Button>
         </StackPanel>
+        <Button Grid.Row="1" x:Name="btnOnAirSettings" Click="BtnOnAirSettings" Margin="100,5,100,0">*On Air* Button Settings</Button>
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button  x:Name="btnCancel" IsCancel="True" >
                 <AccessText>_Cancel</AccessText>

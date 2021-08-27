@@ -372,6 +372,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
+                    dataReturn.ID_OnAirData = reader.GetInt64(0);
                     dataReturn.PreSetName = (string)reader[1];
                     dataReturn.OutFileName = (string)reader[2];
                     dataReturn.IntStartChar = (int)reader.GetInt64(3);

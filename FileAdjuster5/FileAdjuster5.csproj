@@ -150,6 +150,9 @@
       <DependentUpon>ModifyPreset.xaml</DependentUpon>
     </Compile>
     <Compile Include="OnAirData.cs" />
+    <Compile Include="OnAirSettings.xaml.cs">
+      <DependentUpon>OnAirSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ReadLastFromLog.cs" />
     <Compile Include="SavePreset.xaml.cs">
       <DependentUpon>SavePreset.xaml</DependentUpon>
@@ -197,6 +200,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ModifyPreset.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OnAirSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

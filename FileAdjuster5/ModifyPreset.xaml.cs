@@ -73,5 +73,14 @@ namespace FileAdjuster5
             }
             DialogResult = true;
         }
+
+        private void BtnOnAirSettings(object sender, RoutedEventArgs e)
+        {
+            OnAirSettings myOnAirSettings = new OnAirSettings();
+            if (myOnAirSettings.ShowDialog() == true)
+            {
+                DialogResult = true;
+            }
+        }
     }
 }

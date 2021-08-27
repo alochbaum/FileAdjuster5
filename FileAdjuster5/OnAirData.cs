@@ -8,6 +8,7 @@ namespace FileAdjuster5
 {
     class OnAirData
     {
+        public Int64 ID_OnAirData { get; set; }
         public string PreSetName { get; set; }
         public string OutFileName { get; set; }
         public int IntStartChar { get; set; }
