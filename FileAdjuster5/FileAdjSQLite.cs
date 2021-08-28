@@ -219,7 +219,6 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             m_dbConnection.Close();
             return strReturn;
         }
-
         static public Int64 GetPresetFlags(Int64 iGroup)
         {
             Int64 iReturn = 3,iRowsAfter=0;
@@ -257,7 +256,6 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             iReturn += (iRowsAfter << 7);
             return iReturn;
         }
-
         static public List<string> ReadHistory(Int64 lGroup)
         {
             List<string> mList = new List<string>();
@@ -386,11 +384,6 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
             }
             return dataReturn;
         }
-        static public Int64 CountOfOnAir()
-        {
-            Int64 lgReturn=1;
-            return lgReturn;
-        }
         static public String ReadVersion(string strDBFile)
         {
             string strReturn = "";
@@ -436,6 +429,33 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 m_dbConnection.Close();
             }
             return blreturn;
+        }
+        static public bool WriteOnAir(OnAirData inData)
+        {
+            bool blReturnGood = false;
+            SQLiteConnection m_dbConnection = new SQLiteConnection();
+            string strDBFile = DBFile();
+            if (File.Exists(strDBFile))
+            {
+                // Cleaning up any single quotes in strings
+                string strPreSetName = inData.PreSetName;
+                strPreSetName = strPreSetName.Replace("'", "");
+                string strOutFile = inData.OutFileName;
+                strOutFile = strOutFile.Replace("'", "");
+                m_dbConnection.ConnectionString = "Data Source=" + strDBFile + ";Version=3;";
+                m_dbConnection.Open();
+                string sqlcmd = "INSERT INTO OnAir (PreSetName,OutFileName,IntStartChar," +
+                    "IntInGroupChar,IntInGroupPos,IntOutGroupChar,LongLinesPerFile) VALUES ('" +
+                    strPreSetName + "','" + strOutFile + "',"+ inData.IntStartChar.ToString() +
+                    "','" + inData.IntGroupChar.ToString() + "','" + inData.IntGroupPos.ToString() +
+                    "," + inData.IntOutChar.ToString() + "," + inData.LongLinesPerFile.ToString() +
+                    ");";
+                SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);
+                int rows = command.ExecuteNonQuery();
+                if (rows == 1) blReturnGood = true;
+                m_dbConnection.Close();
+            }
+            return blReturnGood;
         }
         static public bool WriteFileHistory(Int64 iGroup, string strFileName, string strExt)
         {
