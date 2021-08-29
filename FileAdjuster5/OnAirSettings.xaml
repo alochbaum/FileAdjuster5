@@ -33,8 +33,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2">
-            <Button x:Name="btnPrevious" IsEnabled="False">Previous</Button>
-            <Button x:Name="btnNext" IsEnabled="False">Next</Button>
+            <Button x:Name="btnPrevious" IsEnabled="False" Click="BtnPrevious_Click">Previous</Button>
+            <Button x:Name="btnNext" IsEnabled="False" Click="BtnNext_Click">Next</Button>
         </StackPanel>
         <Label Content="Preset Name:" Grid.Row="1" HorizontalAlignment="Center"/>
         <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbPresetName" Margin="5"/>

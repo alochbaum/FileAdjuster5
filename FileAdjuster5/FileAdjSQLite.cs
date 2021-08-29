@@ -447,7 +447,7 @@ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Dec
                 string sqlcmd = "INSERT INTO OnAir (PreSetName,OutFileName,IntStartChar," +
                     "IntInGroupChar,IntInGroupPos,IntOutGroupChar,LongLinesPerFile) VALUES ('" +
                     strPreSetName + "','" + strOutFile + "',"+ inData.IntStartChar.ToString() +
-                    "','" + inData.IntGroupChar.ToString() + "','" + inData.IntGroupPos.ToString() +
+                    "," + inData.IntGroupChar.ToString() + "," + inData.IntGroupPos.ToString() +
                     "," + inData.IntOutChar.ToString() + "," + inData.LongLinesPerFile.ToString() +
                     ");";
                 SQLiteCommand command = new SQLiteCommand(sqlcmd, m_dbConnection);

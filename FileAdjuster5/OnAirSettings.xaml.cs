@@ -20,9 +20,15 @@ namespace FileAdjuster5
     public partial class OnAirSettings : Window
     {
         private OnAirData myOnAirData = new OnAirData();
+        private int iMaxData = -1;
         public OnAirSettings()
         {
             InitializeComponent();
+            LoadOnAirData();
+        }
+
+        private void LoadOnAirData()
+        {
             myOnAirData = FileAdjSQLite.ReadOnAirData();
             if (!string.IsNullOrEmpty(myOnAirData.PreSetName))
             {
@@ -33,6 +39,12 @@ namespace FileAdjuster5
                 tbGrInChar.Text = ((char)myOnAirData.IntGroupChar).ToString();
                 tbGrpOutChar.Text = ((char)myOnAirData.IntOutChar).ToString();
                 intOffSet.Value = myOnAirData.IntGroupPos;
+                int iID = (int) myOnAirData.ID_OnAirData;
+                if (iID > 1) btnPrevious.IsEnabled = true;
+                if (iMaxData < 0) iMaxData = iID;
+                if (iID > 0 && iID < iMaxData) btnNext.IsEnabled = true;
+                if (iID >= iMaxData) btnNext.IsEnabled = false;
+                if (iID < 2) btnPrevious.IsEnabled = false;
             }
         }
 
@@ -52,6 +64,16 @@ namespace FileAdjuster5
                     "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             this.DialogResult = true;
+        }
+
+        private void BtnPrevious_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnNext_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
