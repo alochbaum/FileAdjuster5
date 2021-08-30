@@ -20,16 +20,19 @@ namespace FileAdjuster5
     public partial class OnAirSettings : Window
     {
         private OnAirData myOnAirData = new OnAirData();
-        private int iMaxData = -1;
+        private int iMaxData = -1,iCurrentPos=0;
         public OnAirSettings()
         {
             InitializeComponent();
-            LoadOnAirData();
+            LoadOnAirData(0);
         }
 
-        private void LoadOnAirData()
+        private void LoadOnAirData(int iDirection)
         {
-            myOnAirData = FileAdjSQLite.ReadOnAirData();
+            if (iCurrentPos != 0)
+                myOnAirData = FileAdjSQLite.ReadOnAirData(iCurrentPos + iDirection);
+            else
+                myOnAirData = FileAdjSQLite.ReadOnAirData();
             if (!string.IsNullOrEmpty(myOnAirData.PreSetName))
             {
                 tbPresetName.Text = myOnAirData.PreSetName;
@@ -39,12 +42,12 @@ namespace FileAdjuster5
                 tbGrInChar.Text = ((char)myOnAirData.IntGroupChar).ToString();
                 tbGrpOutChar.Text = ((char)myOnAirData.IntOutChar).ToString();
                 intOffSet.Value = myOnAirData.IntGroupPos;
-                int iID = (int) myOnAirData.ID_OnAirData;
-                if (iID > 1) btnPrevious.IsEnabled = true;
-                if (iMaxData < 0) iMaxData = iID;
-                if (iID > 0 && iID < iMaxData) btnNext.IsEnabled = true;
-                if (iID >= iMaxData) btnNext.IsEnabled = false;
-                if (iID < 2) btnPrevious.IsEnabled = false;
+                if(iCurrentPos == 0) iMaxData = (int)myOnAirData.ID_OnAirData;
+                iCurrentPos = (int) myOnAirData.ID_OnAirData;
+                if (iCurrentPos > 1) btnPrevious.IsEnabled = true;
+                else btnPrevious.IsEnabled = false;
+                if (iCurrentPos < iMaxData) btnNext.IsEnabled = true;
+                else btnNext.IsEnabled = false; 
             }
         }
 
@@ -68,12 +71,12 @@ namespace FileAdjuster5
 
         private void BtnPrevious_Click(object sender, RoutedEventArgs e)
         {
-
+            LoadOnAirData(-1);
         }
 
         private void BtnNext_Click(object sender, RoutedEventArgs e)
         {
-
+            LoadOnAirData(1);
         }
     }
 }

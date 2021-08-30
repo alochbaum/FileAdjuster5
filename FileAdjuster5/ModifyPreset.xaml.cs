@@ -79,8 +79,13 @@ namespace FileAdjuster5
             OnAirSettings myOnAirSettings = new OnAirSettings();
             if (myOnAirSettings.ShowDialog() == true)
             {
-                DialogResult = true;
+                strResult = "Saved changes to On Air button settings.";
             }
+            else
+            {
+                strResult = "Looked, but didn't save On Air button settings.";
+            }
+            DialogResult = true;
         }
     }
 }
