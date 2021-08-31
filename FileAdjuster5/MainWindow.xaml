@@ -192,7 +192,16 @@
                 </Button>
                 <Label Content="--" Margin="0,0,5,0"></Label>
                 <Button x:Name="btnSavePreset" Click="BtnSavePreset_Click" ToolTip="Saves current actions below and checkboxes as a preset.">Save as Preset</Button>
-                <Button x:Name="btnModifyPresets" ToolTip="This exports presets to a database file." Click="btnModifyPresets_Click">Modify Presets</Button>
+                <Button x:Name="btnModifyPresets" Click="btnModifyPresets_Click">
+                    <Button.ToolTip>
+                        <TextBlock>
+                        This can import, export or modify action presets
+                        <LineBreak />
+                        and it can change settings for the *On Air* button
+                        </TextBlock>
+                    </Button.ToolTip>
+                    Modify Presets
+                </Button>
                 <Button x:Name="btnLoadPreset" Click="BtnLoadPreset_Click" ToolTip="Loads Action Presets (alt L)">
                     <AccessText>_Load Preset</AccessText>
                 </Button>
@@ -200,9 +209,13 @@
                     <AccessText>_*On Air*</AccessText>
                     <Button.ToolTip>
                         <TextBlock>
-                            On Air: divides on file to many files with names created from string between
+                            Clicking this button processes first file in input list 
                             <LineBreak />
-                            character groups, if the group exist in that line (alt *)
+                            with a saved preset to saved output file, then each row
+                            <LineBreak />
+                            in big output file is character scanned to possibly create
+                            <LineBreak />
+                            multiple output files if file name pattern is found (alt *)
                         </TextBlock>
                     </Button.ToolTip>    
                 </Button>

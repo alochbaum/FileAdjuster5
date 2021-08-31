@@ -61,12 +61,14 @@ namespace FileAdjuster5
             iTotal = strlines.Count;
             foreach (string strline in strlines)
             {
-                // report progress on background thread
+                // chStart search is one character to start substring
                 ipos = strline.IndexOf(chStart);
                 if (ipos > 1)
                 {
+                    // finding end of group with offset from start
                     ipos2 = strline.IndexOf(chInGroup, ipos+(int)iOffsetInGroup);
                     strEnd = strline.Substring(ipos + 1, ipos2 - ipos - 1);
+                    // optional second shortening of group
                     ipos2 = strEnd.LastIndexOf(chOutGroup);
                     if (ipos2 > 0)
                     {

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FileAdjuster5"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="OnAirSettings" Height="221.2" Width="500" ResizeMode="NoResize">
+        Title="On Air Settings (top section is preset, interim output and max lines)" Height="441.4" Width="500" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5,5,5,0"/>
@@ -51,10 +51,11 @@
             <TextBox x:Name="tbGrpOutChar" Text=":" Margin="3" MaxLength="1" Width="12" Height="20" MinWidth="12" MinHeight="20"  />
         </StackPanel>
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2">
-            <Label Content="Group Start Character Offset:"/>
-            <xctk:IntegerUpDown x:Name="intOffSet" FormatString="N0" Value="0" Increment="1" Maximum="126"/>
+            <Label Content="Group In Character Offset:"/>
+            <xctk:IntegerUpDown x:Name="intOffSet" FormatString="N0" Value="0" Increment="1" Maximum="126" Margin="5,5,60,0"/>
             <Button x:Name="btnCancel" IsCancel="True">Cancel</Button>
             <Button x:Name="btnSave" Click="BtnSave_Click">Save</Button>
         </StackPanel>
+        <Image Grid.Row="6" Grid.ColumnSpan="2" Source="OnAirData.png"></Image>
     </Grid>
 </Window>
