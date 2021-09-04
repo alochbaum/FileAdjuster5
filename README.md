@@ -114,7 +114,7 @@ Finally, as shown in the image at the beginning of this segment, the start (alt 
 
 ### **Line Splitting Selectable Sizes and Progress Area**
 
-![](RackMultipart20210904-4-1dpjyig_html_fce83490c99a6c27.png)
+<img width="912" alt="Size" src="https://user-images.githubusercontent.com/13303715/132102280-989decbc-0ee4-4691-b4a2-9af0ba1c68ad.png">
 
 There is a drop-down selector with the maximum number of lines to be written to an output file, before creating a new output file. This selector shows the number of lines and a description, taken from the embedded database&#39;s size table (and database edits can create additional options).
 
@@ -148,7 +148,7 @@ There is a shortcut to constructing a new Action List with an Include Action. Th
 
 In the example image below the phrase on the clipboard was: Error,&quot;Asset is missing! Unable to cache.&quot;, before the alt-q was pressed.
 
-![](RackMultipart20210904-4-1dpjyig_html_7f510a1994885eb8.png)
+<img width="965" alt="QuickAction" src="https://user-images.githubusercontent.com/13303715/132102115-fe98d32d-c21c-49e0-ac84-ded26175d5f7.png">
 
 ### **Quickly Adding Include or Exclude Rows to an Action List**
 
@@ -162,7 +162,7 @@ The &quot;Edit Row&quot; (alt E) button allows you to change Action Type and the
 
 This was added in 5.11.3 to match the arranging of preset groups.
 
-![](RackMultipart20210904-4-1dpjyig_html_9740ca90b8b8a0f1.png)
+<img width="1184" alt="SwapRow" src="https://user-images.githubusercontent.com/13303715/132102294-93a93042-e697-4dd0-a1ff-f3c80ad98558.png">
 
 ### **Writing Additional Rows and Handling Empty Rows**
 
@@ -202,7 +202,7 @@ One or many presets can be deleted in a new dialog that is opened by clicking on
 
 Without an &quot;Are You Sure&quot; button, you might want to save an export of all your presets before deleting.
 
-![](RackMultipart20210904-4-1dpjyig_html_2cd492371d6aa4d9.png)
+<img width="979" alt="SelectPresets" src="https://user-images.githubusercontent.com/13303715/132102250-cacbd355-f6da-4ff1-99af-2ef14ff3a487.png">
 
 ### Importing Selected Presets
 
@@ -237,7 +237,7 @@ Upgrading users must uninstall old versions of the program, before installing th
 
 You must run the standard windows uninstaller, under the control panel, programs and features, and double click on FileAdjuster5. This launches the windows uninstaller for this program, click OK.
 
-![](RackMultipart20210904-4-1dpjyig_html_6c50b8b431daf54f.png)
+<img width="484" alt="RemoveProgram" src="https://user-images.githubusercontent.com/13303715/132102182-8d67883d-dbe6-4961-95fb-b7404555c2c6.png">
 
 ### Installing program
 
@@ -247,7 +247,7 @@ Unzip the installer to a local drive, right click on &quot;setup.exe&quot; and r
 
 Then click &quot;Install&quot; during the security warning, as shown in the image below.
 
-![](RackMultipart20210904-4-1dpjyig_html_80d66f3e09c0e124.png)
+<img width="684" alt="SecurityWarning" src="https://user-images.githubusercontent.com/13303715/132102218-6b529dc4-5285-459a-a732-30a10143b657.png">
 
 ## Appendix A – List of shortcut keys
 
