@@ -2,7 +2,7 @@
 
 ## **Overview**
 
-![](RackMultipart20210904-4-1dpjyig_html_f55cfb3d774d682a.png)
+<img width="1176" alt="Overview" src="https://user-images.githubusercontent.com/13303715/132102030-2a01f6be-513c-481f-ac33-a6881c474d58.png">
 
 File Adjuster 5 processes a source file or groups of files, into smaller output files by maximum number of lines to be contained in the output file or files. While the program copies lines and optional section of line excluding or including actions is used, and each line is filtered to remove Null characters (which are characters added to program logs during errors).
 
@@ -88,7 +88,7 @@ If a more detailed view of saved source files is desired a history or &quot;«-H
 
 When you select some source files, the output file section will attempt to set an output file for you, but remember the main function of the File Adjuster Program is splitting files into smaller files, so this might be just the starting name of a numbered sequence of output files.
 
-![](RackMultipart20210904-4-1dpjyig_html_c5c9ad8fa20c51b0.png)
+<img width="894" alt="OutputSettings" src="https://user-images.githubusercontent.com/13303715/132102008-50612299-9a0e-43d9-849d-b9bf50b3377f.png">
 
 The &quot;ext:&quot; textbox sets the extension used for the output files, common ones are .txt, .log, and .csv. These extensions are saved in action presets, so you could work on a source file with a few different methods, saving different groups of outputs.
 
@@ -106,7 +106,7 @@ The increment or &quot;Inc&quot; (alt n) button is used when a change is made in
 
 The &quot;Log&quot; button (no quick keyboard shortcut) will open the program&#39;s log file in to Notepad++ for review.
 
-![](RackMultipart20210904-4-1dpjyig_html_a52fe67c5e5b8f36.png)
+![Out2In](https://user-images.githubusercontent.com/13303715/132101972-b816b15c-fc23-4f2c-9a0b-9acee8ce9b11.png)
 
 The output to input or &quot;Out2In&quot; (alt 2) button, takes the listed output file and makes it a new source file, which is often used if a series of action presets are used on sequential files.
 
@@ -136,11 +136,11 @@ File Adjuster 5 supports a list of line filtering actions, which can have only c
 
 The middle button in the action section &quot;New Action&quot; (alt w) opens action creation dialog, requesting you to create a starting comment row, which aids in historical recalling of the action section and saving the group of actions as a preset.
 
-![](RackMultipart20210904-4-1dpjyig_html_1ab01617f67e1331.png)
+![NewAction](https://user-images.githubusercontent.com/13303715/132101927-b998c8b2-600f-4e52-9f0f-458c8d025919.PNG)
 
 The fourth &quot;Add Row &amp;&quot; (alt &amp;) button in the action list section opens the add row dialog window, in which you select an action type. Include and Exclude action types use the Parameter 1 field as a phrase to match in the rows being analyzed, and the Parameter 2 field for comments or advanced options. The Time Window action type uses Parameter 1 as a start time and Parameter 2 as ending time, selecting this type opens a setup dialog, allowing you to enter times and duration.
 
-![](RackMultipart20210904-4-1dpjyig_html_7cc3306be2e5ae1c.png)
+<img width="1036" alt="NewRow" src="https://user-images.githubusercontent.com/13303715/132101950-31e920ab-1ce1-45df-a745-43498be9a1ea.png">
 
 ### **Quickly Creating Actions with &quot;Quick Action Insert&quot; Button**
 
@@ -184,13 +184,13 @@ When you click the load presets button you can, just load Modifier Settings or b
 
 In addition to loading presets, when you are the preset loading screen, you can swap the order in which presets are displayed in the future. (Control left clicking on a preset and that preset&#39;s group is swapped with the group above.)
 
-![](RackMultipart20210904-4-1dpjyig_html_2835c1b99ef5ccdd.png)
+<img width="831" alt="LoadingPresets" src="https://user-images.githubusercontent.com/13303715/132101879-a0f2ae97-fd95-499e-bc90-1c40de26d539.png">
 
 ## Modify Preset or \*On Air\* Settings
 
 Clicking on the &quot;Modify Presets&quot; Button, in the main window, (no keyboard shortcut) brings up the modify presets dialog.
 
-![](RackMultipart20210904-4-1dpjyig_html_edfb050c5e2bade5.png)
+<img width="610" alt="ModifyPresets" src="https://user-images.githubusercontent.com/13303715/132101902-ab39c547-1977-49ae-897e-f009a9d2998f.png">
 
 ### Exporting Presets
 
@@ -223,7 +223,7 @@ Under the history buttons are settings for the name of the Preset Used, the inte
 
 Next in the dialog are the character settings for the row scanning for possible phrases to create the new sub-files. An example image is shown of sub dividing a sample row (shown in purple) with the 3 characters of pipe or &quot;|&quot;, hyphen or &quot;-&quot; and the number one or &quot;1&quot;.
 
-![](RackMultipart20210904-4-1dpjyig_html_a0cb926deeb728e.png)
+<img width="607" alt="OnAirSettings" src="https://user-images.githubusercontent.com/13303715/132101961-a931de4a-ad90-4352-a34d-cfd8031d26dd.png">
 
 ## Installation procedure
 
@@ -243,7 +243,7 @@ You must run the standard windows uninstaller, under the control panel, programs
 
 Unzip the installer to a local drive, right click on &quot;setup.exe&quot; and run as administrator.
 
-![](RackMultipart20210904-4-1dpjyig_html_c5fb7e6f6684aae7.png)
+![InstallProgram](https://user-images.githubusercontent.com/13303715/132101843-43d70977-e2f6-49d3-b71c-477ec3d29501.PNG)
 
 Then click &quot;Install&quot; during the security warning, as shown in the image below.
 
