@@ -72,17 +72,17 @@ Just added in version 5.14: is a routine called &quot;On Air&quot; which runs an
 
 I find the easiest way to add source file(s) is to select the files in a windows folder and drag them to the file loading area; if you drop them over the &quot;Clear&quot; button the previous list of files will be cleared then the dragged file(s) are added to the list of files.
 
-![](RackMultipart20210904-4-1dpjyig_html_38762b2f8844a4bf.png)
+<img width="911" alt="FileLoading1" src="https://user-images.githubusercontent.com/13303715/132101763-cf4cf038-b413-4676-a066-427e5d850faf.png">
 
 In addition to dragging files, in the file loading area there is an &quot;Add File&quot; (alt A) button which opens a dialog to select file or files, and the &quot;Clear&quot; button (alt C) which clears out the list.
 
 The embedded database saves a record of all files or file groups which you have processed in the past. The previous files can be loaded with the previous or &quot;\&lt;-&quot; button (alt -), and it can be used many times.
 
-![](RackMultipart20210904-4-1dpjyig_html_51e58308827c1f74.png)
+<img width="879" alt="FileLoading2" src="https://user-images.githubusercontent.com/13303715/132101781-0bdc8644-ac47-4fd1-a224-5a899a792143.png">
 
 If a more detailed view of saved source files is desired a history or &quot;«-H&quot; (alt H) button opens the File Histories window, which shows the first file and date that each group was saved, you can also set a date to search before, or even delete saved history before a specific date. Simply clicking on a row to select it and the OK button will load all the file(s) in that group to the source section again.
 
-![](RackMultipart20210904-4-1dpjyig_html_1a07b674db786459.png)
+<img width="774" alt="FileHistory" src="https://user-images.githubusercontent.com/13303715/132101741-935fa4c8-90fb-47cf-a684-ea22a4a46bf5.png">
 
 ### **Setting Output File and Output Options**
 
@@ -98,7 +98,7 @@ Checking the &quot;Combine Files&quot; checkbox will create a single group of ou
 
 Checking the &quot;Headers&quot; checkbox will add the name of the source file and a separator line of equal sign characters to the start of each change of source files, this is commonly used with the &quot;Combine Files&quot; feature to identify different origination files for the written lines.
 
-![](RackMultipart20210904-4-1dpjyig_html_c1e65d96acd35aff.png)
+![CU](https://user-images.githubusercontent.com/13303715/132101704-a2d03315-93e2-451f-ac09-48787d1723b4.png)
 
 The cleanup or &quot;CU&quot; (alt C) button will look at the output file text and delete all files that have the same root name, which could be many numbered files.
 
@@ -166,7 +166,7 @@ This was added in 5.11.3 to match the arranging of preset groups.
 
 ### **Writing Additional Rows and Handling Empty Rows**
 
-![](RackMultipart20210904-4-1dpjyig_html_8279bed5ef56c0ba.png)
+<img width="1033" alt="AdditionalRows" src="https://user-images.githubusercontent.com/13303715/132101516-697ed1fd-285c-440f-82da-6f2e3c8ab2c4.png">
 
 If your Action has Include or Any\_Case\_Include type events, then you can have the program write to output file the next 0 to 50 rows, by checking the &quot;lines after include&quot; (alt t) checkbox and adjusting the slider to its right to the number of additional lines.
 
@@ -251,7 +251,7 @@ Then click &quot;Install&quot; during the security warning, as shown in the imag
 
 ## Appendix A – List of shortcut keys
 
-![](RackMultipart20210904-4-1dpjyig_html_3dcd07f4fb5c9e73.png)
+<img width="864" alt="AppendixA" src="https://user-images.githubusercontent.com/13303715/132101689-7e3e9cbc-0c55-4c9a-904a-f3bce7c0238e.png">
 
 ## **Appendix B – Release Notes version 5.14.2**
 
