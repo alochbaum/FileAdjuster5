@@ -128,11 +128,11 @@ The &quot;Notepad++&quot; (alt +) button stays ghosted until the first processin
 
 File Adjuster 5 supports a list of line filtering actions, which can have only comments for simple file dividing processing, or hundreds of line exclusions strings, inclusion by contained strings, or a range of included times. When using line inclusion matching, additional lines following match line can also be written by a series of checkable options.
 
-![](RackMultipart20210904-4-1dpjyig_html_f65ed5678583ab74.png)
+<img width="880" alt="Actions" src="https://user-images.githubusercontent.com/13303715/132101483-700a655d-051a-4f9b-ac44-f641eb59d76e.png">
 
-### Creation Actions and Adding Line Actions Rows
+### Creation Actions and Adding Actions Rows
 
-![](RackMultipart20210904-4-1dpjyig_html_2c22d67c7cd6beee.png)
+![ActionRows](https://user-images.githubusercontent.com/13303715/132101462-0fd93025-d916-4d6e-a59e-7f4a1bf76298.PNG)
 
 The middle button in the action section &quot;New Action&quot; (alt w) opens action creation dialog, requesting you to create a starting comment row, which aids in historical recalling of the action section and saving the group of actions as a preset.
 
