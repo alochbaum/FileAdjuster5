@@ -4,7 +4,7 @@
 
 <img width="1176" alt="Overview" src="https://user-images.githubusercontent.com/13303715/132102030-2a01f6be-513c-481f-ac33-a6881c474d58.png">
 
-File Adjuster 5 processes a source file or groups of files, into smaller output files by maximum number of lines to be contained in the output file or files. While the program copies lines and optional section of line excluding or including actions is used, and each line is filtered to remove Null characters (which are characters added to program logs during errors).
+File Adjuster 5 processes a source file or groups of files, into smaller output files by maximum number of lines to be contained in the output file or files. While the program copies lines and optional section of line excluding or including actions are used, and each line is filtered to remove Null characters (which are characters added to program logs during errors).
 
 This program saves a history of all the source files and actions used with dates to an embedded database, as well as it has action presets and shortcuts to open output files in Notepad++ or the windows directory containing output files.
 
