@@ -4,7 +4,7 @@
 
 <img width="1176" alt="Overview" src="https://user-images.githubusercontent.com/13303715/132102030-2a01f6be-513c-481f-ac33-a6881c474d58.png">
 
-File Adjuster 5 processes a source file or groups of files, into smaller output files by maximum number of lines to be contained in the output file or files. While the program copies lines and optional section of line excluding or including actions are used, and each line is filtered to remove Null characters (which are characters added to program logs during errors).
+The FileAdjuster5 processes a source file or files, into smaller output files with the maximum number of lines limited to a specific number in the output file or files. While the program copies lines and optional section of line excluding or including actions are used, and each line is filtered to remove Null characters (which are characters added to program logs during errors).
 
 This program saves a history of all the source files and actions used with dates to an embedded database, as well as it has action presets and shortcuts to open output files in Notepad++ or the windows directory containing output files.
 
@@ -100,7 +100,7 @@ Checking the &quot;Headers&quot; checkbox will add the name of the source file a
 
 ![CU](https://user-images.githubusercontent.com/13303715/132101704-a2d03315-93e2-451f-ac09-48787d1723b4.png)
 
-The cleanup or &quot;CU&quot; (alt C) button will look at the output file text and delete all files that have the same root name, which could be many numbered files.
+The cleanup or &quot;CU&quot; (alt C) button will look at the output file text and deletes all file(s) that have the same root name, which could be many numbered files.
 
 The increment or &quot;Inc&quot; (alt n) button is used when a change is made in Action Filters and you would like to save previous output files; it searches the root output name for the next available number in the sequence, if there is no current output file it will not change the output name.
 
